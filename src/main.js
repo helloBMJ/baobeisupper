@@ -15,6 +15,8 @@ import "../public/static/ueditor/ueditor.all.min.js";
 import "../public/static/ueditor/lang/zh-cn/zh-cn.js";
 import "../public/static/ueditor/ueditor.parse.min.js";
 
+// 引入图标
+import "./assets/icon/iconfont.css";
 // 请求数据
 Vue.prototype.$http = http;
 Vue.prototype.$sortPro = sortPro;

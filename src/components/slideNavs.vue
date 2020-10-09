@@ -14,6 +14,7 @@
       >
         <el-submenu v-for="item of menu" :index="item.id" :key="item.id">
           <template slot="title">
+            <i :class="item.icon" style="margin-right:5px"></i>
             <span>{{ item.name }}</span>
           </template>
           <el-menu-item-group class="over-hide">
@@ -23,6 +24,7 @@
               :key="sub.title"
               @click="clickMenu(sub)"
             >
+              <i :class="sub.icon" style="margin-right:5px"></i>
               {{ sub.title }}
             </el-menu-item>
           </el-menu-item-group>
