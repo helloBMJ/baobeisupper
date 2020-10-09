@@ -3,6 +3,9 @@
     <el-header>
       <p>站点ID：{{ $route.query.website_id }}</p>
       <p>站点名称：{{ $route.query.website_name }}</p>
+      <p>
+        微信开发者工具上传最新代码进入草稿箱后，需要将代码添加至模板列表后，进入模板列表显示最新提交记录
+      </p>
     </el-header>
     <el-table
       ref="multipleTable"
@@ -107,5 +110,8 @@ export default {
 }
 .el-button {
   margin: 4px;
+}
+.el-table {
+  margin-top: 40px;
 }
 </style>

@@ -274,8 +274,20 @@ export default {
     getCodeTemplateList() {
       this.$http.getCodeTemplateList({ params: this.params }).then((res) => {
         if (res.status === 200) {
-          this.tabelData = res.data.template_list;
+          this.tabelData = this.sortByKey(
+            res.data.template_list,
+            "template_id"
+          );
         }
+      });
+    },
+    // 排序
+    //arr是传入的带数字的数组
+    sortByKey(array, key) {
+      return array.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+        return x < y ? 1 : x > y ? -1 : 0;
       });
     },
     uploadCode(row) {
