@@ -15,13 +15,20 @@
     </el-header>
     <el-table
       ref="multipleTable"
+      :row-key="getRowKey"
       :data="tableData"
       border
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column prop="id" label="站点ID" width="100"></el-table-column>
+      <el-table-column
+        type="selection"
+        :reserve-selection="true"
+        prop="id"
+        label="站点ID"
+        width="100"
+      ></el-table-column>
       <el-table-column prop="name" label="站点名称" width="auto">
         <!-- </el-table-column>
         <el-table-column prop="url" label="站点链接" width="auto">-->
@@ -124,6 +131,9 @@ export default {
     this.getDataList();
   },
   methods: {
+    getRowKey(row) {
+      return row.id;
+    },
     changeData(row) {
       this.$router.push(`/updata_web?id=${row.id}`);
     },
@@ -159,15 +169,15 @@ export default {
       this.multipleSelection = val;
     },
     // 取消全选
-    toggleSelection(rows) {
-      if (rows) {
-        rows.forEach((row) => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.multipleTable.clearSelection();
-      }
-    },
+    // toggleSelection(rows) {
+    //   if (rows) {
+    //     rows.forEach((row) => {
+    //       this.$refs.multipleTable.toggleRowSelection(row);
+    //     });
+    //   } else {
+    //     this.$refs.multipleTable.clearSelection();
+    //   }
+    // },
     // 根据分页设置的数据控制每页显示的数据条数及页码跳转页面刷新
     getPageData() {
       let start = (this.params.currentPage - 1) * this.params.pagesize;
