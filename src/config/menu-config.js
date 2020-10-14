@@ -21,11 +21,12 @@ module.exports = [
       //   componentName: "already_code_list",
       //   title: "已上传代码列表",
       // },
-      // {
-      //   name: "draft_list",
-      //   componentName: "draft_list",
-      //   title: "小程序代码草稿箱",
-      // },
+      {
+        name: "draft_list",
+        componentName: "draft_list",
+        title: "小程序代码草稿箱",
+        icon: "icon-xiaochengxu",
+      },
     ],
   },
   {
