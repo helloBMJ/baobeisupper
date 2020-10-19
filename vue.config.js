@@ -16,6 +16,8 @@ module.exports = {
   devServer: {
     host: "webfenxiao.tfcs.cn",
     https: true,
+    // 运行项目自动打开浏览器
+    open: true,
     disableHostCheck: true,
     port: 8081,
     proxy: {

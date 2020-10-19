@@ -108,6 +108,7 @@ class UserCenter {
         if (error.response.status === 500) {
           Message.error("网络连接错误，请检查网络连接");
         }
+        //报错的一个就够了
         return Promise.reject(error);
       }
     );
