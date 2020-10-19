@@ -351,6 +351,12 @@ class UserCenter {
   getReviewRecordingList(id) {
     return this.$http.get(`/admin/wx_open_mp/version/all/audit/status/${id}`);
   }
+  // 获取已开通微信小程序站点
+  getMiniProgramList(params) {
+    return this.$http.get(
+      `/super/admin/website/search/wx_open/mp?page=${params.currentPage}&per_page=${params.pagesize}&name=${params.name}`
+    );
+  }
 }
 
 export default new UserCenter();

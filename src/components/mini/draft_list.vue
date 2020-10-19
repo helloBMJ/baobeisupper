@@ -1,53 +1,63 @@
 <template>
   <el-container>
     <el-header>
-      <p>站点ID：{{ $route.query.website_id }}</p>
-      <p>站点名称：{{ $route.query.website_name }}</p>
+      <div v-if="$route.query.website_id">
+        <p>站点ID：{{ $route.query.website_id }}</p>
+        <p>站点名称：{{ $route.query.website_name }}</p>
+      </div>
       <p>
         微信开发者工具上传最新代码进入草稿箱后，需要将代码添加至模板列表后，进入模板列表显示最新提交记录
       </p>
     </el-header>
-    <el-table
-      ref="multipleTable"
-      :data="tabelData"
-      border
-      tooltip-effect="dark"
-      style="width:100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column prop="draft_id" label="草稿ID" width="100">
-      </el-table-column>
-      <el-table-column width="200" prop="create_time" label="创建时间">
-        <template slot-scope="scope">
-          <p>{{ scope.row.create_time | time }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="user_version"
-        label="版本号"
-        width="100"
-      ></el-table-column>
-      <el-table-column prop="user_desc" label="项目备注"></el-table-column>
-      <el-table-column
-        prop="source_miniprogram_appid"
-        label="小程序ID"
-      ></el-table-column>
-      <el-table-column
-        prop="source_miniprogram"
-        label="小程序名称"
-      ></el-table-column>
-      <el-table-column prop="developer" label="上传者名称"></el-table-column>
-      <el-table-column label="操作" fixed="right">
-        <template slot-scope="scope">
-          <el-button @click="addTemplate(scope.row)" type="success" size="mini"
-            >添加至模板</el-button
-          >
-          <el-button @click="templateList(scope.row)" type="primary" size="mini"
-            >模板列表</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-tabs>
+      <el-table
+        ref="multipleTable"
+        :data="tabelData"
+        border
+        tooltip-effect="dark"
+        style="width:100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column prop="draft_id" label="草稿ID" width="100">
+        </el-table-column>
+        <el-table-column width="200" prop="create_time" label="创建时间">
+          <template slot-scope="scope">
+            <p>{{ scope.row.create_time | time }}</p>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="user_version"
+          label="版本号"
+          width="100"
+        ></el-table-column>
+        <el-table-column prop="user_desc" label="项目备注"></el-table-column>
+        <el-table-column
+          prop="source_miniprogram_appid"
+          label="小程序ID"
+        ></el-table-column>
+        <el-table-column
+          prop="source_miniprogram"
+          label="小程序名称"
+        ></el-table-column>
+        <el-table-column prop="developer" label="上传者名称"></el-table-column>
+        <el-table-column label="操作" fixed="right">
+          <template slot-scope="scope">
+            <el-button
+              @click="addTemplate(scope.row)"
+              type="success"
+              size="mini"
+              >添加至模板</el-button
+            >
+            <el-button
+              @click="templateList(scope.row)"
+              type="primary"
+              size="mini"
+              >模板列表</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-tabs>
   </el-container>
 </template>
 
@@ -60,7 +70,11 @@ export default {
     };
   },
   mounted() {
-    this.getWebsiteToken();
+    if (this.$route.query.website_id) {
+      this.getWebsiteToken();
+    } else {
+      this.getDataList();
+    }
   },
   methods: {
     getWebsiteToken() {
@@ -96,9 +110,13 @@ export default {
       });
     },
     templateList() {
-      this.$router.push(
-        `/mini_site?website_id=${this.$route.query.website_id}&website_name=${this.$route.query.website_name}`
-      );
+      if (this.$route.query.website_id) {
+        this.$router.push(
+          `/mini_site?website_id=${this.$route.query.website_id}&website_name=${this.$route.query.website_name}`
+        );
+      } else {
+        this.$router.push(`/mini_site`);
+      }
     },
   },
 };

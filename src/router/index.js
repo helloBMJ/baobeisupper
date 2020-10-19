@@ -149,6 +149,13 @@ export default new Router({
           meta: { title: "审核记录列表" },
           name: "审核记录列表",
         },
+        {
+          path: "/mini_program_list",
+          component: (resolve) =>
+            require(["@/components/mini/mini_program_list"], resolve),
+          meta: { title: "已开通小程序站点" },
+          name: "已开通小程序站点",
+        },
       ],
     },
     {

@@ -1,7 +1,12 @@
 <template>
   <el-container>
     <el-header class="div row">
-      <el-button type="primary" @click="createdWeb">创建站点</el-button>
+      <div class="div row">
+        <el-button type="primary" @click="createdWeb">创建站点</el-button>
+        <el-button type="success" @click="miniProgram"
+          >已开通小程序列表</el-button
+        >
+      </div>
       <div class="div row input-box">
         <el-input
           v-model="company_name"
@@ -245,6 +250,9 @@ export default {
     },
     authWxMiniAppId(id) {
       this.$router.push(`/authorization_list?wxminiappid=${id}`);
+    },
+    miniProgram() {
+      this.$router.push("/mini_program_list");
     },
   },
 };
