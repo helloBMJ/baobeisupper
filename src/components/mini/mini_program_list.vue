@@ -461,6 +461,7 @@ export default {
                       });
                     }
                   });
+                  this.getDataList();
                   this.dialogVisible = false;
                 }
               });
@@ -491,6 +492,7 @@ export default {
                     });
                   }
                 });
+                this.getDataList();
                 this.dialogVisible = false;
               }
             });
