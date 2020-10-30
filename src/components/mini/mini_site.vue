@@ -384,7 +384,7 @@ export default {
     },
 
     reviewRecording(id) {
-      this.$router.push(`/review_recording_list?id=${id}`);
+      this.$router.push(`/review_audit_list?id=${id}`);
     },
     // 小程序草稿箱
     // draftList() {

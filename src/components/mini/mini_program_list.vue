@@ -592,7 +592,7 @@ export default {
       );
     },
     findReason(row) {
-      this.$router.push(`/review_recording_list?id=${row.submit_audit_id}`);
+      this.$router.push(`/review_audit_list?id=${row.submit_audit_id}`);
     },
   },
 };

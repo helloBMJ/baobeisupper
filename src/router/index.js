@@ -143,9 +143,9 @@ export default new Router({
           name: "用户通知列表",
         },
         {
-          path: "/review_recording_list",
+          path: "/review_audit_list",
           component: (resolve) =>
-            require(["@/components/mini/review_recording_list"], resolve),
+            require(["@/components/mini/review_audit_list"], resolve),
           meta: { title: "审核记录列表" },
           name: "审核记录列表",
         },
