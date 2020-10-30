@@ -30,10 +30,9 @@
       <el-table-column
         type="selection"
         :reserve-selection="true"
-        prop="id"
-        label="站点ID"
         width="100"
       ></el-table-column>
+      <el-table-column prop="id" label="站点ID" width="auto"> </el-table-column>
       <el-table-column prop="name" label="站点名称" width="auto">
         <!-- </el-table-column>
         <el-table-column prop="url" label="站点链接" width="auto">-->

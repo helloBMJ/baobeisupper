@@ -31,7 +31,7 @@
       </div>
     </el-header>
     <el-table
-      v-if="isReview"
+      v-if="isReview === 1"
       ref="multipleTable"
       :data="tabelData"
       border
@@ -77,7 +77,7 @@
       </el-table-column>
     </el-table>
     <el-table
-      v-else
+      v-if="isReview === 0"
       :data="reviewList"
       border
       tooltip-effect="dark"
@@ -201,7 +201,7 @@ export default {
       review_status: "",
       wechatid: "",
       testerList: [],
-      isReview: true,
+      isReview: 1,
       reviewList: [],
       btn_txt: "模板列表",
     };
@@ -213,6 +213,10 @@ export default {
       this.queryReview();
     } else {
       this.getCodeTemplateList();
+    }
+    if (this.$route.query.isReview) {
+      this.isReview = parseInt(this.$route.query.isReview);
+      this.SubmitReview();
     }
   },
   methods: {
@@ -326,10 +330,12 @@ export default {
 
     // 提交代码审核
     SubmitReview() {
-      this.isReview = !this.isReview;
-      if (this.isReview === true) {
+      if (this.isReview === 0) {
         this.btn_txt = "审核列表";
-      } else {
+        this.isReview = 1;
+        this.getCodeTemplateList();
+      } else if (this.isReview === 1) {
+        this.isReview = 0;
         this.btn_txt = "模板列表";
         this.$http.getReviewCodeList().then((res) => {
           if (res.status === 200) {

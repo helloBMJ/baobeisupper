@@ -89,6 +89,12 @@ class UserCenter {
           Message.error("请检查网络连接");
         }
         if (error.response.status === 422) {
+          /**
+           * @time 2020/10/21 添加注释
+           * @description error返回报错信息是个数组则显示数组第一个内容
+           * @description 反之打印报错信息
+           * */
+
           if (error.response.data.message) {
             if (error.response.data.errors) {
               for (var key in error.response.data.errors) {
@@ -147,7 +153,7 @@ class UserCenter {
   }
   // 获取站点信息展示
   queryWeb(id) {
-    return this.$http.get(`super/admin/website/query/${id}`);
+    return this.$http.get(`/super/admin/website/query/${id}`);
   }
   // 发送手机验证码
   sendPhoneCode(data) {
@@ -356,6 +362,13 @@ class UserCenter {
   getMiniProgramList(params) {
     return this.$http.get(
       `/super/admin/website/search/wx_open/mp?page=${params.currentPage}&per_page=${params.pagesize}&name=${params.name}`
+    );
+  }
+  getErrorImg(params) {
+    return this.$http.post(
+      `/admin/wx_open/public/material/get/permanent/assets`,
+      params,
+      { responseType: "arraybuffer" }
     );
   }
 }

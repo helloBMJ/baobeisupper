@@ -107,6 +107,13 @@
                     : "审核延后"
                 }}
               </span>
+              <el-button
+                v-if="scope.row.submit_audit_status === 1"
+                size="mini"
+                type="danger"
+                @click="findReason(scope.row)"
+                >查看原因</el-button
+              >
             </el-form-item>
             <el-form-item label="最新提交审核版本的更新时间：">
               <span>{{ scope.row.submit_audit_updated_at }}</span>
@@ -140,13 +147,17 @@
         prop="release_user_version"
         label="最新上线版本号"
       ></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right" width="200">
         <template slot-scope="scope">
           <el-button
+            size="mini"
             :disabled="scope.row.submit_audit_status !== 0"
             type="success"
             @click="onlineCode(scope.row)"
             >上线</el-button
+          >
+          <el-button size="mini" type="primary" @click="templateList(scope.row)"
+            >审核记录</el-button
           >
         </template>
       </el-table-column>
@@ -267,7 +278,7 @@ export default {
   mounted() {
     this.getDataList();
     this.getTemplateList();
-    this.queryReview();
+    // this.queryReview();
   },
   methods: {
     // 查询小程序审核状态
@@ -435,38 +446,101 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.multipleSelection.length > 1) {
-            this.multipleSelection.map((item) => {
-              let ext_json = {
-                ext: {
-                  website_id: item.id,
-                },
-              };
-              let data = {
-                template_id: this.form_template.template_id,
-                user_version: this.form_template.user_version,
-                user_desc: this.form_template.user_desc,
-                ext_json: JSON.stringify(ext_json),
-              };
-              this.$http.uploadTemplateCode(data).then((res) => {
-                if (res.status === 200) {
-                  this.$message({
-                    message: "提交成功",
-                    type: "success",
-                  });
-                  this.$http.SubmitReview().then((res) => {
+            // var array = ["some", "array", "contains", "words"];
+
+            /**
+             * @time 2020/10/20
+              @description 循环加定时器，个每个数组对象1.5s时间提交数据
+            */
+            var interval = 1500; //两次迭代之间的延迟时间（以毫秒为单位）？
+            var that = this;
+            that.multipleSelection.forEach(function(el) {
+              setTimeout(function() {
+                that.$http
+                  .getWebsiteToken(that.multipleSelection[0].id)
+                  .then((res) => {
                     if (res.status === 200) {
-                      this.$message({
-                        message: "上传成功",
-                        type: "success",
-                      });
+                      localStorage.setItem("admin_TOKEN", res.data.token);
                     }
                   });
-                  this.getDataList();
-                  this.dialogVisible = false;
+                let ext_json = {
+                  ext: {
+                    website_id: el.id,
+                  },
+                };
+                let data = {
+                  template_id: that.form_template.template_id,
+                  user_version: that.form_template.user_version,
+                  user_desc: that.form_template.user_desc,
+                  ext_json: JSON.stringify(ext_json),
+                };
+                that.$http.uploadTemplateCode(data).then((res) => {
+                  if (res.status === 200) {
+                    that.$message({
+                      message: "提交成功",
+                      type: "success",
+                    });
+                    that.$http.SubmitReview().then((res) => {
+                      if (res.status === 200) {
+                        that.$message({
+                          message: "上传成功",
+                          type: "success",
+                        });
+                      }
+                    });
+                    that.getDataList();
+                    that.dialogVisible = false;
+                  }
+                });
+              }, interval);
+            });
+            // this.multipleSelection.map((item) => {
+            //   this.$http
+            //     .getWebsiteToken(this.multipleSelection[0].id)
+            //     .then((res) => {
+            //       if (res.status === 200) {
+            //         localStorage.setItem("admin_TOKEN", res.data.token);
+            //       }
+            //     });
+            //   let ext_json = {
+            //     ext: {
+            //       website_id: item.id,
+            //     },
+            //   };
+            //   let data = {
+            //     template_id: this.form_template.template_id,
+            //     user_version: this.form_template.user_version,
+            //     user_desc: this.form_template.user_desc,
+            //     ext_json: JSON.stringify(ext_json),
+            //   };
+            //   console.log(data);
+            //   this.$http.uploadTemplateCode(data).then((res) => {
+            //     if (res.status === 200) {
+            //       this.$message({
+            //         message: "提交成功",
+            //         type: "success",
+            //       });
+            //       this.$http.SubmitReview().then((res) => {
+            //         if (res.status === 200) {
+            //           this.$message({
+            //             message: "上传成功",
+            //             type: "success",
+            //           });
+            //         }
+            //       });
+            //       this.getDataList();
+            //       this.dialogVisible = false;
+            //     }
+            //   });
+            // });
+          } else if (this.multipleSelection.length === 1) {
+            this.$http
+              .getWebsiteToken(this.multipleSelection[0].id)
+              .then((res) => {
+                if (res.status === 200) {
+                  localStorage.setItem("admin_TOKEN", res.data.token);
                 }
               });
-            });
-          } else if (this.multipleSelection.length === 1) {
             let ext_json = {
               ext: {
                 website_id: this.multipleSelection[0].id,
@@ -511,6 +585,14 @@ export default {
           });
         }
       });
+    },
+    templateList(row) {
+      this.$router.push(
+        `/mini_site?website_id=${row.id}&website_name=${row.name}&isReview=1`
+      );
+    },
+    findReason(row) {
+      this.$router.push(`/review_recording_list?id=${row.submit_audit_id}`);
     },
   },
 };
