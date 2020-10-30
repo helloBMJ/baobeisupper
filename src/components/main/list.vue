@@ -32,6 +32,34 @@
         :reserve-selection="true"
         width="100"
       ></el-table-column>
+      <el-table-column label="折叠内容" type="expand" width="100">
+        <template slot-scope="scope">
+          <el-form
+            label-position="left"
+            label-width="200px"
+            inline
+            class="demo-table-expand"
+          >
+            <el-form-item label="公司名称：">
+              <span>{{ scope.row.website_company_name }}</span>
+            </el-form-item>
+            <el-form-item label="联系人：">
+              <span>{{ scope.row.website_contact_name }}</span>
+            </el-form-item>
+            <el-form-item label="联系方式：">
+              <span>{{ scope.row.website_contact_phone }}</span>
+            </el-form-item>
+            <el-form-item label="城市名称：">
+              <span>{{ scope.row.website_city_name }}</span>
+            </el-form-item>
+            <el-form-item label="版本类型名称：">
+              <span v-if="scope.row.website_version_category">{{
+                scope.row.website_version_category === 0 ? "试用版" : "正式版"
+              }}</span>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column prop="id" label="站点ID" width="auto"> </el-table-column>
       <el-table-column prop="name" label="站点名称" width="auto">
         <!-- </el-table-column>
@@ -257,7 +285,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .el-tag {
   cursor: pointer;
 }
@@ -272,5 +300,17 @@ export default {
 .el-input {
   border-left: none;
   width: 200px;
+}
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 100%;
 }
 </style>

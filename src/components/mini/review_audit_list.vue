@@ -5,6 +5,7 @@
         >失败原因：当审核被拒绝时，返回拒绝原因，当审核延后时，返回延后原因</el-tag
       >
     </el-header>
+    <!-- @expand-change 当用户展开某一行时调用该接口 -->
     <el-table
       :data="tableData"
       border
@@ -80,6 +81,7 @@ export default {
       this.img_arr = [];
       if (row.audit_status === 1) {
         let arr = row.screenshot.split("|");
+        // 拒绝原因截图有时不止一张，处理后存入新数组
         arr.map((item) => {
           this.$http
             .getErrorImg({ media_id: item, access_token_type: 1 })

@@ -364,6 +364,7 @@ class UserCenter {
       `/super/admin/website/search/wx_open/mp?page=${params.currentPage}&per_page=${params.pagesize}&name=${params.name}`
     );
   }
+  // 获取报错信息图片列表 ，注意图片格式
   getErrorImg(params) {
     return this.$http.post(
       `/admin/wx_open/public/material/get/permanent/assets`,
