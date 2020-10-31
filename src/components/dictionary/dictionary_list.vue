@@ -14,7 +14,12 @@
       </div>
     </el-header>
     <el-main>
-      <el-table :data="tableData" tooltip-effect="dark" style="width: 100%">
+      <el-table
+        :default-sort="{ prop: 'id' }"
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width: 100%"
+      >
         <el-table-column label="ID" prop="id" width="100px"></el-table-column>
         <el-table-column
           label="字典名称"
