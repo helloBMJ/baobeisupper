@@ -15,7 +15,7 @@
     </el-header>
     <el-main>
       <el-table
-        :default-sort="{ prop: 'id' }"
+        :default-sort="{ prop: 'id', order: 'descending' }"
         :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
@@ -253,15 +253,28 @@ export default {
       this.getDataList();
     },
     onDelete(id) {
-      this.$http.deleteDictionaryData(id).then((res) => {
-        if (res.status === 200) {
-          this.$message({
-            message: "删除成功",
-            type: "success",
+      this.$confirm("此操作将删除该字典, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$http.deleteDictionaryData(id).then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                type: "success",
+                message: "删除成功!",
+              });
+              this.getDataList();
+            }
           });
-          this.getDataList();
-        }
-      });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };

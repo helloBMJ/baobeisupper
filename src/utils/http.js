@@ -372,6 +372,54 @@ class UserCenter {
       { responseType: "arraybuffer" }
     );
   }
+  // 获取oss列表数据
+  getOssList(params) {
+    return this.$http.get("/super/admin/package/oss_storage/search", params);
+  }
+  // 创建oss套餐
+  createOss(data) {
+    return this.$http.post("/super/admin/package/oss_storage/create", data);
+  }
+  // 删除oss套餐
+  deleteOss(id) {
+    return this.$http.get(`/super/admin/package/oss_storage/delete/${id}`);
+  }
+  // 查询oss
+  queryOss(id) {
+    return this.$http.get(`/super/admin/package/oss_storage/query/${id}`);
+  }
+  // 修改oss
+  updateOss(data) {
+    return this.$http.post("/super/admin/package/oss_storage/update", data);
+  }
+  // 设置上架下架
+  updateOssStatus(id, status) {
+    return this.$http.get(
+      `/super/admin/package/oss_storage/update/status/${id}/${status}`
+    );
+  }
+  // 获取sms列表数据
+  getSmsList(params) {
+    return this.$http.get("/super/admin/package/sms/search", params);
+  }
+  // 创建sms套餐
+  createSms(data) {
+    return this.$http.post("/super/admin/package/sms/create", data);
+  }
+  // 删除sms套餐
+  deleteSms(id) {
+    return this.$http.get(`/super/admin/package/sms/delete/${id}`);
+  }
+  // 修改sms
+  updateSms(data) {
+    return this.$http.post("/super/admin/package/sms/update", data);
+  }
+  // 设置上下架
+  updateSmsStatus(id, status) {
+    return this.$http.get(
+      `/super/admin/package/sms/update/status/${id}/${status}`
+    );
+  }
 }
 
 export default new UserCenter();

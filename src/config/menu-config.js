@@ -22,6 +22,18 @@ module.exports = [
       //   title: "已上传代码列表",
       // },
       {
+        name: "oss_list",
+        componentName: "oss_list",
+        title: "oss管理",
+        icon: "el-icon-money",
+      },
+      {
+        name: "sms_list",
+        componentName: "sms_list",
+        title: "短信管理",
+        icon: "el-icon-money",
+      },
+      {
         name: "draft_list",
         componentName: "draft_list",
         title: "小程序代码草稿箱",

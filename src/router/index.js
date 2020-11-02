@@ -156,6 +156,20 @@ export default new Router({
           meta: { title: "已开通小程序站点" },
           name: "已开通小程序站点",
         },
+        {
+          path: "/oss_list",
+          component: (resolve) =>
+            require(["@/components/package/oss_list"], resolve),
+          meta: { title: "oss管理" },
+          name: "oss管理",
+        },
+        {
+          path: "/sms_list",
+          component: (resolve) =>
+            require(["@/components/package/sms_list"], resolve),
+          meta: { title: "短信管理" },
+          name: "短信管理",
+        },
       ],
     },
     {
