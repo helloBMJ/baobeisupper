@@ -38,6 +38,7 @@
       tooltip-effect="dark"
       style="width:100%"
       @selection-change="handleSelectionChange"
+      :default-sort="{ prop: 'template_id', order: 'descending' }"
     >
       <el-table-column
         prop="template_id"
@@ -237,20 +238,8 @@ export default {
     getCodeTemplateList() {
       this.$http.getCodeTemplateList({ params: this.params }).then((res) => {
         if (res.status === 200) {
-          this.tabelData = this.sortByKey(
-            res.data.template_list,
-            "template_id"
-          );
+          this.tabelData = res.data.template_list;
         }
-      });
-    },
-    // 排序
-    //arr是传入的带数字的数组
-    sortByKey(array, key) {
-      return array.sort(function(a, b) {
-        var x = a[key];
-        var y = b[key];
-        return x < y ? 1 : x > y ? -1 : 0;
       });
     },
     uploadCode(row) {
@@ -306,22 +295,39 @@ export default {
             user_version: this.form_template.user_version,
             user_desc: this.form_template.user_desc,
           };
-          this.$http.uploadTemplateCode(data).then((res) => {
-            if (res.status === 200) {
-              this.$message({
-                message: "提交成功",
-                type: "success",
-              });
-              this.getCodeTemplateList();
-              this.queryReview();
-              // 上传代码成功后直接提交代码到审核列表
-              this.$http.SubmitReview().then((res) => {
-                if (res.status === 200) {
-                  this.auditid = res.data.auditid;
+          console.log(data);
+          this.$http
+            .getWebsiteToken(this.form_template.ext_json.ext.website_id)
+            .then((res) => {
+              if (res.status === 200) {
+                // 将token存在本地
+                localStorage.setItem("admin_TOKEN", res.data.token);
+                // 对比接口中token是否一致，一致提交
+                if (res.data.token === localStorage.getItem("admin_TOKEN")) {
+                  this.$http.uploadTemplateCode(data).then((res) => {
+                    if (res.status === 200) {
+                      this.$message({
+                        message: "提交成功",
+                        type: "success",
+                      });
+                      this.getCodeTemplateList();
+                      this.queryReview();
+                      // 上传代码成功后直接提交代码到审核列表
+                      this.$http.SubmitReview().then((res) => {
+                        if (res.status === 200) {
+                          this.auditid = res.data.auditid;
+                        }
+                      });
+                    }
+                  });
+                } else {
+                  this.$message({
+                    message: "提交站点不一致,请从新提交",
+                    type: "error",
+                  });
                 }
-              });
-            }
-          });
+              }
+            });
         } else {
           return false;
         }
