@@ -124,6 +124,9 @@
             @click="authorization(scope.row)"
             >小程序授权</el-button
           >
+          <el-button type="primary" size="mini" @click="bindSite(scope.row)">{{
+            scope.row.tfy_app_id === "" ? "绑定腾房云站点" : "修改腾房云站点"
+          }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -280,6 +283,9 @@ export default {
     },
     miniProgram() {
       this.$router.push("/mini_program_list");
+    },
+    bindSite(row) {
+      this.$router.push(`/tfy_list?site_id=${row.id}`);
     },
   },
 };

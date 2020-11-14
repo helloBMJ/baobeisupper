@@ -420,6 +420,14 @@ class UserCenter {
       `/super/admin/package/sms/update/status/${id}/${status}`
     );
   }
+  // 获取腾房云站点
+  getTfySiteList(params) {
+    return this.$http.get("/super/admin/website/search/tfy", params);
+  }
+  // 绑定分销报备&腾房云站点
+  bindTfySite(data) {
+    return this.$http.post("/admin/sys_conf/tfy/put", data);
+  }
 }
 
 export default new UserCenter();

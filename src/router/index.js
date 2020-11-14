@@ -29,6 +29,13 @@ export default new Router({
           name: "站点列表",
         },
         {
+          path: "/tfy_list",
+          component: (resolve) =>
+            require(["@/components/main/tfy_list"], resolve),
+          meta: { title: "腾房云站点列表" },
+          name: "腾房云站点列表",
+        },
+        {
           path: "/add_list",
           component: (resolve) =>
             require(["@/components/main/add_list"], resolve),

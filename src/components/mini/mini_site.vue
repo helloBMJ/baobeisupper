@@ -312,6 +312,7 @@ export default {
                       });
                       this.getCodeTemplateList();
                       this.queryReview();
+                      this.dialogVisible = false;
                       // 上传代码成功后直接提交代码到审核列表
                       this.$http.SubmitReview().then((res) => {
                         if (res.status === 200) {

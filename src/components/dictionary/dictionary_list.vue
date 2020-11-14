@@ -250,6 +250,7 @@ export default {
       }
     },
     search() {
+      this.params.page = 1;
       this.getDataList();
     },
     onDelete(id) {
