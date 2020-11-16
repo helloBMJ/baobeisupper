@@ -1,11 +1,27 @@
 <template>
   <el-container>
+    <el-header class="div row">
+      <div class="div row input-box">
+        <el-input
+          v-model="params.keywords"
+          placeholder="请输入站点名称"
+          @input="onInput"
+        ></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="search"
+          >搜索</el-button
+        >
+      </div>
+    </el-header>
     <el-main>
       <el-table :data="tableData" tooltip-effect="dark" style="width:100%">
         <el-table-column label="ID" prop="id"></el-table-column>
         <el-table-column label="网站名称" prop="ter_name"></el-table-column
         ><el-table-column label="网站地址" prop="ter_domain"></el-table-column>
-        <el-table-column label="网站logo" prop="ter_logo"></el-table-column>
+        <el-table-column label="网站logo" prop="logo">
+          <template slot-scope="scope">
+            <img :src="scope.row.logo" alt="" />
+          </template>
+        </el-table-column>
         <el-table-column label="网站IP" prop="ter_server_ip"></el-table-column>
         <el-table-column label="APPID" prop="ter_appid"></el-table-column>
         <el-table-column
@@ -43,6 +59,7 @@ export default {
       params: {
         page: 1,
         row: 10,
+        keywords: "",
       },
     };
   },
@@ -96,8 +113,23 @@ export default {
           }
         });
     },
+    onInput() {
+      if (this.params.keywords === "") {
+        this.params.page = 1;
+        this.getDataList();
+      }
+    },
+    search() {
+      this.params.page = 1;
+      this.getDataList();
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.el-header {
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
