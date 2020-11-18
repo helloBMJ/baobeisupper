@@ -21,7 +21,59 @@
         <el-button type="primary" @click="SubmitReview">{{
           btn_txt
         }}</el-button>
-
+        <el-popover
+          placement="top-start"
+          title="体验版二维码"
+          width="200"
+          trigger="click"
+        >
+          <el-image
+            style="width: 180px; height: 180px"
+            :src="url"
+            fit="fit"
+          ></el-image>
+          <el-button slot="reference" type="primary" @click="getQrCode"
+            >获取体验版二维码</el-button
+          >
+        </el-popover>
+        <el-popover
+          placement="bottom"
+          title="查看体验者列表"
+          width="800px"
+          trigger="click"
+        >
+          <el-input
+            style="width:180px"
+            v-model="wechatid"
+            placeholder="请输入体验者微信号"
+          ></el-input>
+          <el-button type="primary" @click="bindTesterWechatId">添加</el-button>
+          <el-table :data="testerList" border style="width:100%">
+            <el-table-column prop="id" label="ID"></el-table-column>
+            <el-table-column
+              prop="wechat_id"
+              label="体验者微信号"
+            ></el-table-column>
+            <el-table-column prop="user_str" label="标识"></el-table-column>
+            <el-table-column
+              prop="created_at"
+              label="添加时间"
+            ></el-table-column>
+            <el-table-column label="操作" width="100">
+              <template slot-scope="scope">
+                <el-button
+                  type="danger"
+                  @click="unbindTester(scope.row)"
+                  size="mini"
+                  >解除绑定</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button slot="reference" type="success" @click="queryTesterList"
+            >体验者列表</el-button
+          >
+        </el-popover>
         <el-button
           v-if="review_status === 0"
           @click="publishMini"
@@ -200,11 +252,14 @@ export default {
       },
       auditid: "",
       review_status: "",
+      // 体验者id
       wechatid: "",
       testerList: [],
       isReview: 1,
       reviewList: [],
       btn_txt: "模板列表",
+      // 体验版二维码地址
+      url: "",
     };
   },
   mounted() {
@@ -389,9 +444,81 @@ export default {
         }
       });
     },
-
     reviewRecording(id) {
       this.$router.push(`/review_audit_list?id=${id}`);
+    },
+    // 获取体验版二维码
+    // 获取体验版二维码
+    getQrCode() {
+      this.$http.getQrCode().then((res) => {
+        if (res.status === 200) {
+          this.url = `data: image/jpeg;base64,${btoa(
+            new Uint8Array(res.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              ""
+            )
+          )}`;
+        }
+      });
+    },
+    // 绑定体验者微信号
+    bindTesterWechatId() {
+      if (!this.wechatid) {
+        this.$message({
+          message: "请输入微信号后提交",
+          type: "danger",
+        });
+        return;
+      }
+      this.$http.bindTesterWechatId({ wechatid: this.wechatid }).then((res) => {
+        if (res.status === 200) {
+          this.$message({
+            message: "绑定成功",
+            type: "success",
+          });
+          this.wechatid = "";
+          this.queryTesterList();
+        }
+      });
+    },
+    // 查看体验者列表
+    queryTesterList() {
+      this.$http.queryTesterList().then((res) => {
+        if (res.status === 200) {
+          this.testerList = res.data.data.filter((item) => {
+            return item.status === 1;
+          });
+        }
+      });
+    },
+    // 解除体验者绑定
+    unbindTester(row) {
+      console.log(row);
+      this.$confirm("此操作将解绑该用户", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.$http
+          .unbindTesterWechatId({
+            wechatid: row.wechat_id,
+            userstr: row.user_str,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: "解绑成功",
+                type: "success",
+              });
+            }
+          })
+          .catch(() => {
+            this.$message({
+              type: "success",
+              message: "已取消解绑",
+            });
+          });
+      });
     },
     // 小程序草稿箱
     // draftList() {
