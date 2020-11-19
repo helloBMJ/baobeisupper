@@ -17,7 +17,12 @@
         </i>
         <!-- <el-button type="success" @click="draftList">小程序代码草稿箱</el-button> -->
         <br />
-
+        <div>
+          <i>quoto剩余量：{{ query_quota.rest }}；</i>
+          <i>当月分配quoto：{{ query_quota.limit }}；</i>
+          <i>剩余加急次数：{{ query_quota.speedup_rest }}；</i>
+          <i>当月分配加急次数：{{ query_quota.speedup_limit }}；</i>
+        </div>
         <el-button type="primary" @click="SubmitReview">{{
           btn_txt
         }}</el-button>
@@ -260,6 +265,8 @@ export default {
       btn_txt: "模板列表",
       // 体验版二维码地址
       url: "",
+      // 获取当月加急
+      query_quota: {},
     };
   },
   mounted() {
@@ -267,6 +274,7 @@ export default {
     if (this.$route.query.website_id) {
       this.getWebsiteToken();
       this.queryReview();
+      this.getQueryQuota();
     } else {
       this.getCodeTemplateList();
     }
@@ -276,6 +284,14 @@ export default {
     }
   },
   methods: {
+    // 获取当月的提审和加急次数
+    getQueryQuota() {
+      this.$http.getQueryQuota().then((res) => {
+        if (res.status === 200) {
+          this.query_quota = res.data;
+        }
+      });
+    },
     // 全选
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -350,7 +366,6 @@ export default {
             user_version: this.form_template.user_version,
             user_desc: this.form_template.user_desc,
           };
-          console.log(data);
           this.$http
             .getWebsiteToken(this.form_template.ext_json.ext.website_id)
             .then((res) => {
@@ -366,12 +381,12 @@ export default {
                         type: "success",
                       });
                       this.getCodeTemplateList();
-                      this.queryReview();
                       this.dialogVisible = false;
                       // 上传代码成功后直接提交代码到审核列表
                       this.$http.SubmitReview().then((res) => {
                         if (res.status === 200) {
                           this.auditid = res.data.auditid;
+                          this.queryReview();
                         }
                       });
                     }
@@ -542,7 +557,7 @@ i {
   font-weight: 600;
 }
 .el-table {
-  margin-top: 30px;
+  margin-top: 60px;
 }
 .el-button {
   margin: 10px 4px;

@@ -428,6 +428,10 @@ class UserCenter {
   bindTfySite(data) {
     return this.$http.post("/admin/sys_conf/tfy/put", data);
   }
+  // 获取当月小程序可提交次数
+  getQueryQuota() {
+    return this.$http.get("/admin/wx_open/mini_program/code/query/quota");
+  }
 }
 
 export default new UserCenter();
