@@ -177,6 +177,20 @@ export default new Router({
           meta: { title: "短信管理" },
           name: "短信管理",
         },
+        {
+          path: "/permission_list",
+          component: (resolve) =>
+            require(["@/components/permission/permission_list"], resolve),
+          meta: { title: "权限管理" },
+          name: "权限管理",
+        },
+        {
+          path: "/role_list",
+          component: (resolve) =>
+            require(["@/components/permission/role_list"], resolve),
+          meta: { title: "角色权限" },
+          name: "角色权限",
+        },
       ],
     },
     {

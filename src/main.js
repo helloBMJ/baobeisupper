@@ -5,7 +5,13 @@ import App from "./App";
 import router from "./router";
 import store from "./store";
 import ElementUI from "element-ui";
-import { sortPro, GetQueryString, sortArr, getDictionary } from "./utils/tools";
+import {
+  sortPro,
+  GetQueryString,
+  sortArr,
+  getDictionary,
+  toTree,
+} from "./utils/tools";
 // 引入工具类
 import "element-ui/lib/theme-chalk/index.css";
 
@@ -23,6 +29,7 @@ Vue.prototype.$sortPro = sortPro;
 Vue.prototype.$GetQueryString = GetQueryString;
 Vue.prototype.$sortArr = sortArr;
 Vue.prototype.$getDictionary = getDictionary;
+Vue.prototype.$toTree = toTree;
 // 过滤时间戳格式
 Vue.filter("time", (time) => {
   return new Date(parseInt(time) * 1000)

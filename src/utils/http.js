@@ -432,6 +432,66 @@ class UserCenter {
   getQueryQuota() {
     return this.$http.get("/admin/wx_open/mini_program/code/query/quota");
   }
+  // 查询权限表
+  getPermissionList(id) {
+    return this.$http.get(`/super/admin/permission/all/${id}`);
+  }
+  // 删除权限表
+  deletePermission(id) {
+    return this.$http.get(`/super/admin/permission/delete/${id}`);
+  }
+  // 创建权限
+  createPermission(data) {
+    return this.$http.post("/super/admin/permission/create", data);
+  }
+  // 修改权限
+  updataPermission(data) {
+    return this.$http.post("/super/admin/permission/update", data);
+  }
+  // 获取站点角色列表
+  getWebsiteRoles(params) {
+    return this.$http.get("/admin/role/search", params);
+  }
+  // 创建站点角色
+  createWebsiteRole(data) {
+    return this.$http.post("/admin/role/create", data);
+  }
+  // 修改站点角色
+  updataWebsiteRole(data) {
+    return this.$http.post("/admin/role/update", data);
+  }
+  // 删除站点角色
+  deleteWebsiteRole(id) {
+    return this.$http.get(`/admin/role/delete/${id}`);
+  }
+  // 从新分配权限
+  resetPermission(data) {
+    return this.$http.post("/admin/role/permission/reset/all", data);
+  }
+  // 获取角色权限列表
+  getRolePermissionList(id) {
+    return this.$http.get(`/admin/role/permission/all/${id}`);
+  }
+  // 撤销权限
+  revokePermission(data) {
+    return this.$http.post("/admin/role/permission/revoke", data);
+  }
+  // 添加权限
+  givePermission(data) {
+    return this.$http.post("/admin/role/permission/give", data);
+  }
+  // 给管理员绑定角色
+  giveUserRole(data) {
+    return this.$http.post("/admin/admin_user/role/revoke", data);
+  }
+  // 绑定管理员角色 重置
+  resetUserRole(data) {
+    return this.$http.post("/admin/admin_user/role/reset/all", data);
+  }
+  // 查询管理员绑定角色
+  queryAdminRoles(id) {
+    return this.$http.get(`/admin/admin_user/role/all/${id}`);
+  }
 }
 
 export default new UserCenter();

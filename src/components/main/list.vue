@@ -117,6 +117,9 @@
           <el-button type="success" size="mini" @click="editData(scope.row)"
             >管理员列表</el-button
           >
+          <el-button type="primary" size="mini" @click="roleData(scope.row)"
+            >角色</el-button
+          >
           <el-button
             v-if="scope.row.wx_mini_program_app_id"
             type="success"
@@ -286,6 +289,9 @@ export default {
     },
     bindSite(row) {
       this.$router.push(`/tfy_list?site_id=${row.id}`);
+    },
+    roleData(row) {
+      this.$router.push(`/role_list?id=${row.id}`);
     },
   },
 };

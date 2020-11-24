@@ -16,6 +16,12 @@ module.exports = [
         title: "创建站点",
         icon: "icon-chuangjian",
       },
+      {
+        name: "permission_list",
+        componentName: "permission_list",
+        title: "权限管理",
+        icon: "el-icon-edit",
+      },
       // {
       //   name: "already_code_list",
       //   componentName: "already_code_list",
