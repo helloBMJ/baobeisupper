@@ -175,15 +175,15 @@ class UserCenter {
   }
   // 创建站点下面的管理员
   createUser(data) {
-    return this.$http.post("/super/admin/admin_user/create", data);
+    return this.$http.post("/admin/admin_user/create", data);
   }
   //删除站点管理员
   deleteWebUser(id) {
-    return this.$http.get(`/super/admin/admin_user/delete/${id}`);
+    return this.$http.get(`/admin/admin_user/delete/${id}`);
   }
   // 修改管理员信息
   editAdminMsg(data) {
-    return this.$http.post("/super/admin/admin_user/update", data);
+    return this.$http.post("/admin/admin_user/update", data);
   }
   // 查询管理员信息
   queryAdminMsg(id) {

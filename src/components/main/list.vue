@@ -85,6 +85,9 @@
       </el-table-column>
       <el-table-column prop="id" label="站点ID" width="auto"> </el-table-column>
       <el-table-column prop="name" label="站点名称" width="auto">
+        <template slot-scope="scope">
+          <el-tag @click="openSite(scope.row)">{{ scope.row.name }}</el-tag>
+        </template>
         <!-- </el-table-column>
         <el-table-column prop="url" label="站点链接" width="auto">-->
       </el-table-column>
@@ -333,6 +336,17 @@ export default {
     },
     roleData(row) {
       this.$router.push(`/role_list?id=${row.id}`);
+    },
+    // 跳转进站点
+    openSite(row) {
+      this.$http.getWebsiteToken(row.id).then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("TOKEN", res.data.token);
+          var tempwindow = window.open("_blank");
+          tempwindow.location =
+            "https://yun.tfcs.cn/admin?website_id=" + row.id;
+        }
+      });
     },
   },
 };
