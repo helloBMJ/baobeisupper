@@ -7,9 +7,7 @@
     <div class="right div row">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item v-for="item in levelList" :key="item.path">
-          {{
-          item.meta.title
-          }}
+          {{ item.meta.title }}
         </el-breadcrumb-item>
       </el-breadcrumb>
       <div class="right_r div row">
@@ -20,12 +18,13 @@
             src="https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg"
             @error="errorHandler"
           >
-            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+            <img
+              src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"
+            />
           </el-avatar>
           <el-dropdown @command="handleCommand">
             <el-button split-button type="primary" class="el-dropdown-link">
-              {{ admin_list.user_name
-              }}
+              {{ admin_list.user_name }}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
@@ -37,15 +36,34 @@
         <el-button type="danger" @click="loginOut">退出登录</el-button>
       </div>
       <el-dialog title="修改密码" :visible.sync="dialogPassword">
-        <el-form :rules="rules3" ref="form_password" status-icon :model="form_password">
-          <el-form-item label="请输入原密码" label-width="200px" prop="old_password">
+        <el-form
+          :rules="rules3"
+          ref="form_password"
+          status-icon
+          :model="form_password"
+        >
+          <el-form-item
+            label="请输入原密码"
+            label-width="200px"
+            prop="old_password"
+          >
             <el-input v-model="form_password.old_password"></el-input>
           </el-form-item>
-          <el-form-item label="请输入新密码" label-width="200px" prop="new_password">
+          <el-form-item
+            label="请输入新密码"
+            label-width="200px"
+            prop="new_password"
+          >
             <el-input v-model="form_password.new_password"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码" label-width="200px" prop="new_password_confirmation">
-            <el-input v-model="form_password.new_password_confirmation"></el-input>
+          <el-form-item
+            label="确认密码"
+            label-width="200px"
+            prop="new_password_confirmation"
+          >
+            <el-input
+              v-model="form_password.new_password_confirmation"
+            ></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -99,26 +117,26 @@ export default {
       form_password: {
         old_password: "",
         new_password: "",
-        new_password_confirmation: ""
+        new_password_confirmation: "",
       },
       password_loading: false,
       rules3: {
         old_password: [
-          { required: true, message: "请输入原密码", trigger: "blur" }
+          { required: true, message: "请输入原密码", trigger: "blur" },
         ],
         new_password: [{ validator: validatePass5, trigger: "blur" }],
         new_password_confirmation: [
-          { validator: validatePass6, trigger: "blur" }
-        ]
+          { validator: validatePass6, trigger: "blur" },
+        ],
       },
       auth_code: "",
-      expires_in: ""
+      expires_in: "",
     };
   },
   watch: {
     $route() {
       this.getBreadcrumb();
-    }
+    },
   },
   created() {
     this.getBreadcrumb();
@@ -134,7 +152,7 @@ export default {
   methods: {
     ...mapMutations(["login"]),
     getBreadcrumb() {
-      let matched = this.$route.matched.filter(item => item.name);
+      let matched = this.$route.matched.filter((item) => item.name);
       const first = matched[0];
       if (
         first &&
@@ -163,7 +181,7 @@ export default {
     },
     // 获取信息展示
     getadmin() {
-      this.$http.getAdmin().then(res => {
+      this.$http.getAdmin().then((res) => {
         if (res.status === 200) {
           this.admin_list = res.data;
         }
@@ -173,16 +191,16 @@ export default {
       this.dialogPassword = true;
     },
     isModify() {
-      this.$http.updataAdmin(this.form_password).then(res => {
+      this.$http.updataAdmin(this.form_password).then((res) => {
         if (res.status === 200) {
           this.$message({
             message: "修改成功",
-            type: "success"
+            type: "success",
           });
           this.dialogPassword = false;
         }
       });
-    }
+    },
     // bingWx() {
     //   let url = "https://fenxiao.zaodaoxiao.com/admin";
     //   this.$http.openWX(url).then((res) => {
@@ -218,7 +236,7 @@ export default {
     //   if (r != null) return unescape(r[2]);
     //   return null;
     // },
-  }
+  },
 };
 </script>
 
@@ -236,6 +254,11 @@ export default {
     margin: auto 0;
     font-size: 32px;
     color: #2366a8;
+    height: 60px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   .right {
     width: 100%;

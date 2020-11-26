@@ -9,7 +9,7 @@
       </div>
       <div class="div row input-box">
         <el-input
-          v-model="company_name"
+          v-model="params.name"
           placeholder="请输入站点名称"
           @input="onInput"
         ></el-input>
@@ -18,6 +18,29 @@
         >
       </div>
     </el-header>
+    <div class="select-box div row">
+      <el-select
+        v-model="params.website_version_category"
+        placeholder="请选择版本"
+      >
+        <el-option
+          v-for="item in website_version_category_list"
+          :key="item.value"
+          :label="item.description"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <el-date-picker
+        v-model="time_value"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        value-format="yyyy-MM-dd"
+      >
+      </el-date-picker>
+      <el-button type="primary" @click="search">搜索</el-button>
+    </div>
     <el-table
       ref="multipleTable"
       :row-key="getRowKey"
@@ -139,9 +162,9 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="this.params.currentPage"
+          :current-page="this.params.page"
           :page-sizes="[10, 20, 30, 40]"
-          :page-size="this.params.pagesize"
+          :page-size="this.params.per_page"
           layout="total, sizes, prev, pager, next, jumper"
           :total="this.params.total"
         ></el-pagination>
@@ -157,12 +180,21 @@ export default {
       tableData: [],
       multipleSelection: [],
       params: {
-        currentPage: 1,
-        pagesize: 10,
+        page: 1,
+        per_page: 10,
         total: 0,
         row: 0,
+        name: "",
+        website_version_category: "",
+        lease_start_date: "",
+        lease_end_date: "",
       },
-      company_name: "",
+      // 版本筛选
+      website_version_category_list: [
+        { description: "正式版", value: 1 },
+        { description: "试用版", value: 0 },
+      ],
+      time_value: [],
     };
   },
   mounted() {
@@ -217,56 +249,65 @@ export default {
     //   }
     // },
     // 根据分页设置的数据控制每页显示的数据条数及页码跳转页面刷新
+
+    // 根据分页设置的数据控制每页显示的数据条数及页码跳转页面刷新
     getPageData() {
-      let start = (this.params.currentPage - 1) * this.params.pagesize;
-      let end = start + this.params.pagesize;
+      let start = (this.params.page - 1) * this.params.per_page;
+      let end = start + this.params.per_page;
       this.schArr = this.tableData.slice(start, end);
     },
     // 分页自带的函数，当pageSize变化时会触发此函数
     handleSizeChange(val) {
-      this.params.pagesize = val;
+      this.params.per_page = val;
       this.getPageData();
       this.getDataList();
     },
     // 分页自带函数，当currentPage变化时会触发此函数
     handleCurrentChange(val) {
-      this.params.currentPage = val;
+      this.params.page = val;
       this.getPageData();
       this.getDataList();
     },
 
     // 获取列表数据
     getDataList() {
-      this.$http
-        .websiteList(
-          this.params.currentPage,
-          this.params.pagesize,
-          this.company_name
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            this.tableData = res.data.data;
-            this.params.currentPage = res.data.current_page;
-            this.params.total = res.data.total;
-            this.params.row = res.data.per_page;
-          } else {
-            this.$message({
-              message: "请求数据列表失败！",
-              type: "error",
-            });
-          }
-        });
+      if (this.params.lease_start_date === "") {
+        delete this.params.lease_start_date;
+      }
+      if (this.params.lease_end_date === "") {
+        delete this.params.lease_end_date;
+      }
+      if (this.params.website_version_category === "") {
+        delete this.params.website_version_category;
+      }
+      this.$http.websiteList({ params: this.params }).then((res) => {
+        if (res.status === 200) {
+          this.tableData = res.data.data;
+          this.params.page = res.data.current_page;
+          this.params.total = res.data.total;
+          this.params.row = res.data.per_page;
+        } else {
+          this.$message({
+            message: "请求数据列表失败！",
+            type: "error",
+          });
+        }
+      });
     },
     createdWeb() {
       this.$router.push("/add_list");
     },
     search() {
+      if (this.time_value) {
+        this.params.lease_start_date = this.time_value[0];
+        this.params.lease_end_date = this.time_value[1];
+      }
       this.params.currentPage = 1;
       this.params.pagesize = 10;
       this.getDataList();
     },
     onInput() {
-      if (this.company_name === "") {
+      if (this.params.name === "") {
         this.params.currentPage = 1;
         this.params.pagesize = 10;
         this.getDataList();
@@ -324,5 +365,12 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 100%;
+}
+.select-box {
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  .el-select {
+    margin: 0 10px;
+  }
 }
 </style>

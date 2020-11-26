@@ -45,9 +45,9 @@
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="this.params.currentPage"
+            :current-page="this.params.page"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="this.params.pagesize"
+            :page-size="this.params.per_page"
             layout="total, sizes, prev, pager, next, jumper"
             :total="this.params.total"
           ></el-pagination>
@@ -177,19 +177,19 @@ export default {
     },
     // 根据分页设置的数据控制每页显示的数据条数及页码跳转页面刷新
     getPageData() {
-      let start = (this.params.currentPage - 1) * this.params.pagesize;
-      let end = start + this.params.pagesize;
+      let start = (this.params.page - 1) * this.params.per_page;
+      let end = start + this.params.per_page;
       this.schArr = this.tableData.slice(start, end);
     },
     // 分页自带的函数，当pageSize变化时会触发此函数
     handleSizeChange(val) {
-      this.params.pagesize = val;
+      this.params.per_page = val;
       this.getPageData();
       this.getDataList();
     },
     // 分页自带函数，当currentPage变化时会触发此函数
     handleCurrentChange(val) {
-      this.params.currentPage = val;
+      this.params.page = val;
       this.getPageData();
       this.getDataList();
     },

@@ -46,6 +46,17 @@
           >{{ item.description }}</el-radio
         >
       </el-form-item>
+      <el-form-item label="使用时长">
+        <el-date-picker
+          v-model="time_value"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd"
+        >
+        </el-date-picker>
+      </el-form-item>
       <div class="btn-box">
         <el-form-item size="large">
           <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -86,6 +97,9 @@ export default {
         website_contact_phone: "",
         website_city_name: "",
         website_version_category: "",
+        // 使用开始和结束时间
+        lease_start: "",
+        lease_end: "",
         // 0:试用版，1：正式版
       },
       website_version_category_list: [
@@ -110,6 +124,7 @@ export default {
           { required: true, message: "请输入联系人名称", trigger: "blur" },
         ],
       },
+      time_value: "",
     };
   },
   methods: {
@@ -117,6 +132,8 @@ export default {
       this.$router.push("/list");
     },
     onSubmit() {
+      this.form.lease_start = this.time_value[0];
+      this.form.lease_end = this.time_value[1];
       if (!this.form.name) {
         this.$message({
           message: "请输入内容后提交",
