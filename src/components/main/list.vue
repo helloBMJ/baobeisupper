@@ -341,10 +341,15 @@ export default {
     openSite(row) {
       this.$http.getWebsiteToken(row.id).then((res) => {
         if (res.status === 200) {
+          // 获取站点token，id存本地
           localStorage.setItem("TOKEN", res.data.token);
+          localStorage.setItem("website_id", row.id);
           var tempwindow = window.open("_blank");
-          tempwindow.location =
-            "https://yun.tfcs.cn/admin?website_id=" + row.id;
+          // 判断是否存在接跳转连接
+          if (localStorage.getItem("TOKEN")) {
+            tempwindow.location =
+              "https://yun.tfcs.cn/admin/?website_id=" + row.id;
+          }
         }
       });
     },
