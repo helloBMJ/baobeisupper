@@ -96,7 +96,6 @@
             @check="checkChange"
             @check-change="checkChangeVal"
             :props="defaultProps"
-            :render-content="renderContent"
             :indent="0"
             check-strictly
           >
@@ -309,27 +308,27 @@ export default {
       }
     },
     // 渲染按钮
-    renderContent(h, { node, data }) {
-      this.submit_permission = true;
-      return (
-        <span class="custom-tree-node">
-          <span>{node.label}</span>
-          <span>
-            {node.checked === true && this.submit_permission === true ? (
-              <el-button
-                size="mini"
-                type="text"
-                on-click={() => this.revokePermission(node, data)}
-              >
-                撤销权限
-              </el-button>
-            ) : (
-              ""
-            )}
-          </span>
-        </span>
-      );
-    },
+    // renderContent(h, { node, data }) {
+    //   this.submit_permission = true;
+    //   return (
+    //     <span class="custom-tree-node">
+    //       <span>{node.label}</span>
+    //       <span>
+    //         {node.checked === true && this.submit_permission === true ? (
+    //           <el-button
+    //             size="mini"
+    //             type="text"
+    //             on-click={() => this.revokePermission(node, data)}
+    //           >
+    //             撤销权限
+    //           </el-button>
+    //         ) : (
+    //           ""
+    //         )}
+    //       </span>
+    //     </span>
+    //   );
+    // },
     // givePermission(data, node) {
     //   if (node.checked === true) {
     //     this.$http
@@ -350,18 +349,18 @@ export default {
     //   }
     // },
     // 删除权限
-    revokePermission(node, data) {
-      this.give_permission_form.permission_name = data.name;
-      this.$http.revokePermission(this.give_permission_form).then((res) => {
-        if (res.status === 200) {
-          this.$message({
-            message: "已撤销",
-            type: "success",
-          });
-          this.expandChange(this.give_permission_form.id);
-        }
-      });
-    },
+    // revokePermission(node, data) {
+    //   this.give_permission_form.permission_name = data.name;
+    //   this.$http.revokePermission(this.give_permission_form).then((res) => {
+    //     if (res.status === 200) {
+    //       this.$message({
+    //         message: "已撤销",
+    //         type: "success",
+    //       });
+    //       this.expandChange(this.give_permission_form.id);
+    //     }
+    //   });
+    // },
     // 设置权限
     // 点击展开列
     expandChange(id) {
