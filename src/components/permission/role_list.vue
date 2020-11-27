@@ -88,13 +88,10 @@
             show-checkbox
             node-key="id"
             ref="tree"
-            :props="defaultProps"
-            default-expand-all
-            check-on-click-node
-            :render-content="renderContent"
+            :default-expanded-keys="default_expanded_keys"
             @check="checkChange"
-            :expand-on-click-node="false"
-            check-strictly
+            :props="defaultProps"
+            :render-content="renderContent"
           >
           </el-tree>
         </el-form-item>
@@ -152,6 +149,9 @@ export default {
         label: "title",
       },
       submit_permission: false,
+      default_expanded_keys: [],
+      // 获取全部权限
+      check_permission_list: [],
     };
   },
   mounted() {
@@ -172,6 +172,7 @@ export default {
       this.$http.getPermissionList(1).then((res) => {
         if (res.status === 200) {
           this.permission_list = this.$toTree(res.data);
+          this.check_permission_list = res.data;
         }
       });
     },
@@ -208,7 +209,9 @@ export default {
       });
     },
     createData() {
-      this.form_create = {};
+      this.form_create = {
+        init_permission: 0,
+      };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
       this.switch_type = true;
@@ -353,14 +356,22 @@ export default {
     // 设置权限
     // 点击展开列
     expandChange(id) {
+      this.default_expanded_keys = [];
       this.$http.getRolePermissionList(id).then((res) => {
         if (res.status === 200) {
           this.role_permission_list = res.data;
-          this.$refs.tree.setCheckedKeys(
-            this.role_permission_list.map((item) => {
-              return item.id;
-            })
-          );
+          this.role_permission_list.map((item) => {
+            this.default_expanded_keys.push(item.id);
+          });
+          this.$nextTick(() => {
+            this.$refs.tree.setCheckedKeys(this.default_expanded_keys);
+          });
+
+          // this.$refs.tree.setCheckedKeys(
+          //   this.role_permission_list.map((item) => {
+          //     return item.id;
+          //   })
+          // );
         }
       });
     },
@@ -375,9 +386,21 @@ export default {
       });
     },
     checkChange(data, node) {
+      var arr = data.pid_path.split(",");
+      var arr2 = [];
+      this.check_permission_list.filter((item) => {
+        arr.map((item1) => {
+          if (item.id == item1) {
+            arr2.push(item.name);
+          }
+        });
+      });
       this.permission_form.permission_names = node.checkedNodes.map((item) => {
         return item.name;
       });
+      this.permission_form.permission_names = this.permission_form.permission_names.concat(
+        arr2
+      );
     },
   },
 };
@@ -418,5 +441,30 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+}
+
+.el-tree-node__content {
+  .el-button {
+    display: none;
+  }
+}
+.el-tree-node__content:hover {
+  .el-button {
+    display: inline;
+  }
+}
+.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  background-color: #eaebed;
+  color: #4796ec;
+  font-weight: bold;
+}
+.el-tree {
+  height: 350px;
+  overflow-y: auto !important;
+  .el-tree-node__content span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }
 </style>
