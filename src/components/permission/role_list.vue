@@ -82,14 +82,19 @@
     <el-dialog title="权限分配" :visible.sync="dialogRole">
       <el-form :model="permission_form">
         <el-form-item label="权限分配：" class="tree-box">
+          <el-checkbox v-model="checkAll" @change="handleCheckAllChange"
+            >全选</el-checkbox
+          >
           <el-tree
             style="margin-left:80px"
             :data="permission_list"
             show-checkbox
             node-key="id"
             ref="tree"
+            default-expand-all
             :default-expanded-keys="default_expanded_keys"
             @check="checkChange"
+            @check-change="checkChangeVal"
             :props="defaultProps"
             :render-content="renderContent"
             :indent="0"
@@ -154,6 +159,8 @@ export default {
       default_expanded_keys: [],
       // 获取全部权限
       check_permission_list: [],
+      // 全选非全选择
+      checkAll: false,
     };
   },
   mounted() {
@@ -387,22 +394,24 @@ export default {
         }
       });
     },
+    checkChangeVal(node, check) {
+      if (check) {
+        this.permission_form.permission_names.push(node.name);
+      } else {
+        this.permission_form.permission_names = [];
+      }
+    },
     checkChange(data, node) {
-      var arr = data.pid_path.split(",");
-      var arr2 = [];
-      this.check_permission_list.filter((item) => {
-        arr.map((item1) => {
-          if (item.id == item1) {
-            arr2.push(item.name);
-          }
-        });
-      });
       this.permission_form.permission_names = node.checkedNodes.map((item) => {
         return item.name;
       });
-      this.permission_form.permission_names = this.permission_form.permission_names.concat(
-        arr2
-      );
+    },
+    handleCheckAllChange() {
+      if (this.checkAll) {
+        this.$refs.tree.setCheckedNodes(this.check_permission_list);
+      } else {
+        this.$refs.tree.setCheckedKeys([]);
+      }
     },
   },
 };
