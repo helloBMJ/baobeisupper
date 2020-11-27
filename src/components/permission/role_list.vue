@@ -92,6 +92,8 @@
             @check="checkChange"
             :props="defaultProps"
             :render-content="renderContent"
+            :indent="0"
+            check-strictly
           >
           </el-tree>
         </el-form-item>
@@ -442,22 +444,6 @@ export default {
   font-size: 14px;
   padding-right: 8px;
 }
-
-.el-tree-node__content {
-  .el-button {
-    display: none;
-  }
-}
-.el-tree-node__content:hover {
-  .el-button {
-    display: inline;
-  }
-}
-.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
-  background-color: #eaebed;
-  color: #4796ec;
-  font-weight: bold;
-}
 .el-tree {
   height: 350px;
   overflow-y: auto !important;
@@ -466,5 +452,60 @@ export default {
     white-space: nowrap;
     overflow: hidden;
   }
+}
+// 添加虚线tree
+.el-tree-node {
+  position: relative;
+  padding-left: 16px;
+}
+//节点有间隙，隐藏掉展开按钮就好了,如果觉得空隙没事可以删掉
+.el-tree-node__expand-icon.is-leaf {
+  display: none;
+}
+.el-tree-node__children {
+  padding-left: 16px;
+}
+
+.el-tree-node :last-child:before {
+  height: 38px;
+}
+
+.el-tree > .el-tree-node:before {
+  border-left: none;
+}
+
+.el-tree > .el-tree-node:after {
+  border-top: none;
+}
+
+.el-tree-node:before {
+  content: "";
+  left: -4px;
+  position: absolute;
+  right: auto;
+  border-width: 1px;
+}
+
+.el-tree-node:after {
+  content: "";
+  left: -4px;
+  position: absolute;
+  right: auto;
+  border-width: 1px;
+}
+
+.el-tree-node:before {
+  border-left: 1px dashed #4386c6;
+  bottom: 0px;
+  height: 100%;
+  top: -26px;
+  width: 1px;
+}
+
+.el-tree-node:after {
+  border-top: 1px dashed #4386c6;
+  height: 20px;
+  top: 12px;
+  width: 24px;
 }
 </style>
