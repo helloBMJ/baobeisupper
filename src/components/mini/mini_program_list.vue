@@ -12,9 +12,6 @@
             @click="onlineCode"
             >上线</el-button
           > -->
-          <el-button @click="goReviewStatusList" type="success"
-            >通知用户列表</el-button
-          >
           <el-input
             v-model="params.name"
             placeholder="请输入站点名称"
@@ -311,150 +308,77 @@ export default {
       this.params.pagesize = 10;
       this.getDataList();
     },
-
-    goReviewStatusList() {
-      this.$router.push("/review_status_list");
+    // 通过promise队列提交审核
+    promiseCreate(thing) {
+      let promise = Promise.resolve();
+      thing.forEach((item) => {
+        promise = promise.then(() => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              this.getAdminToken(item);
+              resolve("ok");
+            }, 1000);
+          });
+        });
+      });
     },
+    // 获取站点token并在获取上传数据
+    getAdminToken(item) {
+      this.$http.getWebsiteToken(item.id).then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("admin_TOKEN", res.data.token);
+          let ext_json = { ext: { website_id: item.id } };
+          let data = {
+            template_id: this.form_template.template_id,
+            user_version: this.form_template.user_version,
+            user_desc: this.form_template.user_desc,
+            ext_json: JSON.stringify(ext_json),
+          };
+          this.$http.uploadTemplateCode(data).then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: "提交成功",
+                type: "success",
+              });
+              this.$http.SubmitReview().then((res) => {
+                if (res.status === 200) {
+                  this.$message({
+                    message: "上传成功",
+                    type: "success",
+                  });
+                }
+              });
+            }
+          });
+          this.dialogVisible = false;
+          this.$message({
+            message: item.name + "上传成功",
+            type: "success",
+          });
+        }
+      });
+    },
+    // 点击提交按钮
     uploadTemplateCode(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.multipleSelection.length > 1) {
-            // var array = ["some", "array", "contains", "words"];
-
-            /**
-             * @time 2020/10/20
-              @description 循环加定时器，个每个数组对象1.5s时间提交数据
-            */
-            var interval = 1500; //两次迭代之间的延迟时间（以毫秒为单位）？
-            var that = this;
-            that.multipleSelection.forEach(function(el) {
-              setTimeout(function() {
-                that.$http
-                  .getWebsiteToken(that.multipleSelection[0].id)
-                  .then((res) => {
-                    if (res.status === 200) {
-                      localStorage.setItem("admin_TOKEN", res.data.token);
-                    }
-                  });
-                let ext_json = {
-                  ext: {
-                    website_id: el.id,
-                  },
-                };
-                let data = {
-                  template_id: that.form_template.template_id,
-                  user_version: that.form_template.user_version,
-                  user_desc: that.form_template.user_desc,
-                  ext_json: JSON.stringify(ext_json),
-                };
-                that.$http.uploadTemplateCode(data).then((res) => {
-                  if (res.status === 200) {
-                    that.$message({
-                      message: "提交成功",
-                      type: "success",
-                    });
-                    that.$http.SubmitReview().then((res) => {
-                      if (res.status === 200) {
-                        that.$message({
-                          message: "上传成功",
-                          type: "success",
-                        });
-                      }
-                    });
-                    that.getDataList();
-                    that.dialogVisible = false;
-                  }
-                });
-              }, interval);
-            });
-            // this.multipleSelection.map((item) => {
-            //   this.$http
-            //     .getWebsiteToken(this.multipleSelection[0].id)
-            //     .then((res) => {
-            //       if (res.status === 200) {
-            //         localStorage.setItem("admin_TOKEN", res.data.token);
-            //       }
-            //     });
-            //   let ext_json = {
-            //     ext: {
-            //       website_id: item.id,
-            //     },
-            //   };
-            //   let data = {
-            //     template_id: this.form_template.template_id,
-            //     user_version: this.form_template.user_version,
-            //     user_desc: this.form_template.user_desc,
-            //     ext_json: JSON.stringify(ext_json),
-            //   };
-            //   console.log(data);
-            //   this.$http.uploadTemplateCode(data).then((res) => {
-            //     if (res.status === 200) {
-            //       this.$message({
-            //         message: "提交成功",
-            //         type: "success",
-            //       });
-            //       this.$http.SubmitReview().then((res) => {
-            //         if (res.status === 200) {
-            //           this.$message({
-            //             message: "上传成功",
-            //             type: "success",
-            //           });
-            //         }
-            //       });
-            //       this.getDataList();
-            //       this.dialogVisible = false;
-            //     }
-            //   });
-            // });
-          } else if (this.multipleSelection.length === 1) {
-            this.$http
-              .getWebsiteToken(this.multipleSelection[0].id)
-              .then((res) => {
-                if (res.status === 200) {
-                  localStorage.setItem("admin_TOKEN", res.data.token);
-                }
-              });
-            let ext_json = {
-              ext: {
-                website_id: this.multipleSelection[0].id,
-              },
-            };
-            let data = {
-              template_id: this.form_template.template_id,
-              user_version: this.form_template.user_version,
-              user_desc: this.form_template.user_desc,
-              ext_json: JSON.stringify(ext_json),
-            };
-            this.$http.uploadTemplateCode(data).then((res) => {
-              if (res.status === 200) {
-                this.$message({
-                  message: "提交成功",
-                  type: "success",
-                });
-                this.$http.SubmitReview().then((res) => {
-                  if (res.status === 200) {
-                    this.$message({
-                      message: "上传成功",
-                      type: "success",
-                    });
-                  }
-                });
-                this.getDataList();
-                this.dialogVisible = false;
-              }
-            });
-          }
+          this.promiseCreate(this.multipleSelection);
         } else {
           return false;
         }
       });
     },
-    onlineCode() {
-      this.$http.publishMini().then((res) => {
+    onlineCode(row) {
+      this.$http.getWebsiteToken(row.id).then((res) => {
         if (res.status === 200) {
-          this.$message({
-            message: "发布成功",
-            type: "success",
+          localStorage.setItem("admin_TOKEN", res.data.token);
+          this.$http.publishMini().then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                message: "发布成功",
+                type: "success",
+              });
+            }
           });
         }
       });

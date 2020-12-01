@@ -85,6 +85,10 @@
           type="primary"
           >上线小程序</el-button
         >
+
+        <el-button @click="goReviewStatusList" type="success"
+          >通知用户列表</el-button
+        >
       </div>
     </el-header>
     <el-table
@@ -280,7 +284,6 @@ export default {
     }
     if (this.$route.query.isReview) {
       this.isReview = parseInt(this.$route.query.isReview);
-      this.SubmitReview();
     }
   },
   methods: {
@@ -300,9 +303,8 @@ export default {
       this.$http.getWebsiteToken(this.website_id).then((res) => {
         if (res.status === 200) {
           localStorage.setItem("admin_TOKEN", res.data.token);
-          setTimeout(() => {
-            this.getCodeTemplateList();
-          }, 1000);
+          this.getCodeTemplateList();
+          this.SubmitReview();
         }
       });
     },
@@ -534,6 +536,10 @@ export default {
             });
           });
       });
+    },
+
+    goReviewStatusList() {
+      this.$router.push("/review_status_list");
     },
     // 小程序草稿箱
     // draftList() {
