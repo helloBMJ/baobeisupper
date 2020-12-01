@@ -309,7 +309,7 @@ export default {
       this.getDataList();
     },
     // 通过promise队列提交审核
-    promiseCreate(thing) {
+    async promiseCreate(thing) {
       let promise = Promise.resolve();
       thing.forEach((item) => {
         promise = promise.then(() => {

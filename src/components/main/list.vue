@@ -151,7 +151,7 @@
             type="success"
             size="mini"
             @click="authorization(scope.row)"
-            >小程序授权</el-button
+            >小程序管理</el-button
           >
           <el-button type="primary" size="mini" @click="bindSite(scope.row)">{{
             scope.row.tfy_app_id === "" ? "绑定腾房云站点" : "修改腾房云站点"

@@ -81,9 +81,7 @@ export default {
       this.$http.getWebsiteToken(this.$route.query.website_id).then((res) => {
         if (res.status === 200) {
           localStorage.setItem("admin_TOKEN", res.data.token);
-          setTimeout(() => {
-            this.getDataList();
-          }, 1000);
+          this.getDataList();
         }
       });
     },
