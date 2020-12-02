@@ -46,6 +46,16 @@
           >{{ item.description }}</el-radio
         >
       </el-form-item>
+      <el-form-item label="版本模式" prop="website_mode_category">
+        <el-radio
+          v-for="item in website_mode_category_list"
+          :key="item.id"
+          v-model="form.website_mode_category"
+          :label="item.value"
+          disabled
+          >{{ item.description }}</el-radio
+        >
+      </el-form-item>
       <el-form-item label="使用时长">
         <el-date-picker
           v-model="time_value"
@@ -101,7 +111,8 @@ export default {
         // 使用开始和结束时间
         lease_start: "",
         lease_end: "",
-        // 0:试用版，1：正式版
+        // 0:试用版，1：正式版,
+        website_mode_category: "",
       },
       website_version_category_list: [
         { value: 0, description: "试用版" },
@@ -126,6 +137,7 @@ export default {
         ],
       },
       time_value: [],
+      website_mode_category_list: this.$getDictionary("WEBSITE_MODE_CATEGORY"),
     };
   },
   mounted() {
@@ -138,6 +150,7 @@ export default {
       this.$http.queryWeb(this.form.id).then((res) => {
         if (res.status === 200) {
           this.form = res.data;
+          this.form.website_mode_category = this.form.website_mode_category.toString();
         }
       });
     },

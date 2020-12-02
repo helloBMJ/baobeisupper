@@ -72,6 +72,15 @@
           >
           </el-switch>
         </el-form-item>
+        <el-form-item prop="website_mode_category" label="站点模式">
+          <el-radio
+            v-for="item in website_mode_category_list"
+            :key="item.id"
+            v-model="form_create.website_mode_category"
+            :label="item.value"
+            >{{ item.description }}</el-radio
+          >
+        </el-form-item>
         <el-form-item prop="sort" label="排序">
           <el-input
             v-model="form_create.sort"
@@ -111,6 +120,7 @@ export default {
       },
       dialogTitle: "",
       next_pid: false,
+      website_mode_category_list: this.$getDictionary("WEBSITE_MODE_CATEGORY"),
     };
   },
   mounted() {
@@ -125,7 +135,12 @@ export default {
       });
     },
     createData() {
-      this.form_create = { system_id: 1 };
+      this.form_create = {
+        system_id: 1,
+        website_mode_category: "0",
+        menu: 1,
+        sort: 0,
+      };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
     },
@@ -159,6 +174,7 @@ export default {
       this.dialogCreate = true;
       this.next_pid = true;
       this.form_create = row;
+      row.website_mode_category = row.website_mode_category.toString();
       if (row.menu === 1) {
         this.form_create.menu = true;
       } else {
@@ -166,7 +182,12 @@ export default {
       }
     },
     createNext(row) {
-      this.form_create = { system_id: 1, menu: 0, sort: 0 };
+      this.form_create = {
+        system_id: 1,
+        menu: 0,
+        sort: 0,
+        website_mode_category: "0",
+      };
       this.next_pid = true;
       this.dialogTitle = "addData";
       this.form_create.pid = row.id;

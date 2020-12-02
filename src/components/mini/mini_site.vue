@@ -181,7 +181,6 @@
         :model="form_template"
         label-position="left"
         label-width="100px"
-        :rules="rules"
         ref="form_template"
       >
         <el-form-item label="模板ID" prop="template_id">
@@ -190,15 +189,51 @@
             v-model="form_template.template_id"
           ></el-input>
         </el-form-item>
-        <div class="row div normal">
-          <i class="">*</i>
-          <el-form-item label="站点ID" prop="website_id">
-            <el-input
-              style="width:200px"
-              v-model="form_template.ext_json.ext.website_id"
-            ></el-input>
-          </el-form-item>
-        </div>
+        <el-form-item label="站点ID" prop="website_id">
+          <el-input
+            style="width:200px"
+            v-model="form_template.ext_json.ext.website_id"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="站点模式" prop="mode">
+          <el-radio
+            v-for="item in website_mode_category_list"
+            :key="item.id"
+            v-model="form_template.ext_json.ext.mode"
+            :label="item.value"
+            @change="changeMode"
+            >{{ item.description }}</el-radio
+          >
+        </el-form-item>
+        <el-form-item label="pages路径">
+          <el-tag
+            style="margin:5px"
+            v-for="(item, index) in form_template.ext_json.pages"
+            :key="index"
+            type="success"
+            >{{ item }}</el-tag
+          >
+        </el-form-item>
+        <el-form-item label="tabbar路径">
+          <div
+            class="p-label"
+            v-for="(item, index) in form_template.ext_json.tabBar.list"
+            :key="index"
+          >
+            <el-input v-model="item.pagePath" size="mini">
+              <template slot="prepend">pagePath：</template>
+            </el-input>
+            <el-input v-model="item.text" size="mini">
+              <template slot="prepend">text：</template>
+            </el-input>
+            <el-input v-model="item.iconPath" size="mini">
+              <template slot="prepend">iconPath：</template>
+            </el-input>
+            <el-input v-model="item.selectedIconPath" size="mini">
+              <template slot="prepend">selectedIconPath：</template>
+            </el-input>
+          </div>
+        </el-form-item>
         <el-form-item label="版本号" prop="user_version">
           <el-input
             style="width:200px"
@@ -243,21 +278,47 @@ export default {
         ext_json: {
           ext: {
             website_id: "",
+            mode: "0",
+          },
+          pages: [
+            "index/index",
+            "index/project",
+            "index/message",
+            "index/mine",
+            "index/search",
+            "index/search-build",
+          ],
+          tabBar: {
+            list: [
+              {
+                pagePath: "index/index",
+                text: "首页",
+                iconPath: "static/tab_icon/index-select.png",
+                selectedIconPath: "static/tab_icon/index.png",
+              },
+              {
+                pagePath: "index/project",
+                text: "项目",
+                iconPath: "static/tab_icon/ic_xiangmu_nor.png",
+                selectedIconPath: "static/tab_icon/ic_xiangmu.png",
+              },
+              {
+                pagePath: "index/message",
+                text: "消息",
+                iconPath: "static/tab_icon/message-select.png",
+                selectedIconPath: "static/tab_icon/message.png",
+              },
+              {
+                pagePath: "index/mine",
+                text: "我的",
+                iconPath: "static/tab_icon/main-select.png",
+                selectedIconPath: "static/tab_icon/main.png",
+              },
+            ],
           },
         },
         user_version: "",
         user_desc: "",
-      },
-      rules: {
-        template_id: [
-          { required: true, message: "请输入模板ID", trigger: "blur" },
-        ],
-        user_version: [
-          { required: true, message: "请输入版本号", trigger: "blur" },
-        ],
-        user_desc: [
-          { required: true, message: "请输入版本描述", trigger: "blur" },
-        ],
       },
       auditid: "",
       review_status: "",
@@ -271,6 +332,8 @@ export default {
       url: "",
       // 获取当月加急
       query_quota: {},
+      website_mode_category_list: this.$getDictionary("WEBSITE_MODE_CATEGORY"),
+      // 默认显示分销报备
     };
   },
   mounted() {
@@ -350,24 +413,6 @@ export default {
     uploadTemplateCode(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (!this.form_template.ext_json.ext.website_id) {
-            this.$message({
-              message: "请输入站点ID",
-              type: "error",
-            });
-            return;
-          }
-          let ext_json = {
-            ext: {
-              website_id: this.form_template.ext_json.ext.website_id,
-            },
-          };
-          let data = {
-            template_id: this.form_template.template_id,
-            ext_json: JSON.stringify(ext_json),
-            user_version: this.form_template.user_version,
-            user_desc: this.form_template.user_desc,
-          };
           this.$http
             .getWebsiteToken(this.form_template.ext_json.ext.website_id)
             .then((res) => {
@@ -376,6 +421,19 @@ export default {
                 localStorage.setItem("admin_TOKEN", res.data.token);
                 // 对比接口中token是否一致，一致提交
                 if (res.data.token === localStorage.getItem("admin_TOKEN")) {
+                  let ext_json = {
+                    ext: {
+                      website_id: this.form_template.ext_json.ext.website_id,
+                    },
+                    pages: this.form_template.ext_json.pages,
+                    tabBar: this.form_template.ext_json.tabBar,
+                  };
+                  let data = {
+                    template_id: this.form_template.template_id,
+                    ext_json: JSON.stringify(ext_json),
+                    user_version: this.form_template.user_version,
+                    user_desc: this.form_template.user_desc,
+                  };
                   this.$http.uploadTemplateCode(data).then((res) => {
                     if (res.status === 200) {
                       this.$message({
@@ -541,6 +599,80 @@ export default {
     goReviewStatusList() {
       this.$router.push("/review_status_list");
     },
+    // 改变小程序类型触发
+    changeMode(e) {
+      if (e == 0) {
+        this.form_template.ext_json.pages = [
+          "index/index",
+          "index/project",
+          "index/message",
+          "index/mine",
+          "index/search",
+          "index/search-build",
+        ];
+        this.form_template.ext_json.tabBar.list = [
+          {
+            pagePath: "index/index",
+            text: "首页",
+            iconPath: "static/tab_icon/index-select.png",
+            selectedIconPath: "static/tab_icon/index.png",
+          },
+          {
+            pagePath: "index/project",
+            text: "项目",
+            iconPath: "static/tab_icon/ic_xiangmu_nor.png",
+            selectedIconPath: "static/tab_icon/ic_xiangmu.png",
+          },
+          {
+            pagePath: "index/message",
+            text: "消息",
+            iconPath: "static/tab_icon/message-select.png",
+            selectedIconPath: "static/tab_icon/message.png",
+          },
+          {
+            pagePath: "index/mine",
+            text: "我的",
+            iconPath: "static/tab_icon/main-select.png",
+            selectedIconPath: "static/tab_icon/main.png",
+          },
+        ];
+      } else if (e == 1) {
+        this.form_template.ext_json.pages = [
+          "only_build/pages/index/index",
+          "only_build/pages/index/house_type",
+          "only_build/pages/index/dynamic",
+          "only_build/pages/index/mine",
+        ];
+        this.form_template.ext_json.tabBar.list = [
+          {
+            pagePath: "only_build/pages/index/index",
+            text: "首页",
+            iconPath: "static/only/home.png",
+            selectedIconPath: "static/only/home_active.png",
+          },
+          {
+            pagePath: "only_build/pages/index/house_type",
+            text: "户型",
+            iconPath: "static/only/build.png",
+            selectedIconPath: "static/only/build_active.png",
+          },
+          {
+            pagePath: "only_build/pages/index/dynamic",
+            text: "动态",
+            iconPath: "static/only/dynamic.png",
+            selectedIconPath: "static/only/dynamic_active.png",
+          },
+          {
+            pagePath: "only_build/pages/index/mine",
+            text: "我的",
+            iconPath: "static/only/mine.png",
+            selectedIconPath: "static/only/mine_active.png",
+          },
+        ];
+      } else {
+        console.log("马上开启新模式");
+      }
+    },
     // 小程序草稿箱
     // draftList() {
     //   this.$router.push("/draft_list");
@@ -567,5 +699,9 @@ i {
 }
 .el-button {
   margin: 10px 4px;
+}
+.p-label {
+  margin: 4px 0;
+  padding: 10px 0;
 }
 </style>
