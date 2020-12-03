@@ -220,16 +220,20 @@
             v-for="(item, index) in form_template.ext_json.tabBar.list"
             :key="index"
           >
-            <el-input v-model="item.pagePath" size="mini">
+            <el-input style="width:100%" v-model="item.pagePath" size="mini">
               <template slot="prepend">pagePath：</template>
             </el-input>
-            <el-input v-model="item.text" size="mini">
+            <el-input style="width:100%" v-model="item.text" size="mini">
               <template slot="prepend">text：</template>
             </el-input>
-            <el-input v-model="item.iconPath" size="mini">
+            <el-input style="width:100%" v-model="item.iconPath" size="mini">
               <template slot="prepend">iconPath：</template>
             </el-input>
-            <el-input v-model="item.selectedIconPath" size="mini">
+            <el-input
+              style="width:100%"
+              v-model="item.selectedIconPath"
+              size="mini"
+            >
               <template slot="prepend">selectedIconPath：</template>
             </el-input>
           </div>
@@ -568,7 +572,6 @@ export default {
     },
     // 解除体验者绑定
     unbindTester(row) {
-      console.log(row);
       this.$confirm("此操作将解绑该用户", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

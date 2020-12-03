@@ -437,8 +437,10 @@ class UserCenter {
     return this.$http.get("/admin/wx_open/mini_program/code/query/quota");
   }
   // 查询权限表
-  getPermissionList(id) {
-    return this.$http.get(`/super/admin/permission/all/${id}`);
+  getPermissionList(id, value) {
+    return this.$http.get(
+      `/super/admin/permission/all/${id}?website_mode_category=${value}`
+    );
   }
   // 删除权限表
   deletePermission(id) {

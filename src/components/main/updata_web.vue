@@ -52,7 +52,6 @@
           :key="item.id"
           v-model="form.website_mode_category"
           :label="item.value"
-          disabled
           >{{ item.description }}</el-radio
         >
       </el-form-item>

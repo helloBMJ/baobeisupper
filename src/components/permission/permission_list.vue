@@ -2,6 +2,18 @@
   <el-main>
     <el-header class="div row">
       <el-button type="primary" @click="createData">添加</el-button>
+      <el-select
+        v-model="website_mode_value"
+        style="margin-left:10px"
+        @change="changeMode"
+      >
+        <el-option
+          v-for="item in website_mode_category_list"
+          :key="item.id"
+          :label="item.description"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </el-header>
     <el-table
       :default-sort="{ prop: 'sort', order: 'descending' }"
@@ -73,13 +85,24 @@
           </el-switch>
         </el-form-item>
         <el-form-item prop="website_mode_category" label="站点模式">
-          <el-radio
+          <!-- <el-radio
             v-for="item in website_mode_category_list"
             :key="item.id"
             v-model="form_create.website_mode_category"
             :label="item.value"
             >{{ item.description }}</el-radio
+          > -->
+          <el-checkbox-group
+            v-model="website_mode_value_list"
+            @change="onChange"
           >
+            <el-checkbox
+              v-for="item in website_mode_category_list"
+              :key="item.id"
+              :label="item.value"
+              >{{ item.description }}</el-checkbox
+            >
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item prop="sort" label="排序">
           <el-input
@@ -121,6 +144,13 @@ export default {
       dialogTitle: "",
       next_pid: false,
       website_mode_category_list: this.$getDictionary("WEBSITE_MODE_CATEGORY"),
+      filters_list: [
+        { text: "分销报备", value: 0 },
+        { text: "单楼盘", value: 1 },
+        { text: "微房产", value: 2 },
+      ],
+      website_mode_value: "0",
+      website_mode_value_list: ["0"],
     };
   },
   mounted() {
@@ -128,11 +158,13 @@ export default {
   },
   methods: {
     getDataList() {
-      this.$http.getPermissionList(this.permission_id).then((res) => {
-        if (res.status === 200) {
-          this.tableData = this.$toTree(res.data);
-        }
-      });
+      this.$http
+        .getPermissionList(this.permission_id, this.website_mode_value)
+        .then((res) => {
+          if (res.status === 200) {
+            this.tableData = this.$toTree(res.data);
+          }
+        });
     },
     createData() {
       this.form_create = {
@@ -143,6 +175,9 @@ export default {
       };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
+    },
+    onChange(e) {
+      this.form_create.website_mode_category = e.toString();
     },
     onCreate() {
       if (this.dialogTitle === "addData") {
@@ -174,7 +209,7 @@ export default {
       this.dialogCreate = true;
       this.next_pid = true;
       this.form_create = row;
-      row.website_mode_category = row.website_mode_category.toString();
+      this.website_mode_value_list = row.website_mode_category.split(",");
       if (row.menu === 1) {
         this.form_create.menu = true;
       } else {
@@ -217,6 +252,10 @@ export default {
           });
         });
     },
+    changeMode(e) {
+      this.website_mode_value = e;
+      this.getDataList();
+    },
   },
 };
 </script>
@@ -224,6 +263,7 @@ export default {
 <style lang="scss">
 .el-header {
   align-items: center;
+  justify-content: flex-start;
 }
 .demo-table-expand {
   font-size: 0;

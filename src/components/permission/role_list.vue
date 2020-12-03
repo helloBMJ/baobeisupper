@@ -170,14 +170,21 @@ export default {
       this.$http.getWebsiteToken(this.$route.query.id).then((res) => {
         if (res.status === 200) {
           localStorage.setItem("admin_TOKEN", res.data.token);
+          this.queryWebsiteInfo();
+        }
+      });
+    },
+    queryWebsiteInfo() {
+      this.$http.queryWeb(this.$route.query.id).then((res) => {
+        if (res.status === 200) {
           this.getDataList();
-          this.getPermissionList();
+          this.getPermissionList(res.data.website_mode_category);
         }
       });
     },
     // 获取权限列表
-    getPermissionList() {
-      this.$http.getPermissionList(1).then((res) => {
+    getPermissionList(value) {
+      this.$http.getPermissionList(1, value).then((res) => {
         if (res.status === 200) {
           this.permission_list = this.$toTree(res.data);
           this.check_permission_list = res.data;
