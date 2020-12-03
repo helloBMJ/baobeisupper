@@ -305,13 +305,13 @@ export default {
         this.params.lease_start_date = this.time_value[0];
         this.params.lease_end_date = this.time_value[1];
       }
-      this.params.currentPage = 1;
+      this.params.page = 1;
       this.params.pagesize = 10;
       this.getDataList();
     },
     onInput() {
       if (this.params.name === "") {
-        this.params.currentPage = 1;
+        this.params.page = 1;
         this.params.pagesize = 10;
         this.getDataList();
       }
