@@ -83,13 +83,25 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="站点ID" width="auto"> </el-table-column>
-      <el-table-column prop="name" label="站点名称" width="auto">
+      <el-table-column prop="name" label="站点" width="auto">
         <template slot-scope="scope">
-          <el-tag @click="openSite(scope.row)">{{ scope.row.name }}</el-tag>
+          <el-tag @click="openSite(scope.row)"
+            >{{ scope.row.name }} （{{ scope.row.id }}）</el-tag
+          >
         </template>
         <!-- </el-table-column>
         <el-table-column prop="url" label="站点链接" width="auto">-->
+      </el-table-column>
+      <el-table-column prop="id" label="站点模式" width="auto">
+        <template slot-scope="scope">
+          <el-tag style="margin:4px" type="success">{{
+            scope.row.website_mode_category === 0
+              ? "分销报备"
+              : scope.row.website_mode_category === 1
+              ? "单楼盘"
+              : "微房产"
+          }}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column prop="wx_pub_app_id" label="公众号" width="auto">
         <template slot-scope="scope">
