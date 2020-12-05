@@ -53,9 +53,9 @@
       <el-table-column
         type="selection"
         :reserve-selection="true"
-        width="100"
+        width="50"
       ></el-table-column>
-      <el-table-column label="折叠内容" type="expand" width="100">
+      <el-table-column type="expand" width="100">
         <template slot-scope="scope">
           <el-form
             label-position="left"
