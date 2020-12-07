@@ -79,15 +79,21 @@
             >体验者列表</el-button
           >
         </el-popover>
-        <el-button
-          v-if="review_status === 0"
-          @click="publishMini"
-          type="primary"
-          >上线小程序</el-button
-        >
 
         <el-button @click="goReviewStatusList" type="success"
           >通知用户列表</el-button
+        >
+        <el-button
+          v-if="review_status === 0"
+          @click="uploadTemplateCode"
+          type="primary"
+          >提交审核</el-button
+        >
+        <el-button
+          v-if="review_status === 0"
+          @click="publishMini"
+          type="success"
+          >上线小程序</el-button
         >
       </div>
     </el-header>
@@ -344,7 +350,6 @@ export default {
     this.website_id = this.$route.query.website_id;
     if (this.$route.query.website_id) {
       this.getWebsiteToken();
-      this.queryReview();
       this.getQueryQuota();
     } else {
       this.getCodeTemplateList();
@@ -446,13 +451,6 @@ export default {
                       });
                       this.getCodeTemplateList();
                       this.dialogVisible = false;
-                      // 上传代码成功后直接提交代码到审核列表
-                      this.$http.SubmitReview().then((res) => {
-                        if (res.status === 200) {
-                          this.auditid = res.data.auditid;
-                          this.queryReview();
-                        }
-                      });
                     }
                   });
                 } else {
@@ -468,7 +466,16 @@ export default {
         }
       });
     },
-
+    // 上传成功显示提交审核
+    uploadSuccessReview() {
+      // 上传代码成功后直接提交代码到审核列表
+      this.$http.SubmitReview().then((res) => {
+        if (res.status === 200) {
+          this.auditid = res.data.auditid;
+          this.queryReview();
+        }
+      });
+    },
     // 提交代码审核
     SubmitReview() {
       if (this.isReview === 0) {
@@ -481,6 +488,9 @@ export default {
         this.$http.getReviewCodeList().then((res) => {
           if (res.status === 200) {
             this.reviewList = res.data.data;
+            if (res.data.data[0].audit_id) {
+              this.queryReview();
+            }
           }
         });
       }
