@@ -83,10 +83,7 @@
         <el-button @click="goReviewStatusList" type="success"
           >通知用户列表</el-button
         >
-        <el-button
-          v-if="review_status === 0"
-          @click="uploadTemplateCode"
-          type="primary"
+        <el-button @click="uploadSuccessReview" type="primary"
           >提交审核</el-button
         >
         <el-button
@@ -105,7 +102,6 @@
       tooltip-effect="dark"
       style="width:100%"
       @selection-change="handleSelectionChange"
-      :default-sort="{ prop: 'template_id', order: 'descending' }"
     >
       <el-table-column
         prop="template_id"
@@ -148,7 +144,6 @@
       v-if="isReview === 0"
       :data="reviewList"
       border
-      tooltip-effect="dark"
       style="width:100%"
     >
       <el-table-column prop="id" label="ID"> </el-table-column>
