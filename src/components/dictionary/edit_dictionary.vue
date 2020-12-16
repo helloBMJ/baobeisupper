@@ -10,7 +10,7 @@
       <el-form-item label="值" prop="value">
         <el-input
           v-model="form_dic.value"
-          type="number"
+          type="text"
           placeholder="作为键值使用"
         ></el-input>
       </el-form-item>
@@ -96,4 +96,8 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.el-input {
+  width: 500px;
+}
+</style>

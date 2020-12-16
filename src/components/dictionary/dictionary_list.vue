@@ -97,7 +97,7 @@
         <el-form-item label="值" prop="value">
           <el-input
             v-model="form_dic.value"
-            type="number"
+            type="text"
             placeholder="作为键值使用"
           ></el-input>
         </el-form-item>
@@ -306,7 +306,7 @@ export default {
   .search-box {
     align-items: center;
     .el-input {
-      width: 300px;
+      width: 500px;
     }
   }
 }
