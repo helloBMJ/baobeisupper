@@ -649,6 +649,7 @@ export default {
           "only_build/pages/index/index",
           "only_build/pages/index/house_type",
           "only_build/pages/index/dynamic",
+          "only_build/pages/index/loushu",
           "only_build/pages/index/mine",
         ];
         this.form_template.ext_json.tabBar.list = [
@@ -669,6 +670,12 @@ export default {
             text: "动态",
             iconPath: "static/only/dynamic.png",
             selectedIconPath: "static/only/dynamic_active.png",
+          },
+          {
+            pagePath: "only_build/pages/index/loushu",
+            text: "楼书",
+            iconPath: "static/only/build_book.png",
+            selectedIconPath: "static/only/build_bookc_active.png",
           },
           {
             pagePath: "only_build/pages/index/mine",
