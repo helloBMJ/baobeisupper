@@ -27,6 +27,14 @@
           placeholder="建议填写大写英文描述(USER_STATUS)"
         ></el-input>
       </el-form-item>
+      <el-form-item label="备注" prop="remark">
+        <el-input
+          v-model="form_dic.remark"
+          placeholder="备注信息"
+          type="textarea"
+          :rows="6"
+        ></el-input>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onCreate">确定</el-button>
         <el-button type="success" @click="goBack">返回</el-button>
@@ -45,6 +53,7 @@ export default {
         value: "",
         sort: "",
         description: "",
+        remark: "",
       },
       rules: {
         description: [
