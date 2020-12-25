@@ -610,6 +610,8 @@ export default {
     // 改变小程序类型触发
     changeMode(e) {
       if (e == 0) {
+        this.form_template.ext_json.window = {};
+        this.form_template.ext_json.tabBar.color = "";
         this.form_template.ext_json.pages = [
           "index/index",
           "index/project",
@@ -645,6 +647,8 @@ export default {
           },
         ];
       } else if (e == 1) {
+        this.form_template.ext_json.window = {};
+        this.form_template.ext_json.tabBar.color = "";
         this.form_template.ext_json.pages = [
           "only_build/pages/index/index",
           "only_build/pages/index/house_type",
@@ -675,7 +679,7 @@ export default {
             pagePath: "only_build/pages/index/loushu",
             text: "楼书",
             iconPath: "static/only/build_book.png",
-            selectedIconPath: "static/only/build_bookc_active.png",
+            selectedIconPath: "static/only/build_book_active.png",
           },
           {
             pagePath: "only_build/pages/index/mine",
@@ -685,7 +689,43 @@ export default {
           },
         ];
       } else {
-        console.log("马上开启新模式");
+        this.form_template.ext_json.window = {
+          navigationBarBackgroundColor: "#35A7F4",
+          navigationBarTextStyle: "white",
+        };
+        this.form_template.ext_json.pages = [
+          "weifangchan/pages/index/index",
+          "weifangchan/pages/index/find_room",
+          "weifangchan/pages/index/find",
+          "weifangchan/pages/index/mine",
+        ];
+        this.form_template.ext_json.tabBar.color = "#ccc";
+        this.form_template.ext_json.tabBar.list = [
+          {
+            pagePath: "weifangchan/pages/index/index",
+            text: "首页",
+            iconPath: "static/wei/shouye.png",
+            selectedIconPath: "static/wei/shouye-active.png",
+          },
+          {
+            pagePath: "weifangchan/pages/index/find_room",
+            text: "找房",
+            iconPath: "static/wei/zhaofang.png",
+            selectedIconPath: "static/wei/zhaofang-active.png",
+          },
+          {
+            pagePath: "weifangchan/pages/index/find",
+            text: "发现",
+            iconPath: "static/wei/faxian.png",
+            selectedIconPath: "static/wei/faxian-active.png",
+          },
+          {
+            pagePath: "weifangchan/pages/index/mine",
+            text: "我的",
+            iconPath: "static/wei/wode.png",
+            selectedIconPath: "static/wei/wode-active.png",
+          },
+        ];
       }
     },
     // 小程序草稿箱
