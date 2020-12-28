@@ -49,9 +49,11 @@
                     ? "审核中"
                     : scope.row.submit_audit_status === 3
                     ? "已撤回"
-                    : scope.row.submit_audit_status === null
-                    ? "审核状态null"
-                    : "审核延后"
+                    : scope.row.submit_audit_status === 4
+                    ? "审核延后"
+                    : scope.row.submit_audit_status === 5
+                    ? "未提交审核"
+                    : ""
                 }}
               </span>
               <el-button

@@ -12,7 +12,13 @@
               ? "审核拒绝"
               : review_status === 2
               ? "审核中"
-              : "已撤回"
+              : review_status === 3
+              ? "已撤回"
+              : review_status === 4
+              ? "审核延后"
+              : review_status === 5
+              ? "未提交审核"
+              : ""
           }}
         </i>
         <!-- <el-button type="success" @click="draftList">小程序代码草稿箱</el-button> -->
@@ -501,7 +507,11 @@ export default {
           ? "审核中"
           : row.audit_status === 3
           ? "已撤回"
-          : "审核延后";
+          : row.audit_status === 4
+          ? "审核延后"
+          : row.audit_status === 5
+          ? "未提交审核"
+          : "";
       return audit_status;
     },
     status(row) {
