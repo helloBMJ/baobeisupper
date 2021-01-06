@@ -434,6 +434,7 @@ export default {
                   let ext_json = {
                     ext: {
                       website_id: this.form_template.ext_json.ext.website_id,
+                      mode: this.form_template.ext_json.ext.mode,
                     },
                     pages: this.form_template.ext_json.pages,
                     tabBar: this.form_template.ext_json.tabBar,
