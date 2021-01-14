@@ -47,45 +47,9 @@
             >获取体验版二维码</el-button
           >
         </el-popover>
-        <el-popover
-          placement="bottom"
-          title="查看体验者列表"
-          width="800px"
-          trigger="click"
+        <el-button slot="reference" type="success" @click="queryTesterList"
+          >体验者列表</el-button
         >
-          <el-input
-            style="width:180px"
-            v-model="wechatid"
-            placeholder="请输入体验者微信号"
-          ></el-input>
-          <el-button type="primary" @click="bindTesterWechatId">添加</el-button>
-          <el-table :data="testerList" border style="width:100%">
-            <el-table-column prop="id" label="ID"></el-table-column>
-            <el-table-column
-              prop="wechat_id"
-              label="体验者微信号"
-            ></el-table-column>
-            <el-table-column prop="user_str" label="标识"></el-table-column>
-            <el-table-column
-              prop="created_at"
-              label="添加时间"
-            ></el-table-column>
-            <el-table-column label="操作" width="100">
-              <template slot-scope="scope">
-                <el-button
-                  type="danger"
-                  @click="unbindTester(scope.row)"
-                  size="mini"
-                  >解除绑定</el-button
-                >
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-button slot="reference" type="success" @click="queryTesterList"
-            >体验者列表</el-button
-          >
-        </el-popover>
-
         <el-button @click="goReviewStatusList" type="success"
           >通知用户列表</el-button
         >
@@ -267,6 +231,33 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog title="体验者列表" :visible.sync="dialogVisibleList" width="60%">
+      <el-input
+        style="width:180px"
+        v-model="wechatid"
+        placeholder="请输入体验者微信号"
+      ></el-input>
+      <el-button type="primary" @click="bindTesterWechatId">添加</el-button>
+      <el-table :data="testerList" border style="width:100%">
+        <el-table-column prop="id" label="ID"></el-table-column>
+        <el-table-column
+          prop="wechat_id"
+          label="体验者微信号"
+        ></el-table-column>
+        <el-table-column prop="user_str" label="标识"></el-table-column>
+        <el-table-column prop="created_at" label="添加时间"></el-table-column>
+        <el-table-column label="操作" width="100">
+          <template slot-scope="scope">
+            <el-button
+              type="danger"
+              @click="unbindTester(scope.row)"
+              size="mini"
+              >解除绑定</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -284,6 +275,7 @@ export default {
       tabelData: [],
       multipleSelection: [],
       dialogVisible: false,
+      dialogVisibleList: false,
       form_template: {
         template_id: "",
         ext_json: {
@@ -578,6 +570,7 @@ export default {
     },
     // 查看体验者列表
     queryTesterList() {
+      this.dialogVisibleList = true;
       this.$http.queryTesterList().then((res) => {
         if (res.status === 200) {
           this.testerList = res.data.data.filter((item) => {
@@ -659,7 +652,7 @@ export default {
         ];
       } else if (e == 1) {
         this.form_template.ext_json.window = {};
-        this.form_template.ext_json.tabBar.color = "";
+        this.form_template.ext_json.tabBar.color = "#999";
         this.form_template.ext_json.pages = [
           "only_build/pages/index/index",
           "only_build/pages/index/house_type",
