@@ -191,6 +191,20 @@ export default new Router({
           meta: { title: "角色权限" },
           name: "角色权限",
         },
+        {
+          path: "/mode_category_list",
+          component: (resolve) =>
+            require(["@/components/website/mode_category_list"], resolve),
+          meta: { title: "模式列表" },
+          name: "模式列表",
+        },
+        {
+          path: "/tenant_list",
+          component: (resolve) =>
+            require(["@/components/tenant/tenant_list"], resolve),
+          meta: { title: "租赁列表" },
+          name: "租赁列表",
+        },
       ],
     },
     {

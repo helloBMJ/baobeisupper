@@ -498,6 +498,26 @@ class UserCenter {
   queryAdminRoles(id) {
     return this.$http.get(`/admin/admin_user/role/all/${id}`);
   }
+  // 查询所有字典数据
+  queryDicData(website_id) {
+    return this.$http.get(`/common/dictionary/all?website_id=${website_id}`);
+  }
+  // 查看套餐列表
+  getModeCategoryList(params) {
+    return this.$http.get("/super/admin/website/mode_category/search", params);
+  }
+  // 修改套餐
+  updataModeCategory(data) {
+    return this.$http.post("/super/admin/website/mode_category/update", data);
+  }
+  // 添加套餐
+  createModeCategory(data) {
+    return this.$http.post("/super/admin/website/mode_category/create", data);
+  }
+  // 删除套餐
+  deleteModeCategory(id) {
+    return this.$http.get(`/super/admin/website/mode_category/delete/${id}`);
+  }
 }
 
 export default new UserCenter();

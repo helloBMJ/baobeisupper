@@ -105,3 +105,31 @@ export function toTree(data) {
   });
   return result;
 }
+
+/**
+ *  @title 后台接口请求字典数据
+ *  @per_page {200} 一页显示的总数量
+ *  @description 页面需要字典数据类型多的情况下使用，other times use $getDictionaryList
+ *  @method use this.$setDictionary(e=>{})
+ * */
+
+export function setDictionary(callback) {
+  this.$http.queryDicData(localStorage.getItem("website_id")).then((res) => {
+    if (res.status === 200) {
+      const arr = [];
+      res.data.forEach((item) => {
+        const parent = arr.find((cur) => cur.name === item.name);
+        if (parent) {
+          parent.childs.push(item);
+        } else {
+          const obj = {
+            name: item.name,
+            childs: [item],
+          };
+          arr.push(obj);
+        }
+      });
+      callback(arr);
+    }
+  });
+}

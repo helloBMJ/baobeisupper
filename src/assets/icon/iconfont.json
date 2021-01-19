@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1541244",
+      "name": "楼盘",
+      "font_class": "ziyuan",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "3216076",
+      "name": "列表",
+      "font_class": "icon--",
+      "unicode": "e714",
+      "unicode_decimal": 59156
+    },
+    {
       "icon_id": "16364337",
       "name": "小程序",
       "font_class": "xiaochengxu",

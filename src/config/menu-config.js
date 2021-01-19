@@ -11,6 +11,12 @@ module.exports = [
         icon: "icon-chazhaobiaodanliebiao",
       },
       {
+        name: "mode_category_list",
+        componentName: "mode_category_list",
+        title: "模式列表",
+        icon: "icon-icon--",
+      },
+      {
         name: "add_list",
         componentName: "add_list",
         title: "创建站点",
@@ -76,6 +82,19 @@ module.exports = [
         componentName: "dictionary_list",
         title: "字典列表",
         icon: "icon-zidian",
+      },
+    ],
+  },
+  {
+    name: "单盘管理",
+    id: "4",
+    icon: "icon-ziyuan",
+    sub: [
+      {
+        name: "tenant_list",
+        componentName: "tenant_list",
+        title: "租赁客户",
+        icon: "icon-icon--",
       },
     ],
   },

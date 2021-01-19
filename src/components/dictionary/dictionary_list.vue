@@ -44,12 +44,12 @@
           width="100px"
         ></el-table-column>
         <el-table-column label="创建时间" prop="created_at"></el-table-column>
-        <el-table-column label="操作">
+        <el-table-column fixed="right" label="操作" width="200px">
           <template slot-scope="scope">
-            <el-button type="success" @click="onPoint(scope.row)"
+            <el-button size="mini" type="success" @click="onPoint(scope.row)"
               >修改</el-button
             >
-            <el-button type="danger" @click="onDelete(scope.row.id)"
+            <el-button size="mini" type="danger" @click="onDelete(scope.row.id)"
               >删除</el-button
             >
           </template>
