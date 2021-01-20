@@ -19,14 +19,17 @@
               label-position="left"
               class="demo-table-expand"
             >
-              <el-form-item label="官方定价：">
+              <el-form-item label="官方指导价：">
                 <span>{{ scope.row.official_price }}元</span>
               </el-form-item>
-              <el-form-item label="一级定价：">
+              <el-form-item label="一级代理价：">
                 <span>{{ scope.row.one_level_price }}元</span>
               </el-form-item>
               <el-form-item label="一级最低定价：">
                 <span>{{ scope.row.one_level_min_top_up_amount }}元</span>
+              </el-form-item>
+              <el-form-item label="二级代理价：">
+                <span>{{ scope.row.second_level_price }}元</span>
               </el-form-item>
               <el-form-item label="二级最低定价：">
                 <span>{{ scope.row.second_level_min_top_up_amount }}元</span>
@@ -37,14 +40,14 @@
               <el-form-item label="收费时长：">
                 <span>{{ scope.row.cost_duration_day }}天</span>
               </el-form-item>
-              <el-form-item label="项目助理：">
+              <el-form-item label="置业顾问：">
                 <span
                   >已{{
                     formmatSwitch(scope.row.config_support_project_manager)
                   }}</span
                 >
               </el-form-item>
-              <el-form-item label="开启报备：">
+              <el-form-item label="分销报备：">
                 <span
                   >已{{
                     formmatSwitch(scope.row.config_support_reported)
@@ -58,7 +61,7 @@
                   }}</span
                 >
               </el-form-item>
-              <el-form-item label="即时聊天：">
+              <el-form-item label="即时通讯：">
                 <span>已{{ formmatSwitch(scope.row.config_support_im) }}</span>
               </el-form-item>
               <el-form-item label="在线直播">
@@ -143,13 +146,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="套餐名称：" prop="name">
+        <el-form-item label="产品版本：" prop="name">
           <el-input
             v-model="form_create.name"
             placeholder="请输入套餐名称"
           ></el-input>
         </el-form-item>
-        <el-form-item label="官方定价：" prop="official_price">
+        <el-form-item label="官方指导价：" prop="official_price">
           <el-input
             type="number"
             v-model="form_create.official_price"
@@ -159,7 +162,7 @@
             <template slot="append">元</template></el-input
           >
         </el-form-item>
-        <el-form-item label="一级定价：" prop="one_level_price">
+        <el-form-item label="一级代理价：" prop="one_level_price">
           <el-input
             type="number"
             v-model="form_create.one_level_price"
@@ -169,7 +172,7 @@
             <template slot="append">元</template></el-input
           >
         </el-form-item>
-        <el-form-item label="二级定价：" prop="second_level_price">
+        <el-form-item label="二级代理价：" prop="second_level_price">
           <el-input
             type="number"
             v-model="form_create.second_level_price"
@@ -193,7 +196,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="收费时长：" prop="cost_duration_day">
+        <!-- <el-form-item label="收费时长：" prop="cost_duration_day">
           <el-input
             type="number"
             v-model="form_create.cost_duration_day"
@@ -203,9 +206,9 @@
           >
             <template slot="append">天</template></el-input
           >
-        </el-form-item>
+        </el-form-item> -->
         <div class="div row">
-          <el-form-item label="项目助理：">
+          <el-form-item label="置业顾问：">
             <el-radio-group
               v-model="form_create.config_support_project_manager"
             >
@@ -217,7 +220,7 @@
               >
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="开启报备：">
+          <el-form-item label="分销报备：">
             <el-radio-group v-model="form_create.config_support_reported">
               <el-radio-button
                 v-for="item in switch_box"
@@ -229,7 +232,7 @@
           </el-form-item>
         </div>
         <div class="div row">
-          <el-form-item label="即时聊天：">
+          <el-form-item label="即时通讯：">
             <el-radio-group v-model="form_create.config_support_im">
               <el-radio-button
                 v-for="item in switch_box"
@@ -252,16 +255,29 @@
             </el-radio-group>
           </el-form-item>
         </div>
-        <el-form-item label="私有开关：">
-          <el-radio-group v-model="form_create.config_support_private_flow">
-            <el-radio-button
-              v-for="item in switch_box"
-              :key="item.value"
-              :label="item.value"
-              >{{ item.description }}</el-radio-button
-            >
-          </el-radio-group>
-        </el-form-item>
+        <div class="div row">
+          <el-form-item label="私有流量管理：">
+            <el-radio-group v-model="form_create.config_support_private_flow">
+              <el-radio-button
+                v-for="item in switch_box"
+                :key="item.value"
+                :label="item.value"
+                >{{ item.description }}</el-radio-button
+              >
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="在线直播：">
+            <el-radio-group v-model="form_create.config_support_online_live">
+              <el-radio-button
+                v-for="item in switch_box"
+                :key="item.value"
+                :label="item.value"
+                >{{ item.description }}</el-radio-button
+              >
+            </el-radio-group>
+          </el-form-item>
+        </div>
         <el-form-item label="详细描述：">
           <el-input
             type="textarea"
@@ -370,12 +386,13 @@ export default {
     },
     createData() {
       this.form_create = {
-        website_mode_category: "1",
-        config_support_project_manager: "1",
-        config_support_reported: "1",
-        config_support_im: "1",
-        config_support_online_get_customer: "1",
-        config_support_private_flow: "1",
+        website_mode_category: "0",
+        config_support_project_manager: "0",
+        config_support_reported: "0",
+        config_support_im: "0",
+        config_support_online_get_customer: "0",
+        config_support_private_flow: "0",
+        config_support_online_live: "0",
       };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
@@ -468,9 +485,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: auto;
-}
-.el-form-item {
-  margin: 5px;
 }
 .el-input,
 .el-select {
