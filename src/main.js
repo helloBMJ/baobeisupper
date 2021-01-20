@@ -12,6 +12,7 @@ import {
   getDictionary,
   toTree,
   setDictionary,
+  gotoPath,
 } from "./utils/tools";
 // 引入工具类
 import "element-ui/lib/theme-chalk/index.css";
@@ -32,6 +33,7 @@ Vue.prototype.$sortArr = sortArr;
 Vue.prototype.$getDictionary = getDictionary;
 Vue.prototype.$setDictionary = setDictionary;
 Vue.prototype.$toTree = toTree;
+Vue.prototype.$gotoPath = gotoPath;
 // 过滤时间戳格式
 Vue.filter("time", (time) => {
   return new Date(parseInt(time) * 1000)

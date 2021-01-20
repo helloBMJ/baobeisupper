@@ -205,6 +205,13 @@ export default new Router({
           meta: { title: "租赁列表" },
           name: "租赁列表",
         },
+        {
+          path: "/topup_record",
+          component: (resolve) =>
+            require(["@/components/tenant/topup_record"], resolve),
+          meta: { title: "充值记录" },
+          name: "充值记录",
+        },
       ],
     },
     {

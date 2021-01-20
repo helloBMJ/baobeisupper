@@ -73,8 +73,21 @@ module.exports = [
     ],
   },
   {
-    name: "字典管理",
+    name: "租户管理",
     id: "3",
+    icon: "icon-ziyuan",
+    sub: [
+      {
+        name: "tenant_list",
+        componentName: "tenant_list",
+        title: "租户",
+        icon: "icon-icon--",
+      },
+    ],
+  },
+  {
+    name: "字典管理",
+    id: "4",
     icon: "icon-ic_dictionary",
     sub: [
       {
@@ -82,19 +95,6 @@ module.exports = [
         componentName: "dictionary_list",
         title: "字典列表",
         icon: "icon-zidian",
-      },
-    ],
-  },
-  {
-    name: "单盘管理",
-    id: "4",
-    icon: "icon-ziyuan",
-    sub: [
-      {
-        name: "tenant_list",
-        componentName: "tenant_list",
-        title: "租赁客户",
-        icon: "icon-icon--",
       },
     ],
   },

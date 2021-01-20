@@ -518,6 +518,30 @@ class UserCenter {
   deleteModeCategory(id) {
     return this.$http.get(`/super/admin/website/mode_category/delete/${id}`);
   }
+  // 创建租户信息
+  createTenantData(data) {
+    return this.$http.post("/super/admin/tenant/create", data);
+  }
+  // 获取租户信息列表
+  getTenantList(params) {
+    return this.$http.get("/super/admin/tenant/search", params);
+  }
+  // 删除租户列表
+  deleteTenatList(id) {
+    return this.$http.get(`/super/admin/tenant/delete/${id}`);
+  }
+  // 修改租户信息
+  updateTenantData(data) {
+    return this.$http.post("/super/admin/tenant/update", data);
+  }
+  // 添加充值记录
+  createTopupRecord(data) {
+    return this.$http.post("/super/admin/tenant/top_up_record/create", data);
+  }
+  // 充值记录列表
+  getTopupRecord(params) {
+    return this.$http.get("/super/admin/tenant/top_up_record/search", params);
+  }
 }
 
 export default new UserCenter();

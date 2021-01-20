@@ -133,3 +133,7 @@ export function setDictionary(callback) {
     }
   });
 }
+
+export function gotoPath(path) {
+  this.$router.push(path);
+}
