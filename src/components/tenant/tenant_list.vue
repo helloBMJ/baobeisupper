@@ -9,7 +9,7 @@
         <el-table-column label="状态" prop="status"></el-table-column>
         <el-table-column label="余额" prop="balance"></el-table-column>
         <el-table-column label="租户" prop="name"></el-table-column>
-        <el-table-column label="租赁日期" prop="lease_start">
+        <el-table-column label="有效期" prop="lease_start">
           <template slot-scope="scope">
             {{ scope.row.lease_start }}
             -
@@ -76,7 +76,7 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="套餐时间：">
+        <el-form-item label="有效期：">
           <el-date-picker
             v-model="time_value"
             type="daterange"

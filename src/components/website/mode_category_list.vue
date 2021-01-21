@@ -129,7 +129,7 @@
         :model="form_create"
         :rules="create_rules"
         ref="form_create"
-        label-width="100px"
+        label-width="130px"
       >
         <el-form-item label="站点模式：" prop="website_mode_category">
           <el-select
