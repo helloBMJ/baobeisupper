@@ -186,6 +186,7 @@
           <el-select
             v-model="form_create.cost_duration_category"
             placeholder="请选择"
+            @change="changeCost"
           >
             <el-option
               v-for="item in cost_duration_category_list"
@@ -195,6 +196,18 @@
             >
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="有效期：">
+          <el-date-picker
+            v-model="time_value"
+            type="daterange"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
+          </el-date-picker>
         </el-form-item>
         <!-- <el-form-item label="收费时长：" prop="cost_duration_day">
           <el-input
@@ -207,6 +220,16 @@
             <template slot="append">天</template></el-input
           >
         </el-form-item> -->
+        <el-form-item label="是否开启：">
+          <el-radio-group v-model="form_create.enable">
+            <el-radio-button
+              v-for="item in switch_box"
+              :key="item.value"
+              :label="item.value"
+              >{{ item.description }}</el-radio-button
+            >
+          </el-radio-group>
+        </el-form-item>
         <div class="div row">
           <el-form-item label="置业顾问：">
             <el-radio-group
@@ -220,6 +243,21 @@
               >
             </el-radio-group>
           </el-form-item>
+          <el-form-item
+            label="有效期（天）"
+            v-if="form_create.config_support_project_manager == 1"
+          >
+            <el-input
+              class="small-input"
+              type="number"
+              min="0"
+              step="1"
+              v-model="form_create.config_support_project_manager_valid_day"
+              ><template slot="append">天</template></el-input
+            >
+          </el-form-item>
+        </div>
+        <div class="div row">
           <el-form-item label="分销报备：">
             <el-radio-group v-model="form_create.config_support_reported">
               <el-radio-button
@@ -229,6 +267,19 @@
                 >{{ item.description }}</el-radio-button
               >
             </el-radio-group>
+          </el-form-item>
+          <el-form-item
+            label="有效期（天）"
+            v-if="form_create.config_support_reported == 1"
+          >
+            <el-input
+              class="small-input"
+              type="number"
+              min="0"
+              step="1"
+              v-model="form_create.config_support_reported_valid_day"
+              ><template slot="append">天</template></el-input
+            >
           </el-form-item>
         </div>
         <div class="div row">
@@ -242,6 +293,21 @@
               >
             </el-radio-group>
           </el-form-item>
+          <el-form-item
+            label="有效期（天）"
+            v-if="form_create.config_support_im == 1"
+          >
+            <el-input
+              class="small-input"
+              type="number"
+              min="0"
+              step="1"
+              v-model="form_create.config_support_im_valid_day"
+              ><template slot="append">天</template></el-input
+            >
+          </el-form-item>
+        </div>
+        <div class="div row">
           <el-form-item label="在线获客：">
             <el-radio-group
               v-model="form_create.config_support_online_get_customer"
@@ -253,6 +319,19 @@
                 >{{ item.description }}</el-radio-button
               >
             </el-radio-group>
+          </el-form-item>
+          <el-form-item
+            label="有效期（天）"
+            v-if="form_create.config_support_online_get_customer == 1"
+          >
+            <el-input
+              class="small-input"
+              type="number"
+              min="0"
+              step="1"
+              v-model="form_create.config_support_online_get_customer_valid_day"
+              ><template slot="append">天</template></el-input
+            >
           </el-form-item>
         </div>
         <div class="div row">
@@ -266,7 +345,21 @@
               >
             </el-radio-group>
           </el-form-item>
-
+          <el-form-item
+            label="有效期（天）"
+            v-if="form_create.config_support_private_flow == 1"
+          >
+            <el-input
+              class="small-input"
+              type="number"
+              min="0"
+              step="1"
+              v-model="form_create.config_support_private_flow_valid_day"
+              ><template slot="append">天</template></el-input
+            >
+          </el-form-item>
+        </div>
+        <div class="div row">
           <el-form-item label="在线直播：">
             <el-radio-group v-model="form_create.config_support_online_live">
               <el-radio-button
@@ -277,7 +370,21 @@
               >
             </el-radio-group>
           </el-form-item>
+          <el-form-item
+            label="有效期（天）"
+            v-if="form_create.config_support_online_live == 1"
+          >
+            <el-input
+              class="small-input"
+              type="number"
+              min="0"
+              step="1"
+              v-model="form_create.config_support_online_live_valid_day"
+              ><template slot="append">天</template></el-input
+            >
+          </el-form-item>
         </div>
+
         <el-form-item label="详细描述：">
           <el-input
             type="textarea"
@@ -334,6 +441,7 @@ export default {
         row: 0,
         name: "",
       },
+      time_value: [],
     };
   },
   mounted() {
@@ -393,16 +501,24 @@ export default {
         config_support_online_get_customer: "0",
         config_support_private_flow: "0",
         config_support_online_live: "0",
+        enable: "0",
       };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
     },
     changeData(row) {
+      this.time_value = [];
       this.dialogTitle = "updateData";
       this.dialogCreate = true;
       this.form_create = row;
       this.form_create.website_mode_category = row.website_mode_category + "";
       this.form_create.cost_duration_category = row.cost_duration_category + "";
+      if (row.start_date && row.end_date) {
+        this.time_value.push(
+          this.form_create.start_date,
+          this.form_create.end_date
+        );
+      }
     },
     deleteData(row) {
       this.$confirm("此操作将删除该套餐, 是否继续?", "提示", {
@@ -451,6 +567,8 @@ export default {
       this.getDataList();
     },
     onCreate() {
+      this.form_create.start_date = this.time_value[0];
+      this.form_create.end_date = this.time_value[1];
       if (this.dialogTitle === "addData") {
         this.$http.createModeCategory(this.form_create).then((res) => {
           if (res.status === 200) {
@@ -476,6 +594,35 @@ export default {
         });
       }
     },
+    // 修改收费模式
+    changeCost(e) {
+      switch (e) {
+        case "1":
+          this.form_create.config_support_project_manager_valid_day = 365;
+          this.form_create.config_support_reported_valid_day = 365;
+          this.form_create.config_support_im_valid_day = 365;
+          this.form_create.config_support_online_get_customer_valid_day = 365;
+          this.form_create.config_support_private_flow_valid_day = 365;
+          this.form_create.config_support_online_live_valid_day = 365;
+          break;
+        case "2":
+          this.form_create.config_support_project_manager_valid_day = 120;
+          this.form_create.config_support_reported_valid_day = 120;
+          this.form_create.config_support_im_valid_day = 120;
+          this.form_create.config_support_online_get_customer_valid_day = 120;
+          this.form_create.config_support_private_flow_valid_day = 120;
+          this.form_create.config_support_online_live_valid_day = 120;
+          break;
+        case "3":
+          this.form_create.config_support_project_manager_valid_day = 30;
+          this.form_create.config_support_reported_valid_day = 30;
+          this.form_create.config_support_im_valid_day = 30;
+          this.form_create.config_support_online_get_customer_valid_day = 30;
+          this.form_create.config_support_private_flow_valid_day = 30;
+          this.form_create.config_support_online_live_valid_day = 30;
+          break;
+      }
+    },
   },
 };
 </script>
@@ -489,6 +636,9 @@ export default {
 .el-input,
 .el-select {
   width: 300px;
+}
+.small-input {
+  width: 140px;
 }
 span {
   color: #999;
