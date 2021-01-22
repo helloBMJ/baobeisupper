@@ -230,7 +230,7 @@
             >
           </el-radio-group>
         </el-form-item>
-        <div class="div row">
+        <!-- <div class="div row">
           <el-form-item label="置业顾问：">
             <el-radio-group
               v-model="form_create.config_support_project_manager"
@@ -256,7 +256,7 @@
               ><template slot="append">天</template></el-input
             >
           </el-form-item>
-        </div>
+        </div> -->
         <div class="div row">
           <el-form-item label="分销报备：">
             <el-radio-group v-model="form_create.config_support_reported">
@@ -307,7 +307,7 @@
             >
           </el-form-item>
         </div>
-        <div class="div row">
+        <!-- <div class="div row">
           <el-form-item label="在线获客：">
             <el-radio-group
               v-model="form_create.config_support_online_get_customer"
@@ -333,9 +333,9 @@
               ><template slot="append">天</template></el-input
             >
           </el-form-item>
-        </div>
-        <div class="div row">
-          <el-form-item label="私有流量管理：">
+        </div> -->
+        <!-- <div class="div row">
+          <el-form-item label="私域流量管理：">
             <el-radio-group v-model="form_create.config_support_private_flow">
               <el-radio-button
                 v-for="item in switch_box"
@@ -358,7 +358,7 @@
               ><template slot="append">天</template></el-input
             >
           </el-form-item>
-        </div>
+        </div> -->
         <div class="div row">
           <el-form-item label="在线直播：">
             <el-radio-group v-model="form_create.config_support_online_live">
@@ -495,11 +495,11 @@ export default {
     createData() {
       this.form_create = {
         website_mode_category: "0",
-        config_support_project_manager: "0",
+        // config_support_project_manager: "0",
         config_support_reported: "0",
         config_support_im: "0",
-        config_support_online_get_customer: "0",
-        config_support_private_flow: "0",
+        // config_support_online_get_customer: "0",
+        // config_support_private_flow: "0",
         config_support_online_live: "0",
         enable: "0",
       };

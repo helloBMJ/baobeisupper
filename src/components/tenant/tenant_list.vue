@@ -8,7 +8,16 @@
         <el-table-column label="ID" prop="id"></el-table-column>
         <el-table-column label="状态" prop="status"></el-table-column>
         <el-table-column label="余额" prop="balance"></el-table-column>
-        <el-table-column label="租户" prop="name"></el-table-column>
+        <el-table-column label="租户" prop="name">
+          <template slot-scope="scope">
+            <el-link
+              type="primary"
+              @click="openSite(scope.row)"
+              target="_blank"
+              >{{ scope.row.name }}</el-link
+            >
+          </template>
+        </el-table-column>
         <el-table-column label="有效期" prop="lease_start">
           <template slot-scope="scope">
             {{ scope.row.lease_start }}
@@ -60,6 +69,16 @@
       <el-form :model="form_create" label-width="100px">
         <el-form-item label="租户信息：">
           <el-input v-model="form_create.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="租户等级：">
+          <el-select v-model="form_create.level" placeholder="请选择">
+            <el-option
+              v-for="item in level_list"
+              :key="item.value"
+              :label="item.description"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="站点模式：" prop="allow_website_mode_categories">
           <el-select
@@ -117,6 +136,7 @@ export default {
       dialogTitle: "",
       time_value: [],
       website_mode_category_list: [],
+      level_list: [],
     };
   },
   mounted() {
@@ -125,6 +145,9 @@ export default {
         switch (item.name) {
           case "WEBSITE_MODE_CATEGORY":
             this.website_mode_category_list = item.childs;
+            break;
+          case "TENANT_LEVEL_CATEGORY":
+            this.level_list = item.childs;
             break;
         }
       });
@@ -175,6 +198,7 @@ export default {
       this.dialogTitle = "updateData";
       this.dialogCreate = true;
       this.form_create = row;
+      this.form_create.level = row.level + "";
       if (row.lease_start && row.lease_end) {
         this.time_value.push(
           this.form_create.lease_start,
@@ -232,6 +256,20 @@ export default {
           }
         });
       }
+    },
+    openSite(row) {
+      this.$http.getTenantToken(row.id).then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("tenant_TOKEN", res.data.token);
+          localStorage.setItem("website_id", row.id);
+          var tempwindow = window.open("_blank");
+          // 判断是否存在跳转链接
+          if (localStorage.getItem("tenant_TOKEN")) {
+            tempwindow.location =
+              "https://yun.tfcs.cn/tenant_admin?website_id=" + row.id;
+          }
+        }
+      });
     },
   },
 };

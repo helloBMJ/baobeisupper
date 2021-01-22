@@ -542,6 +542,10 @@ class UserCenter {
   getTopupRecord(params) {
     return this.$http.get("/super/admin/tenant/top_up_record/search", params);
   }
+  // 获取租户站点token
+  getTenantToken(id) {
+    return this.$http.get(`/super/admin/tenant/token/${id}`);
+  }
 }
 
 export default new UserCenter();

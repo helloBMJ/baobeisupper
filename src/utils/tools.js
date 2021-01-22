@@ -114,7 +114,7 @@ export function toTree(data) {
  * */
 
 export function setDictionary(callback) {
-  this.$http.queryDicData(localStorage.getItem("website_id")).then((res) => {
+  this.$http.queryDicData(1).then((res) => {
     if (res.status === 200) {
       const arr = [];
       res.data.forEach((item) => {
