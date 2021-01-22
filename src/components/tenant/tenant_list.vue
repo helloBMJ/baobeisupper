@@ -6,7 +6,7 @@
     <el-main>
       <el-table :data="tableData" style="width:100%" tooltip-effect="dark">
         <el-table-column label="ID" prop="id"></el-table-column>
-        <el-table-column label="状态" prop="status"></el-table-column>
+        <el-table-column label="等级" prop="status"></el-table-column>
         <el-table-column label="余额" prop="balance"></el-table-column>
         <el-table-column label="租户" prop="name">
           <template slot-scope="scope">

@@ -6,7 +6,7 @@
         <el-input
           @input="onInput"
           v-model="params.name"
-          placeholder="请输入套餐名称"
+          placeholder="请输入版本名称"
         ></el-input>
       </div>
     </el-header>
@@ -78,7 +78,7 @@
           </template>
         </el-table-column>
         <el-table-column label="ID" prop="id"></el-table-column>
-        <el-table-column label="套餐名称" prop="name"></el-table-column>
+        <el-table-column label="版本名称" prop="name"></el-table-column>
         <el-table-column label="站点类型" prop="website_mode_category">
           <template slot-scope="scope">
             {{
@@ -149,7 +149,7 @@
         <el-form-item label="产品版本：" prop="name">
           <el-input
             v-model="form_create.name"
-            placeholder="请输入套餐名称"
+            placeholder="请输入版本名称"
           ></el-input>
         </el-form-item>
         <el-form-item label="官方指导价：" prop="official_price">
@@ -414,7 +414,7 @@ export default {
       dialogCreate: false,
       form_create: {},
       create_rules: {
-        name: [{ required: true, message: "请输入套餐名称", trigger: "blur" }],
+        name: [{ required: true, message: "请输入版本名称", trigger: "blur" }],
         official_price: [
           { required: true, message: "请输入价格", trigger: "blur" },
         ],
