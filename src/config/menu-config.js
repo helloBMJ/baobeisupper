@@ -13,7 +13,7 @@ module.exports = [
       {
         name: "mode_category_list",
         componentName: "mode_category_list",
-        title: "模式列表",
+        title: "版本列表",
         icon: "icon-icon--",
       },
       {

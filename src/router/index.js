@@ -195,8 +195,8 @@ export default new Router({
           path: "/mode_category_list",
           component: (resolve) =>
             require(["@/components/website/mode_category_list"], resolve),
-          meta: { title: "模式列表" },
-          name: "模式列表",
+          meta: { title: "版本列表" },
+          name: "版本列表",
         },
         {
           path: "/tenant_list",
