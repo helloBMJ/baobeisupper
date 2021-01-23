@@ -56,7 +56,7 @@
               type="primary"
               size="mini"
               @click="$gotoPath(`/topup_record?tenant_id=${scope.row.id}`)"
-              >充值</el-button
+              >充值记录</el-button
             >
             <el-button type="danger" size="mini" @click="deleteData(scope.row)"
               >删除</el-button
