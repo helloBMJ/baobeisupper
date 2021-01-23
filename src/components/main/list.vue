@@ -55,6 +55,16 @@
         :reserve-selection="true"
         width="50"
       ></el-table-column>
+      <el-table-column prop="logo" label="logo">
+        <template slot-scope="scope">
+          <img
+            :src="scope.row.logo"
+            width="120px"
+            height="60px"
+            :alt="scope.row.name"
+          />
+        </template>
+      </el-table-column>
       <el-table-column type="expand" width="100">
         <template slot-scope="scope">
           <el-form
