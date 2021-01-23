@@ -546,6 +546,10 @@ class UserCenter {
   getTenantToken(id) {
     return this.$http.get(`/super/admin/tenant/token/${id}`);
   }
+  // 添加提交审核中新增撤销审核
+  revocationReview() {
+    return this.$http.get("/admin/wx_open/mini_program/code/undo/code/audit");
+  }
 }
 
 export default new UserCenter();

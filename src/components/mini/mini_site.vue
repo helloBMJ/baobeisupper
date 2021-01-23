@@ -57,6 +57,12 @@
           >提交审核</el-button
         >
         <el-button
+          @click="revocationReview"
+          v-if="review_status === 2"
+          type="danger"
+          >撤销审核</el-button
+        >
+        <el-button
           v-if="review_status === 0"
           @click="publishMini"
           type="success"
@@ -731,6 +737,31 @@ export default {
           },
         ];
       }
+    },
+    // 撤销审核
+    revocationReview() {
+      this.$confirm("此操作将撤销审核, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$http.revocationReview().then((res) => {
+            if (res.status === 200) {
+              this.$message({
+                type: "success",
+                message: "已撤销!",
+              });
+              this.getCodeTemplateList();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          });
+        });
     },
     // 小程序草稿箱
     // draftList() {
