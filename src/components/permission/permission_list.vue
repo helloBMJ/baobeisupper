@@ -172,6 +172,7 @@ export default {
         website_mode_category: "0",
         menu: 1,
         sort: 0,
+        pid: 0,
       };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
@@ -210,7 +211,8 @@ export default {
       this.next_pid = true;
       this.form_create = row;
       this.website_mode_value_list = row.website_mode_category.split(",");
-      if (row.menu === 1) {
+      console.log(row.menu);
+      if (row.menu == 1) {
         this.form_create.menu = true;
       } else {
         this.form_create.menu = false;
