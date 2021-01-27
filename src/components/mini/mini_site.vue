@@ -294,8 +294,6 @@ export default {
             "index/project",
             "index/message",
             "index/mine",
-            "index/search",
-            "index/search-build",
           ],
           tabBar: {
             list: [
@@ -627,8 +625,6 @@ export default {
           "index/project",
           "index/message",
           "index/mine",
-          "index/search",
-          "index/search-build",
         ];
         this.form_template.ext_json.tabBar.list = [
           {
