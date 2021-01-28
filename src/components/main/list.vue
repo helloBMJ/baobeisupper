@@ -59,13 +59,13 @@
         <template slot-scope="scope">
           <img
             :src="scope.row.logo"
-            width="120px"
-            height="60px"
+            width="60px"
+            height="30px"
             :alt="scope.row.name"
           />
         </template>
       </el-table-column>
-      <el-table-column type="expand" width="100">
+      <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form
             label-position="left"
@@ -120,9 +120,9 @@
             type="success"
             class="bang"
             v-if="scope.row.wx_pub_app_id"
-            >{{ scope.row.wx_pub_app_id }}</el-tag
+            >已授权</el-tag
           >
-          <el-tag type="danger" class="weibang" v-else>暂未授权公众号</el-tag>
+          <el-tag type="danger" class="weibang" v-else>未授权</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -136,11 +136,9 @@
             type="success"
             class="bang"
             v-if="scope.row.wx_mini_program_app_id"
-            >{{ scope.row.wx_mini_program_app_id }}</el-tag
+            >已授权</el-tag
           >
-          <el-tag type="danger" class="weibang" v-else
-            >暂未授权微信小程序</el-tag
-          >
+          <el-tag type="danger" class="weibang" v-else>未授权</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -152,22 +150,29 @@
         prop="operating"
         label="操作"
         show-overflow-tooltip
-        width="600"
+        width="350"
         fixed="right"
       >
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="changeData(scope.row)"
-            >修改</el-button
-          >
-          <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-            >删除</el-button
-          >
-          <el-button type="success" size="mini" @click="editData(scope.row)"
-            >管理员列表</el-button
-          >
-          <el-button type="primary" size="mini" @click="roleData(scope.row)"
-            >角色</el-button
-          >
+          <el-dropdown style="margin-right:10px">
+            <el-button type="primary" size="mini">
+              操作<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="changeData(scope.row)"
+                >修改</el-dropdown-item
+              >
+              <el-dropdown-item @click.native="deleteData(scope.row)"
+                >删除</el-dropdown-item
+              >
+              <el-dropdown-item @click.native="editData(scope.row)"
+                >管理员列表</el-dropdown-item
+              >
+              <el-dropdown-item @click.native="roleData(scope.row)"
+                >角色</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-button
             v-if="scope.row.wx_mini_program_app_id"
             type="success"
