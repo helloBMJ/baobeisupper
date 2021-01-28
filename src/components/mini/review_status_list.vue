@@ -127,9 +127,17 @@ export default {
     };
   },
   mounted() {
-    this.getDataList();
+    this.getWebsiteToken();
   },
   methods: {
+    getWebsiteToken() {
+      this.$http.getWebsiteToken(1).then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("admin_TOKEN", res.data.token);
+          this.getDataList();
+        }
+      });
+    },
     search() {
       this.params.currentPage = 1;
       this.params.pagesize = 10;

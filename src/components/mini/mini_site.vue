@@ -613,7 +613,7 @@ export default {
     },
 
     goReviewStatusList() {
-      this.$router.push("/review_status_list");
+      this.$router.push(`/review_status_list?website_id=${this.website_id}`);
     },
     // 改变小程序类型触发
     changeMode(e) {
