@@ -417,6 +417,10 @@ export default {
     },
     // 上传代码
     uploadTemplateCode(formName) {
+      this.$message({
+        message: "正在上传...",
+        type: "success",
+      });
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$http
@@ -466,9 +470,17 @@ export default {
     },
     // 上传成功显示提交审核
     uploadSuccessReview() {
+      this.$message({
+        message: "正在提交...",
+        type: "success",
+      });
       // 上传代码成功后直接提交代码到审核列表
       this.$http.SubmitReview().then((res) => {
         if (res.status === 200) {
+          this.$message({
+            message: "提交成功",
+            type: "success",
+          });
           this.auditid = res.data.auditid;
           this.queryReview();
         }
