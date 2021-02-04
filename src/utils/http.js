@@ -550,6 +550,14 @@ class UserCenter {
   revocationReview() {
     return this.$http.get("/admin/wx_open/mini_program/code/undo/code/audit");
   }
+  // 查询免责声明
+  querydisclaimer(category) {
+    return this.$http.get(`/super/admin/disclaimer/query/category/${category}`);
+  }
+  // 创建免责声明
+  createDisclaimerData(data) {
+    return this.$http.post("/super/admin/disclaimer/put", data);
+  }
 }
 
 export default new UserCenter();

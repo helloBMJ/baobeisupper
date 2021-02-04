@@ -70,6 +70,12 @@ module.exports = [
         title: "创建帮助信息",
         icon: "icon-chuangjiangongdan",
       },
+      {
+        name: "disclaimer_list",
+        componentName: "disclaimer_list",
+        title: "免责声明",
+        icon: "el-icon-help",
+      },
     ],
   },
   {

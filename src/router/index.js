@@ -212,6 +212,13 @@ export default new Router({
           meta: { title: "充值记录" },
           name: "充值记录",
         },
+        {
+          path: "/disclaimer_list",
+          component: (resolve) =>
+            require(["@/components/help/disclaimer_list"], resolve),
+          meta: { title: "免责声明" },
+          name: "免责声明",
+        },
       ],
     },
     {
