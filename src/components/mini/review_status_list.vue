@@ -203,11 +203,7 @@ export default {
     },
     changeData(row) {
       this.dialogUser = true;
-      this.create_Notice.name = row.name;
-      this.create_Notice.id = row.id;
-      this.create_Notice.wx_open_id = row.wx_open_id;
-      this.create_Notice.remark = row.remark;
-      this.create_Notice.status = row.status;
+      this.create_Notice = row;
     },
     closeDialog() {
       this.create_Notice = {};
