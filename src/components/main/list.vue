@@ -6,6 +6,9 @@
         <el-button type="success" @click="miniProgram"
           >已开通小程序列表</el-button
         >
+        <el-button type="primary" @click="$router.push('/custom_nav_link')"
+          >自定义链接跳转</el-button
+        >
       </div>
       <div class="div row input-box">
         <el-input

@@ -219,6 +219,13 @@ export default new Router({
           meta: { title: "免责声明" },
           name: "免责声明",
         },
+        {
+          path: "/custom_nav_link",
+          component: (resolve) =>
+            require(["@/components/main/custom_nav_link"], resolve),
+          meta: { title: "自定义导航" },
+          name: "自定义导航",
+        },
       ],
     },
     {

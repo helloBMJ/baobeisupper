@@ -558,6 +558,22 @@ class UserCenter {
   createDisclaimerData(data) {
     return this.$http.post("/super/admin/disclaimer/put", data);
   }
+  // 创建自定义导航
+  createCustomNavLink(data) {
+    return this.$http.post("/super/admin/custom_nav_link/create", data);
+  }
+  // 修改自定义导航
+  updateCustomNavLink(data) {
+    return this.$http.post("/super/admin/custom_nav_link/update", data);
+  }
+  // 删除自定义导航
+  deleteCustomNavLink(id) {
+    return this.$http.get(`/super/admin/custom_nav_link/delete/${id}`);
+  }
+  // 获取列表
+  getCustomNavLink(params) {
+    return this.$http.get("/super/admin/custom_nav_link/search", params);
+  }
 }
 
 export default new UserCenter();

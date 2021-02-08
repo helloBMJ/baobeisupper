@@ -64,6 +64,20 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-footer>
+        <!-- 分页 -->
+        <div class="pagination-box">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="this.params.currentPage"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="this.params.pagesize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="this.params.total"
+          ></el-pagination>
+        </div>
+      </el-footer>
     </el-main>
     <el-dialog :title="titleMap[dialogTitle]" :visible.sync="dialogCreate">
       <el-form :model="form_create" label-width="100px">
