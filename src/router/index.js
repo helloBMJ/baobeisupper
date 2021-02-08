@@ -226,6 +226,13 @@ export default new Router({
           meta: { title: "自定义导航" },
           name: "自定义导航",
         },
+        {
+          path: "/price_range_list",
+          component: (resolve) =>
+            require(["@/components/main/price_range_list"], resolve),
+          meta: { title: "价格管理" },
+          name: "价格管理",
+        },
       ],
     },
     {

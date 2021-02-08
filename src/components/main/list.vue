@@ -9,6 +9,9 @@
         <el-button type="primary" @click="$router.push('/custom_nav_link')"
           >自定义链接跳转</el-button
         >
+        <el-button type="success" @click="$router.push('/price_range_list')"
+          >价格管理</el-button
+        >
       </div>
       <div class="div row input-box">
         <el-input

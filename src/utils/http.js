@@ -574,6 +574,22 @@ class UserCenter {
   getCustomNavLink(params) {
     return this.$http.get("/super/admin/custom_nav_link/search", params);
   }
+  // 创建自定义价格
+  createPriceRange(data) {
+    return this.$http.post("/super/admin/build/price_range/create", data);
+  }
+  // 修改自定义价格
+  updatePriceRange(data) {
+    return this.$http.post("/super/admin/build/price_range/update", data);
+  }
+  // 获取自定义价格列表数据
+  getPriceRange(params) {
+    return this.$http.get("/super/admin/build/price_range/search", params);
+  }
+  // 删除自定义价格列表
+  deletePriceRange(id) {
+    return this.$http.get(`/super/admin/build/price_range/delete/${id}`);
+  }
 }
 
 export default new UserCenter();
