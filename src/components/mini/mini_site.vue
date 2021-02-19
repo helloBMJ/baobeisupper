@@ -715,6 +715,7 @@ export default {
           "weifangchan/pages/index/index",
           "weifangchan/pages/index/find_room",
           "weifangchan/pages/index/find",
+          "weifangchan/pages/index/message",
           "weifangchan/pages/index/mine",
         ];
         this.form_template.ext_json.tabBar.color = "#ccc";
@@ -736,6 +737,12 @@ export default {
             text: "发现",
             iconPath: "static/wei/faxian.png",
             selectedIconPath: "static/wei/faxian-active.png",
+          },
+          {
+            pagePath: "weifangchan/pages/index/message",
+            text: "消息",
+            iconPath: "static/wei/xiaoxi.png",
+            selectedIconPath: "static/wei/xiaoxi-active.png",
           },
           {
             pagePath: "weifangchan/pages/index/mine",
