@@ -153,11 +153,19 @@ export default {
       this.authWxPubAppId =
         this.$route.query.wxpubappid || this.$route.query.wxminiappid;
     }
-    if (this.authWxPubAppId) {
-      this.getAuthWxPubAppId();
-    }
+    this.getWebsiteToken();
   },
   methods: {
+    getWebsiteToken() {
+      this.$http.getWebsiteToken(this.$route.query.website_id).then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("admin_TOKEN", res.data.token);
+          if (this.authWxPubAppId) {
+            this.getAuthWxPubAppId();
+          }
+        }
+      });
+    },
     getAuthWxPubAppId() {
       this.$http.getAuthorizationInfo(this.authWxPubAppId).then((res) => {
         if (res.status === 200) {

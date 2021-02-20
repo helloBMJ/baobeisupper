@@ -122,7 +122,7 @@
       <el-table-column prop="wx_pub_app_id" label="公众号" width="auto">
         <template slot-scope="scope">
           <el-tag
-            @click="authWxPubAppId(scope.row.wx_pub_app_id)"
+            @click="authWxPubAppId(scope.row)"
             type="success"
             class="bang"
             v-if="scope.row.wx_pub_app_id"
@@ -138,7 +138,7 @@
       >
         <template slot-scope="scope">
           <el-tag
-            @click="authWxMiniAppId(scope.row.wx_mini_program_app_id)"
+            @click="authWxMiniAppId(scope.row)"
             type="success"
             class="bang"
             v-if="scope.row.wx_mini_program_app_id"
@@ -355,11 +355,15 @@ export default {
       );
       // this.$router.push(`/mini_site?website_id=${row.id}`);
     },
-    authWxPubAppId(id) {
-      this.$router.push(`/authorization_list?wxpubappid=${id}`);
+    authWxPubAppId(row) {
+      this.$router.push(
+        `/authorization_list?wxpubappid=${row.wx_pub_app_id}&website_id=${row.id}`
+      );
     },
-    authWxMiniAppId(id) {
-      this.$router.push(`/authorization_list?wxminiappid=${id}`);
+    authWxMiniAppId(row) {
+      this.$router.push(
+        `/authorization_list?wxminiappid=${row.wx_mini_program_app_id}&website_id=${row.id}`
+      );
     },
     miniProgram() {
       this.$router.push("/mini_program_list");
