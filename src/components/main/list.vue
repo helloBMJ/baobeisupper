@@ -22,31 +22,11 @@
         <el-button type="primary" icon="el-icon-search" @click="search"
           >搜索</el-button
         >
+        <el-button type="success" @click="draw_slider = true"
+          >高级搜索</el-button
+        >
       </div>
     </el-header>
-    <div class="select-box div row">
-      <el-select
-        v-model="params.website_version_category"
-        placeholder="请选择版本"
-      >
-        <el-option
-          v-for="item in website_version_category_list"
-          :key="item.value"
-          :label="item.description"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <el-date-picker
-        v-model="time_value"
-        type="daterange"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        value-format="yyyy-MM-dd"
-      >
-      </el-date-picker>
-      <el-button type="primary" @click="search">搜索</el-button>
-    </div>
     <el-table
       ref="multipleTable"
       :row-key="getRowKey"
@@ -206,6 +186,66 @@
         ></el-pagination>
       </div>
     </el-footer>
+    <el-drawer
+      custom-class="draw-slider"
+      title="高级搜索"
+      :visible.sync="draw_slider"
+      :wrapperClosable="false"
+    >
+      <el-input
+        v-model="params.website_company_name"
+        placeholder="站点公司名称"
+      ></el-input>
+      <el-input
+        v-model="params.website_contact_name"
+        placeholder="站点联系人名称"
+      ></el-input>
+      <el-input
+        v-model="params.website_contact_phone"
+        placeholder="站点联系人电话"
+      ></el-input>
+      <el-input
+        v-model="params.website_city_name"
+        placeholder="站点城市名称"
+      ></el-input>
+      <el-select
+        v-model="params.website_version_category"
+        placeholder="请选择版本"
+        clearable
+      >
+        <el-option
+          v-for="item in website_version_category_list"
+          :key="item.value"
+          :label="item.description"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <el-select
+        v-model="params.website_mode_category"
+        placeholder="请选择小程序模式"
+        clearable
+      >
+        <el-option
+          v-for="item in website_mode_category_list"
+          :key="item.value"
+          :label="item.description"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <el-date-picker
+        v-model="time_value"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        value-format="yyyy-MM-dd"
+      >
+      </el-date-picker>
+      <div class="div row">
+        <el-button type="danger" @click="resetVal">重置</el-button>
+        <el-button type="primary" @click="search">搜索</el-button>
+      </div>
+    </el-drawer>
   </el-container>
 </template>
 
@@ -222,15 +262,26 @@ export default {
         row: 0,
         name: "",
         website_version_category: "",
-        lease_start_date: "",
-        lease_end_date: "",
+        "lease_start_date[start]": "",
+        "lease_start_date[end]": "",
+        website_mode_category: "",
+        website_company_name: "",
+        website_contact_name: "",
+        website_contact_phone: "",
+        website_city_name: "",
       },
       // 版本筛选
       website_version_category_list: [
-        { description: "正式版", value: 1 },
-        { description: "试用版", value: 0 },
+        { description: "正式版", value: "1" },
+        { description: "试用版", value: "0" },
+      ],
+      website_mode_category_list: [
+        { description: "分销报备", value: "0" },
+        { description: "单楼盘", value: "1" },
+        { description: "微房产", value: "2" },
       ],
       time_value: [],
+      draw_slider: false,
     };
   },
   mounted() {
@@ -307,14 +358,17 @@ export default {
 
     // 获取列表数据
     getDataList() {
-      if (this.params.lease_start_date === "") {
-        delete this.params.lease_start_date;
+      if (!this.params["lease_start_date[start]"]) {
+        delete this.params["lease_start_date[start]"];
       }
-      if (this.params.lease_end_date === "") {
-        delete this.params.lease_end_date;
+      if (!this.params["lease_start_date[end]"]) {
+        delete this.params["lease_start_date[end]"];
       }
-      if (this.params.website_version_category === "") {
+      if (!this.params.website_version_category) {
         delete this.params.website_version_category;
+      }
+      if (!this.params.website_mode_category) {
+        delete this.params.website_mode_category;
       }
       this.$http.websiteList({ params: this.params }).then((res) => {
         if (res.status === 200) {
@@ -334,9 +388,12 @@ export default {
       this.$router.push("/add_list");
     },
     search() {
-      if (this.time_value) {
-        this.params.lease_start_date = this.time_value[0];
-        this.params.lease_end_date = this.time_value[1];
+      if (this.time_value === null) {
+        this.params["lease_start_date[start]"] = "";
+        this.params["lease_start_date[end]"] = "";
+      } else {
+        this.params["lease_start_date[start]"] = this.time_value[0];
+        this.params["lease_start_date[end]"] = this.time_value[1];
       }
       this.params.page = 1;
       this.params.pagesize = 10;
@@ -390,11 +447,44 @@ export default {
         }
       });
     },
+    resetVal() {
+      this.time_value = [];
+      this.params = {
+        page: 1,
+        per_page: 10,
+        total: 0,
+        row: 0,
+        name: "",
+        website_version_category: "",
+        "lease_start_date[start]": "",
+        "lease_start_date[end]": "",
+        website_mode_category: "",
+        website_company_name: "",
+        website_contact_name: "",
+        website_contact_phone: "",
+        website_city_name: "",
+      };
+    },
   },
 };
 </script>
 
 <style lang="scss">
+.draw-slider {
+  padding: 20px;
+  .el-input {
+    display: block;
+    margin: 10px;
+  }
+  .el-select {
+    display: block;
+  }
+  .el-button {
+    margin-top: 10px;
+    display: block;
+    text-align: end;
+  }
+}
 .el-tag {
   cursor: pointer;
 }

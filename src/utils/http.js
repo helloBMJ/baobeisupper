@@ -135,13 +135,7 @@ class UserCenter {
   }
   // 获取站点列表
   websiteList(params) {
-    if (params.params.lease_start_date && params.params.lease_end_date) {
-      return this.$http.get(
-        `/super/admin/website/search?lease_start_date[start]=${params.params.lease_start_date}&lease_start_date[end]=${params.params.lease_end_date}&website_version_category=${params.params.website_version_category}&page=${params.params.page}`
-      );
-    } else {
-      return this.$http.get(`/super/admin/website/search`, params);
-    }
+    return this.$http.get(`/super/admin/website/search`, params);
   }
   // 创建新的站点
   createWeb(data) {
