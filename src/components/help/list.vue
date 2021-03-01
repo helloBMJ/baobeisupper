@@ -13,13 +13,35 @@
     >
       <el-table-column prop="id" label="帮助ID" width="auto"></el-table-column>
       <el-table-column prop="sort" label="排序" width="auto"></el-table-column>
-      <el-table-column prop="title" label="标题内容" width="auto"></el-table-column>
-      <el-table-column prop="created_at" label="创建时间" width="auto"></el-table-column>
-      <el-table-column prop="updated_at" label="更新时间" width="auto"></el-table-column>
-      <el-table-column prop="operating" label="操作" show-overflow-tooltip width="auto" fixed="right">
+      <el-table-column
+        prop="title"
+        label="标题内容"
+        width="auto"
+      ></el-table-column>
+      <el-table-column
+        prop="created_at"
+        label="创建时间"
+        width="auto"
+      ></el-table-column>
+      <el-table-column
+        prop="updated_at"
+        label="更新时间"
+        width="auto"
+      ></el-table-column>
+      <el-table-column
+        prop="operating"
+        label="操作"
+        show-overflow-tooltip
+        width="auto"
+        fixed="right"
+      >
         <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="changeData(scope.row)">修改</el-button>
-          <el-button type="danger" size="mini" @click="deleteData(scope.row)">删除</el-button>
+          <el-button type="success" size="mini" @click="changeData(scope.row)"
+            >修改</el-button
+          >
+          <el-button type="danger" size="mini" @click="deleteData(scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -49,8 +71,8 @@ export default {
       params: {
         page: 1,
         per_page: 10,
-        total: 0
-      }
+        total: 0,
+      },
     };
   },
   mounted() {
@@ -80,7 +102,7 @@ export default {
       this.getDataList();
     },
     getDataList() {
-      this.$http.getHelpData({ params: this.params }).then(res => {
+      this.$http.getHelpData({ params: this.params }).then((res) => {
         if (res.status === 200) {
           this.tableData = res.data.data;
           this.params.page = res.data.current_page;
@@ -89,7 +111,7 @@ export default {
         } else {
           this.$message({
             message: "请求数据列表失败",
-            type: "error"
+            type: "error",
           });
         }
       });
@@ -104,14 +126,14 @@ export default {
       this.$confirm("此操作将删除该信息, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
-          this.$http.deleteHelp(row.id).then(res => {
+          this.$http.deleteHelp(row.id).then((res) => {
             if (res.status === 200) {
               this.$message({
                 type: "success",
-                message: "删除成功!"
+                message: "删除成功!",
               });
               this.getDataList();
             }
@@ -120,11 +142,11 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
