@@ -83,7 +83,7 @@
     </el-main>
     <!-- 弹出框 -->
     <el-dialog
-      title="添加字典数据"
+      :title="titleMap[dialogTitle]"
       custom-class="dia-detail"
       :visible.sync="dialogVisibleDic"
     >
@@ -143,13 +143,7 @@ export default {
         name: "",
       },
       dialogVisibleDic: false,
-      form_dic: {
-        value: "",
-        name: "",
-        sort: 0,
-        description: "",
-        remark: "",
-      },
+      form_dic: {},
       rules: {
         description: [
           { required: true, message: "请输入内容", trigger: "blur" },
@@ -157,6 +151,11 @@ export default {
         name: [{ required: true, message: "请输入内容", trigger: "blur" }],
         value: [{ required: true, message: "请输入内容", trigger: "blur" }],
       },
+      titleMap: {
+        addData: "添加数据",
+        updateData: "修改数据",
+      },
+      dialogTitle: "",
     };
   },
   mounted() {
@@ -217,9 +216,16 @@ export default {
       });
     },
     onPoint(item) {
-      this.$router.push(`/edit_dictionary?id=${item.id}`);
+      this.form_dic = item;
+      this.dialogTitle = "updateData";
+      this.dialogVisibleDic = true;
+      // this.$router.push(`/edit_dictionary?id=${item.id}`);
     },
     createData() {
+      this.form_dic = {
+        sort: 0,
+      };
+      this.dialogTitle = "addData";
       this.dialogVisibleDic = true;
     },
     onCreate() {
@@ -234,23 +240,34 @@ export default {
         });
         return;
       }
-      this.$http.createDictionaryData(this.form_dic).then((res) => {
-        if (res.status === 200) {
-          this.$message({
-            message: "创建成功",
-            type: "success",
-          });
-          this.getDataList();
-          // for (var key in this.form_dic) {
-          //   this.form_dic[key] = "";
-          // }
-        } else {
-          this.$message({
-            message: res.data.message || "创建失败",
-            type: "error",
-          });
-        }
-      });
+
+      if (this.dialogTitle === "addData") {
+        this.$http.createDictionaryData(this.form_dic).then((res) => {
+          if (res.status === 200) {
+            this.$message({
+              message: "创建成功",
+              type: "success",
+            });
+            this.getDataList();
+            // for (var key in this.form_dic) {
+            //   this.form_dic[key] = "";
+            // }
+          }
+        });
+      } else {
+        this.$http.upDateDictionary(this.form_dic).then((res) => {
+          if (res.status === 200) {
+            this.$message({
+              message: "修改成功",
+              type: "success",
+            });
+            this.getDataList();
+            // for (var key in this.form_dic) {
+            //   this.form_dic[key] = "";
+            // }
+          }
+        });
+      }
     },
     onInput(e) {
       this.params.name = e;

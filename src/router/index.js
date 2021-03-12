@@ -107,14 +107,6 @@ export default new Router({
           name: "字典列表",
         },
         {
-          path: "/edit_dictionary",
-          component: (resolve) =>
-            require(["@/components/dictionary/edit_dictionary"], resolve),
-          // 判断是否需要登录
-          meta: { title: "编辑字典" },
-          name: "编辑字典",
-        },
-        {
           path: "/mini_site",
           component: (resolve) =>
             require(["@/components/mini/mini_site"], resolve),
