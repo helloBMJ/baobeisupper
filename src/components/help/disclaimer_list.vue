@@ -17,14 +17,22 @@
       </el-form-item>
       <el-form-item label="免责声明：">
         <el-input
+          v-if="create_form.category == 1 || create_form.category == 2"
+          style="width:500px"
           type="textarea"
           rows="10"
           placeholder="请输入免责声明内容"
           v-model="create_form.content"
         ></el-input>
       </el-form-item>
+      <UE
+        v-if="create_form.category == 3 || create_form.category == 4"
+        :value="create_form.content"
+        :config="ueditor.config"
+        ref="ue"
+      ></UE>
       <el-form-item
-        ><el-button type="primary" @click="onCreate"
+        ><el-button style="margin-top:30px" type="primary" @click="onCreate"
           >确定</el-button
         ></el-form-item
       >
@@ -33,13 +41,22 @@
 </template>
 
 <script>
+import UE from "@/components/ueditor";
 export default {
+  components: { UE },
   data() {
     return {
       create_form: {
         category: "1",
       },
       category_list: [],
+      ueditor: {
+        value: "",
+        config: {
+          initialFrameWidth: "100%",
+        },
+      },
+      ue: "ue",
     };
   },
   mounted() {
