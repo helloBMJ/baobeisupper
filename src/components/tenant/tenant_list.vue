@@ -29,13 +29,10 @@
           <template slot-scope="scope">
             <p>
               {{
-                scope.row.allow_website_mode_categories == 0
-                  ? "分销报备"
-                  : scope.row.allow_website_mode_categories == 1
-                  ? "单楼盘"
-                  : scope.row.allow_website_mode_categories == 2
-                  ? "微房产"
-                  : ""
+                $computedValueArr(
+                  website_mode_category_list,
+                  scope.row.allow_website_mode_categories
+                )
               }}
             </p>
           </template>

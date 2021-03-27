@@ -41,16 +41,7 @@
         :reserve-selection="true"
         width="50"
       ></el-table-column>
-      <el-table-column prop="logo" label="logo">
-        <template slot-scope="scope">
-          <img
-            :src="scope.row.logo"
-            width="60px"
-            height="30px"
-            :alt="scope.row.name"
-          />
-        </template>
-      </el-table-column>
+
       <el-table-column type="expand">
         <template slot-scope="scope">
           <el-form
@@ -77,6 +68,17 @@
               }}</span>
             </el-form-item>
           </el-form>
+        </template>
+      </el-table-column>
+      <el-table-column prop="logo" label="logo">
+        <template slot-scope="scope">
+          <img
+            v-if="scope.row.logo"
+            :src="scope.row.logo"
+            width="60px"
+            height="30px"
+            :alt="scope.row.name"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="name" label="站点" width="auto">

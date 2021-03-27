@@ -137,3 +137,8 @@ export function setDictionary(callback) {
 export function gotoPath(path) {
   this.$router.push(path);
 }
+
+// 从数组匹配内容(匹配列表数据对应描述内容)
+export function computedValueArr(arr, value) {
+  return arr[value]["description"];
+}
