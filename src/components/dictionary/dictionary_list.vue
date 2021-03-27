@@ -5,7 +5,7 @@
       <div class="div row search-box">
         <el-input
           @input="onInput"
-          v-model="params.name"
+          v-model="params.match_name"
           placeholder="请输入字典名称"
         ></el-input>
         <el-button type="primary" icon="el-icon-search" @click="search"
@@ -140,7 +140,7 @@ export default {
         per_page: 10,
         total: 0,
         row: 0,
-        name: "",
+        match_name: "",
       },
       dialogVisibleDic: false,
       form_dic: {},
@@ -181,8 +181,8 @@ export default {
       this.getDataList();
     },
     getDataList() {
-      if (!this.params.name) {
-        delete this.params.name;
+      if (!this.params.match_name) {
+        delete this.params.match_name;
       }
       this.tableData = [];
       this.$http.getDictionaryList({ params: this.params }).then((res) => {
@@ -270,8 +270,8 @@ export default {
       }
     },
     onInput(e) {
-      this.params.name = e;
-      if (!this.params.name) {
+      this.params.match_name = e;
+      if (!this.params.match_name) {
         this.getDataList();
       }
     },

@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header>
+    <el-header style="height:110px">
       <div v-if="$route.query.website_id">
         <i>站点ID：{{ $route.query.website_id }}；</i>
         <i>站点名称：{{ $route.query.website_name }}；</i>
@@ -70,6 +70,46 @@
         >
       </div>
     </el-header>
+    <div class="step-box">
+      <el-steps :active="step_status">
+        <el-step
+          title="提交代码"
+          :description="
+            last_code_info_type.status === 0 ? '代码已提交审核' : ''
+          "
+        ></el-step>
+        <el-step
+          title="提交审核"
+          :description="
+            last_code_info_type.status === 1 ? '代码正在提交审核' : ''
+          "
+        ></el-step>
+        <el-step
+          :status="last_code_info_type.audit_status === 1 ? 'error' : ''"
+          @click.native="ReviewAuditStatus(last_code_info_type.audit_status)"
+          title="审核状态"
+          :description="
+            last_code_info_type.audit_status === 0
+              ? '审核成功'
+              : last_code_info_type.audit_status === 1
+              ? '审核不通过'
+              : last_code_info_type.audit_status === 2
+              ? '审核中'
+              : last_code_info_type.audit_status === 3
+              ? '已撤回'
+              : last_code_info_type.audit_status === 4
+              ? '审核延后'
+              : last_code_info_type.audit_status === 5
+              ? '未提交审核'
+              : ''
+          "
+        ></el-step>
+        <el-step
+          title="上线状态"
+          :description="last_code_info_type.status === 2 ? '审核通过' : ''"
+        ></el-step>
+      </el-steps>
+    </div>
     <el-table
       v-if="isReview === 1"
       ref="multipleTable"
@@ -153,6 +193,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pagination-box" v-if="isReview === 0">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="this.params.page"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="this.params.per_page"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="this.params.total"
+      >
+      </el-pagination>
+    </div>
     <el-dialog title="上传代码" :visible.sync="dialogVisible" width="60%">
       <el-form
         :model="form_template"
@@ -340,6 +392,14 @@ export default {
       // 获取当月加急
       query_quota: {},
       website_mode_category_list: this.$getDictionary("WEBSITE_MODE_CATEGORY"),
+      last_code_info_type: {},
+      step_status: 1,
+      review_params: {
+        page: 1,
+        per_page: 10,
+        total: 0,
+        row: 0,
+      },
       // 默认显示分销报备
     };
   },
@@ -354,6 +414,7 @@ export default {
     if (this.$route.query.isReview) {
       this.isReview = parseInt(this.$route.query.isReview);
     }
+    this.queryLastCode();
   },
   methods: {
     // 获取当月的提审和加急次数
@@ -495,15 +556,41 @@ export default {
       } else if (this.isReview === 1) {
         this.isReview = 0;
         this.btn_txt = "模板列表";
-        this.$http.getReviewCodeList().then((res) => {
+        this.getReviewCodeList();
+      }
+    },
+    getReviewCodeList() {
+      this.$http
+        .getReviewCodeList({ params: this.review_params })
+        .then((res) => {
           if (res.status === 200) {
+            this.params.page = res.data.current_page;
+            this.params.total = res.data.total;
+            this.params.row = res.data.per_page;
             this.reviewList = res.data.data;
             if (res.data.data[0].audit_id) {
               this.queryReview();
             }
           }
         });
-      }
+    },
+    // 根据分页设置的数据控制每页显示的数据条数及页码跳转页面刷新
+    getPageData() {
+      let start = (this.review_params.page - 1) * this.review_params.per_page;
+      let end = start + this.review_params.per_page;
+      this.schArr = this.reviewList.slice(start, end);
+    },
+    // 分页自带的函数，当pageSize变化时会触发此函数
+    handleSizeChange(val) {
+      this.review_params.per_page = val;
+      this.getPageData();
+      this.getReviewCodeList();
+    },
+    // 分页自带函数，当page变化时会触发此函数
+    handleCurrentChange(val) {
+      this.review_params.page = val;
+      this.getPageData();
+      this.getReviewCodeList();
     },
     // 过滤状态
     audit_status(row) {
@@ -782,6 +869,35 @@ export default {
     // draftList() {
     //   this.$router.push("/draft_list");
     // },
+    // 查询最后一次提交审核状态
+    queryLastCode() {
+      this.$http.queryLastCode().then((res) => {
+        if (res.status === 200) {
+          this.last_code_info_type = res.data;
+          switch (this.last_code_info_type.status) {
+            case 0:
+              this.step_status = 1;
+              break;
+            case 1:
+              this.step_status = 2;
+              if (this.last_code_info_type.audit_status) {
+                this.step_status = 3;
+              }
+              break;
+            case 2:
+              this.step_status = 4;
+              break;
+          }
+        }
+      });
+    },
+    ReviewAuditStatus(status) {
+      if (status === 1) {
+        this.$router.push(
+          `/review_audit_list?id=${this.last_code_info_type.id}`
+        );
+      }
+    },
   },
 };
 </script>
@@ -800,7 +916,7 @@ i {
   font-weight: 600;
 }
 .el-table {
-  margin-top: 60px;
+  margin-top: 10px;
 }
 .el-button {
   margin: 10px 4px;
@@ -808,5 +924,10 @@ i {
 .p-label {
   margin: 4px 0;
   padding: 10px 0;
+}
+.step-box {
+  padding: 20px;
+  border-radius: 8px;
+  background: #f3f3f3;
 }
 </style>

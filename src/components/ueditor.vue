@@ -13,10 +13,18 @@ export default {
       editor: null,
     };
   },
+  watch: {
+    value: {
+      handler: function(val) {
+        this.editor.setContent(val);
+      },
+    },
+  },
   props: {
     value: "",
     config: {},
   },
+  created() {},
   mounted() {
     const _this = this;
     this.editor = window.UE.getEditor("editor", this.config);

@@ -10,6 +10,7 @@
           {{ item.meta.title }}
         </el-breadcrumb-item>
       </el-breadcrumb>
+
       <div class="right_r div row">
         <div class="admin div row">
           <!-- 头像 -->

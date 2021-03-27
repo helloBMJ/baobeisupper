@@ -584,6 +584,10 @@ class UserCenter {
   deletePriceRange(id) {
     return this.$http.get(`/super/admin/build/price_range/delete/${id}`);
   }
+  // 查询最后一次提交的代码版本
+  queryLastCode() {
+    return this.$http.get(`/admin/wx_open_mp/version/query/last`);
+  }
 }
 
 export default new UserCenter();
