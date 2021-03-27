@@ -588,6 +588,12 @@ class UserCenter {
   queryLastCode() {
     return this.$http.get(`/admin/wx_open_mp/version/query/last`);
   }
+  // 图片跨域问题
+  getImgCommonProxy(data) {
+    return this.$http.post("/common/proxy", data, {
+      responseType: "arraybuffer",
+    });
+  }
 }
 
 export default new UserCenter();

@@ -15,7 +15,7 @@
         >公众号二维码</el-button
       >
       <el-dialog title="二维码" width="100" :visible.sync="isqrimg">
-        <img width="300" :src="authorizer_info.qrcode_url" alt="" />
+        <img width="300" :src="qr_code" alt="" />
       </el-dialog>
       <el-drawer direction="ltr" :visible.sync="drawer" :with-header="false">
         <div class="header ">
@@ -146,6 +146,7 @@ export default {
       verify_type_info: "",
       service_type_info: "",
       isqrimg: false,
+      qr_code: "",
     };
   },
   mounted() {
@@ -175,6 +176,7 @@ export default {
             }
           );
           this.authorizer_info = res.data.authorizer_info;
+          this.getCommonProxy();
           switch (this.authorizer_info.service_type_info.id) {
             case 0:
               this.service_type_info = "订阅号";
@@ -214,8 +216,22 @@ export default {
         }
       });
     },
-    qrcodeUrl(path) {
-      console.log(path);
+    // 小程序二维码不显示问题
+    getCommonProxy() {
+      var data = {
+        url: this.authorizer_info.qrcode_url,
+        method: "get",
+      };
+      this.$http.getImgCommonProxy(data).then((res) => {
+        if (res.status === 200) {
+          this.qr_code = ` data: image/jpeg;base64,${btoa(
+            new Uint8Array(res.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              ""
+            )
+          )}`;
+        }
+      });
     },
   },
 };
