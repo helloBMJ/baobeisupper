@@ -83,15 +83,13 @@
       <el-footer>
         <!-- 分页 -->
         <div class="pagination-box">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="this.params.currentPage"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="this.params.pagesize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="this.params.total"
-          ></el-pagination>
+          <myPagination
+            :currentPage="params.currentPage"
+            :total="params.total"
+            :pagesize="params.pagesize"
+            @handleCurrentChange="handleCurrentChange"
+            @handleSizeChange="handleSizeChange"
+          ></myPagination>
         </div>
       </el-footer>
     </el-main>
@@ -148,7 +146,11 @@
 </template>
 
 <script>
+import myPagination from "@/components/my_pagination";
 export default {
+  components: {
+    myPagination,
+  },
   data() {
     return {
       tableData: [],
