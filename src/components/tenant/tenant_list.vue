@@ -43,7 +43,7 @@
           label="操作"
           show-overflow-tooltip
           fixed="right"
-          width="250"
+          width="300"
         >
           <template slot-scope="scope">
             <el-button type="success" size="mini" @click="changeData(scope.row)"

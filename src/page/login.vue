@@ -193,7 +193,7 @@ export default {
                     type: "success",
                   });
                   this.$store.commit("login", res.data.token);
-                  this.$router.push("/list");
+                  this.$gotoPath("/list");
                 }
               });
             // this.$router.push({ path: "/home" });
@@ -291,7 +291,7 @@ export default {
                 type: "success",
               });
               this.$store.commit("login", res.data.token);
-              this.$router.push("/list");
+              this.$gotoPath("/list");
             }
           });
       }

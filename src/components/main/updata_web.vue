@@ -154,7 +154,7 @@ export default {
       });
     },
     goBack() {
-      this.$router.push("/list");
+      this.$gotoPath("/list");
     },
     onSubmit() {
       this.form.lease_start = this.time_value[0];
@@ -171,7 +171,7 @@ export default {
               message: "修改成功",
               type: "success",
             });
-            this.$router.push("/list");
+            this.$gotoPath("/list");
           } else {
             this.$message({
               message: "修改失败",

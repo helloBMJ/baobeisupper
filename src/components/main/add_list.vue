@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push("/list");
+      this.$gotoPath("/list");
     },
     onSubmit() {
       this.form.lease_start = this.time_value[0];
@@ -161,7 +161,7 @@ export default {
               message: "创建成功",
               type: "success",
             });
-            this.$router.push("/list");
+            this.$gotoPath("/list");
           } else {
             this.$message({
               message: "创建失败",

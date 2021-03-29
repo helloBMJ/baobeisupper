@@ -8,7 +8,11 @@
         <UE :value="ueditor.value" :config="ueditor.config" ref="ue"></UE>
       </el-form-item>
       <el-form-item label="排序">
-        <el-input type="number" placeholder="请输入" v-model="form.sort"></el-input>
+        <el-input
+          type="number"
+          placeholder="请输入"
+          v-model="form.sort"
+        ></el-input>
       </el-form-item>
       <el-form-item size="large">
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -28,15 +32,15 @@ export default {
       form: {
         title: "",
         content: "",
-        sort: ""
+        sort: "",
       },
       ueditor: {
         value: "",
         config: {
-          initialFrameWidth: "100%"
-        }
+          initialFrameWidth: "100%",
+        },
       },
-      ue: "ue"
+      ue: "ue",
     };
   },
   methods: {
@@ -45,29 +49,29 @@ export default {
       if (!this.form.title || !this.form.content || !this.form.sort) {
         this.$message({
           message: "请输入内容后提交",
-          type: "error"
+          type: "error",
         });
       } else {
-        this.$http.createHelpData(this.form).then(res => {
+        this.$http.createHelpData(this.form).then((res) => {
           if (res.status === 200) {
             this.$message({
               message: "创建成功",
-              type: "success"
+              type: "success",
             });
-            this.$router.push("/help_list");
+            this.$gotoPath("/help_list");
           } else {
             this.$message({
               message: "创建失败",
-              type: "error"
+              type: "error",
             });
           }
         });
       }
     },
     goBack() {
-      this.$router.push("/help_list");
-    }
-  }
+      this.$gotoPath("/help_list");
+    },
+  },
 };
 </script>
 

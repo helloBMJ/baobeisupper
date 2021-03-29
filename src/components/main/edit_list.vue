@@ -246,7 +246,7 @@ export default {
       });
     },
     addUser() {
-      this.$router.push(`/add_admin_list?id=${this.params.id}`);
+      this.$gotoPath(`/add_admin_list?id=${this.params.id}`);
     },
   },
 };

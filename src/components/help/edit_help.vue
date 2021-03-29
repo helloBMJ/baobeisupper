@@ -27,15 +27,15 @@ export default {
       form: {
         title: "",
         content: "",
-        id: ""
+        id: "",
       },
       ueditor: {
         value: "",
         config: {
-          initialFrameWidth: "100%"
-        }
+          initialFrameWidth: "100%",
+        },
       },
-      ue: "ue"
+      ue: "ue",
     };
   },
   mounted() {
@@ -44,14 +44,14 @@ export default {
   },
   methods: {
     getQueryHelp() {
-      this.$http.getQueryHelp(this.form.id).then(res => {
+      this.$http.getQueryHelp(this.form.id).then((res) => {
         if (res.status === 200) {
           this.form = res.data;
           this.ueditor.value = this.form.content;
         } else {
           this.$message({
             message: "获取失败",
-            type: "error"
+            type: "error",
           });
         }
       });
@@ -61,29 +61,29 @@ export default {
       if (!this.form.title || !this.form.content || !this.form.sort) {
         this.$message({
           message: "请输入内容后提交",
-          type: "error"
+          type: "error",
         });
       } else {
-        this.$http.updataHelp(this.form).then(res => {
+        this.$http.updataHelp(this.form).then((res) => {
           if (res.status === 200) {
             this.$message({
               message: "修改成功",
-              type: "success"
+              type: "success",
             });
-            this.$router.push("/help_list");
+            this.$gotoPath("/help_list");
           } else {
             this.$message({
               message: "修改失败",
-              type: "error"
+              type: "error",
             });
           }
         });
       }
     },
     goBack() {
-      this.$router.push("/help_list");
-    }
-  }
+      this.$gotoPath("/help_list");
+    },
+  },
 };
 </script>
 

@@ -174,7 +174,7 @@ export default {
       // 注销后 清除session信息 ，并返回登录页
       window.localStorage.removeItem("TOKEN");
       localStorage.removeItem("user_name");
-      this.$router.push("/login");
+      this.$gotoPath("/login");
     },
     // 头像展示
     errorHandler() {

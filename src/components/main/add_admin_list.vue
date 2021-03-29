@@ -102,7 +102,7 @@ export default {
       });
     },
     goBack() {
-      this.$router.push(`edit_list?id=${this.form.website_id}`);
+      this.$gotoPath(`edit_list?id=${this.form.website_id}`);
     },
     onSubmit() {
       this.$http.createUser(this.form).then((res) => {
@@ -111,7 +111,7 @@ export default {
             message: "创建成功",
             type: "success",
           });
-          this.$router.push(`edit_list?id=${this.form.website_id}`);
+          this.$gotoPath(`edit_list?id=${this.form.website_id}`);
         }
       });
     },

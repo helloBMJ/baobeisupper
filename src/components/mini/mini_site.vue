@@ -2,7 +2,7 @@
   <el-container>
     <el-header style="height:110px">
       <div v-if="$route.query.website_id">
-        <i>站点ID：{{ $route.query.website_id }}；</i>
+        <i>站点ID： {{ $route.query.website_id }}；</i>
         <i>站点名称：{{ $route.query.website_name }}；</i>
         <i>
           审核状态：{{
@@ -543,6 +543,8 @@ export default {
             type: "success",
           });
           this.auditid = res.data.auditid;
+          // queryLastCode查询审核状态
+          this.queryLastCode();
           this.queryReview();
         }
       });
@@ -631,11 +633,12 @@ export default {
             message: "发布成功",
             type: "success",
           });
+          this.queryLastCode();
         }
       });
     },
     reviewRecording(id) {
-      this.$router.push(`/review_audit_list?id=${id}`);
+      this.$gotoPath(`/review_audit_list?id=${id}`);
     },
     // 获取体验版二维码
     // 获取体验版二维码
@@ -712,7 +715,7 @@ export default {
     },
 
     goReviewStatusList() {
-      this.$router.push(`/review_status_list?website_id=${this.website_id}`);
+      this.$gotoPath(`/review_status_list?website_id=${this.website_id}`);
     },
     // 改变小程序类型触发
     changeMode(e) {
@@ -893,9 +896,7 @@ export default {
     },
     ReviewAuditStatus(status) {
       if (status === 1) {
-        this.$router.push(
-          `/review_audit_list?id=${this.last_code_info_type.id}`
-        );
+        this.$gotoPath(`/review_audit_list?id=${this.last_code_info_type.id}`);
       }
     },
   },

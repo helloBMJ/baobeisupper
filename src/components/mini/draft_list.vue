@@ -109,11 +109,11 @@ export default {
     },
     templateList() {
       if (this.$route.query.website_id) {
-        this.$router.push(
+        this.$gotoPath(
           `/mini_site?website_id=${this.$route.query.website_id}&website_name=${this.$route.query.website_name}`
         );
       } else {
-        this.$router.push(`/mini_site`);
+        this.$gotoPath(`/mini_site`);
       }
     },
   },

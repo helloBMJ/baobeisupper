@@ -105,7 +105,7 @@ export default {
       });
     },
     goBack() {
-      this.$router.push(`edit_list?id=${this.form.website_id}`);
+      this.$gotoPath(`edit_list?id=${this.form.website_id}`);
     },
     getDataQuery() {
       this.$http.queryAdminMsg(this.form.id).then((res) => {
@@ -121,7 +121,7 @@ export default {
             message: "修改成功",
             type: "success",
           });
-          this.$router.push(`edit_list?id=${this.form.website_id}`);
+          this.$gotoPath(`edit_list?id=${this.form.website_id}`);
         }
       });
     },

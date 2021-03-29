@@ -129,7 +129,8 @@
             :disabled="updateContent"
             type="number"
             v-model="form_create.price"
-          ></el-input>
+            ><template slot="append">元</template></el-input
+          >
         </el-form-item>
         <el-form-item label="储存空间：" prop="oss_storage_space">
           <el-input
@@ -209,7 +210,10 @@ export default {
       });
     },
     createData() {
-      this.form_create = {};
+      this.form_create = {
+        status: "1",
+        sort: 0,
+      };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
       this.updateContent = false;

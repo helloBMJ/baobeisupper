@@ -294,10 +294,10 @@ export default {
       return row.id;
     },
     changeData(row) {
-      this.$router.push(`/updata_web?id=${row.id}`);
+      this.$gotoPath(`/updata_web?id=${row.id}`);
     },
     editData(row) {
-      this.$router.push(`/edit_list?id=${row.id}`);
+      this.$gotoPath(`/edit_list?id=${row.id}`);
     },
     deleteData(row) {
       this.$confirm("此操作将删除该站点, 是否继续?", "提示", {
@@ -387,7 +387,7 @@ export default {
       });
     },
     createdWeb() {
-      this.$router.push("/add_list");
+      this.$gotoPath("/add_list");
     },
     search() {
       if (this.time_value === null) {
@@ -415,23 +415,23 @@ export default {
       // this.$router.push(`/mini_site?website_id=${row.id}`);
     },
     authWxPubAppId(row) {
-      this.$router.push(
+      this.$gotoPath(
         `/authorization_list?wxpubappid=${row.wx_pub_app_id}&website_id=${row.id}`
       );
     },
     authWxMiniAppId(row) {
-      this.$router.push(
+      this.$gotoPath(
         `/authorization_list?wxminiappid=${row.wx_mini_program_app_id}&website_id=${row.id}`
       );
     },
     miniProgram() {
-      this.$router.push("/mini_program_list");
+      this.$gotoPath("/mini_program_list");
     },
     bindSite(row) {
-      this.$router.push(`/tfy_list?site_id=${row.id}`);
+      this.$gotoPath(`/tfy_list?site_id=${row.id}`);
     },
     roleData(row) {
-      this.$router.push(`/role_list?id=${row.id}`);
+      this.$gotoPath(`/role_list?id=${row.id}`);
     },
     // 跳转进站点
     openSite(row) {

@@ -31,7 +31,7 @@
       tooltip-effect="dark"
       style="width:100%"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column type="selection"> </el-table-column>
       <el-table-column label="最新上传/提交/上线信息" type="expand" width="200">
         <template slot-scope="scope">
           <el-form label-position="left" inline class="demo-table-expand">
@@ -83,7 +83,11 @@
         </template>
       </el-table-column>
       <el-table-column prop="id" label="站点ID"></el-table-column>
-      <el-table-column prop="name" label="站点名称"></el-table-column>
+      <el-table-column
+        prop="name"
+        label="站点名称"
+        width="200"
+      ></el-table-column>
       <el-table-column
         prop="submit_audit_user_version"
         label="最新提交审核版本号"
@@ -390,12 +394,12 @@ export default {
       });
     },
     templateList(row) {
-      this.$router.push(
+      this.$gotoPath(
         `/mini_site?website_id=${row.id}&website_name=${row.name}&isReview=1`
       );
     },
     findReason(row) {
-      this.$router.push(`/review_audit_list?id=${row.submit_audit_id}`);
+      this.$gotoPath(`/review_audit_list?id=${row.submit_audit_id}`);
     },
   },
 };

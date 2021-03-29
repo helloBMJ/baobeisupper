@@ -126,14 +126,16 @@
             :disabled="updateContent"
             type="number"
             v-model="form_create.price"
-          ></el-input>
+            ><template slot="append">元</template></el-input
+          >
         </el-form-item>
         <el-form-item label="短信数量：" prop="sms_total">
           <el-input
             :disabled="updateContent"
             type="number"
             v-model="form_create.sms_total"
-          ></el-input>
+            ><template slot="append">条</template></el-input
+          >
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onCreate">确定</el-button>
@@ -192,7 +194,10 @@ export default {
       this.getDataList();
     },
     createData() {
-      this.form_create = {};
+      this.form_create = {
+        status: "1",
+        sort: 0,
+      };
       this.dialogTitle = "addData";
       this.dialogCreate = true;
       this.updateContent = false;

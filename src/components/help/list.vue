@@ -117,10 +117,10 @@ export default {
       });
     },
     createdHelp() {
-      this.$router.push("/create_help");
+      this.$gotoPath("/create_help");
     },
     changeData(row) {
-      this.$router.push(`/edit_help?id=${row.id}`);
+      this.$gotoPath(`/edit_help?id=${row.id}`);
     },
     deleteData(row) {
       this.$confirm("此操作将删除该信息, 是否继续?", "提示", {

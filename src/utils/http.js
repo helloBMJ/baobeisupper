@@ -109,7 +109,7 @@ class UserCenter {
         }
         if (error.response.status === 401) {
           window.localStorage.removeItem("sup_TOKEN");
-          this.$router.push("/login");
+          this.$gotoPath("/login");
         }
         if (error.response.status === 500) {
           Message.error("网络连接错误，请检查网络连接");
