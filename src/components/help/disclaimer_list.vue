@@ -29,6 +29,7 @@
         v-if="create_form.category == 3 || create_form.category == 4"
         :value="create_form.content"
         :config="ueditor.config"
+        @input="inputUe"
         ref="ue"
       ></UE>
       <el-form-item
@@ -48,6 +49,7 @@ export default {
     return {
       create_form: {
         category: "1",
+        content: "",
       },
       category_list: [],
       ueditor: {
@@ -100,6 +102,10 @@ export default {
     onChange(e) {
       this.create_form.category = e;
       this.getDataList();
+    },
+    inputUe(obj) {
+      // 编辑器内容有变动，具体处理自行修改
+      this.create_form.content = obj.content;
     },
   },
 };

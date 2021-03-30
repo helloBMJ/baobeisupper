@@ -1,49 +1,68 @@
 <template>
-  <div>
-    <script id="editor" type="text/plain"></script>
+  <div class="p-ueditor">
+    <div ref="editorId"></div>
   </div>
 </template>
-<script>
-/* eslint-disable */
 
+<script>
 export default {
-  name: "ue",
   data() {
     return {
       editor: null,
+      id: "editor" + new Date().getTime(),
     };
   },
-  watch: {
+  props: {
     value: {
-      handler: function(val) {
-        this.editor.setContent(val);
+      type: String,
+      default: null,
+    },
+    config: {
+      type: Object,
+      default: () => {
+        return {};
       },
     },
   },
-  props: {
-    value: "",
-    config: {},
-  },
-  created() {},
-  mounted() {
-    const _this = this;
-    this.editor = window.UE.getEditor("editor", this.config);
-    // 初始化UE
-    this.editor.addListener("ready", function() {
-      setTimeout(() => {
-        _this.editor.setContent(_this.value);
-      }, 600);
-      // 确保UE加载完成后，放入内容。
-    });
-  },
-  methods: {
-    getUEContent() {
-      // 获取内容方法
-      return this.editor.getContent();
+  watch: {
+    value: function(val) {
+      this.editor.setContent(val);
     },
   },
-  destroyed() {
-    this.editor.destroy();
+  methods: {
+    resetContent() {
+      this.editor.setContent("");
+    },
+  },
+  mounted() {
+    this.$nextTick(function f1() {
+      // 保证 this.$el 已经插入文档
+      this.$refs.editorId.id = this.id; //创建动态id
+      this.editor = window.UE.getEditor(this.id, this.config);
+      this.editor.ready(
+        function f2() {
+          this.editor.setContent(this.value);
+          this.editor.addListener(
+            "contentChange",
+            function() {
+              const wordCount = this.editor.getContentLength(true);
+              const content = this.editor.getContent();
+              const plainTxt = this.editor.getPlainTxt();
+              const htmlCont = this.editor.getAllHtml();
+              // 编辑器内容有变动,通知父组件
+              this.$emit("input", {
+                wordCount: wordCount,
+                content: content,
+                plainTxt: plainTxt,
+                htmlCont: htmlCont,
+              });
+            }.bind(this)
+          );
+          // editor初始化后操作
+          this.$emit("ready", this.editor);
+        }.bind(this)
+      );
+    });
   },
 };
 </script>

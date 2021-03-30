@@ -5,7 +5,12 @@
         <el-input placeholder="请输入" v-model="form.title"></el-input>
       </el-form-item>
       <el-form-item label="帮助内容">
-        <UE :value="ueditor.value" :config="ueditor.config" ref="ue"></UE>
+        <UE
+          @input="inputUe"
+          :value="ueditor.value"
+          :config="ueditor.config"
+          ref="ue"
+        ></UE>
       </el-form-item>
       <el-form-item label="排序">
         <el-input
@@ -44,8 +49,11 @@ export default {
     };
   },
   methods: {
+    inputUe(obj) {
+      // 编辑器内容有变动，具体处理自行修改
+      this.form.content = obj.content;
+    },
     onSubmit() {
-      this.form.content = this.$refs.ue.getUEContent();
       if (!this.form.title || !this.form.content || !this.form.sort) {
         this.$message({
           message: "请输入内容后提交",
