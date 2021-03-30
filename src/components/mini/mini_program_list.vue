@@ -96,16 +96,6 @@
         prop="submit_audit_user_version"
         label="最新提交审核版本号"
       >
-        <template slot-scope="scope">
-          {{
-            compareVersion(
-              scope.row.last_user_version,
-              scope.row.submit_audit_user_version
-            ) === 1
-              ? scope.row.last_user_version
-              : ""
-          }}
-        </template>
       </el-table-column>
       <el-table-column
         prop="release_user_version"
@@ -129,15 +119,13 @@
     <!-- 分页 -->
     <el-footer>
       <div class="pagination-box">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="this.params.currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="this.params.pagesize"
-          layout="total , sizes, prev, pager, next, jumper"
-          :total="this.params.total"
-        ></el-pagination>
+        <myPagination
+          :currentPage="params.currentPage"
+          :pagesize="params.pagesize"
+          :total="params.total"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+        ></myPagination>
       </div>
     </el-footer>
     <el-dialog
@@ -195,7 +183,11 @@
 </template>
 
 <script>
+import myPagination from "@/components/my_pagination";
 export default {
+  components: {
+    myPagination,
+  },
   data() {
     return {
       tableData: [],
@@ -411,33 +403,6 @@ export default {
     },
     findReason(row) {
       this.$gotoPath(`/review_audit_list?id=${row.submit_audit_id}`);
-    },
-
-    compareVersion(v1, v2) {
-      // 简单对比版本号
-      if (v2 === null || v1 === null) {
-        return;
-      }
-      if (v1 == v2) {
-        return 0;
-      }
-      var vs1 = v1.split(".").map((a) => parseInt(a));
-      var vs2 = v2.split(".").map((a) => parseInt(a));
-
-      var length = Math.min(vs1.length, vs2.length);
-      for (var i = 0; i < length; i++) {
-        if (vs1[i] > vs2[i]) {
-          return 1;
-        } else if (vs1[i] < vs2[i]) {
-          return -1;
-        }
-      }
-
-      if (length == vs1.length) {
-        return -1;
-      } else {
-        return 1;
-      }
     },
   },
 };
