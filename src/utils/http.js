@@ -1,20 +1,7 @@
 import axios from "axios";
-import { Message, Loading } from "element-ui";
+import { Message } from "element-ui";
+import { showLoading, hideLoading } from "./my_loading";
 
-let loading; //定义loading变量
-
-function startLoading() {
-  //使用Element loading-start 方法
-  loading = Loading.service({
-    lock: true,
-    text: "加载中……",
-    background: "rgba(0, 0, 0, 0.1)",
-  });
-}
-function endLoading() {
-  //使用Element loading-close 方法
-  loading.close();
-}
 class UserCenter {
   constructor() {
     this.$http = axios.create({
@@ -25,6 +12,8 @@ class UserCenter {
     // 请求拦截
     this.$http.interceptors.request.use(
       function(config) {
+        showLoading();
+
         // config.url.split("/")[6]
         const platformPath = config.url.split("/")[1];
         // console.log("url", platformPath);
@@ -52,10 +41,7 @@ class UserCenter {
     // 响应拦截
     this.$http.interceptors.response.use(
       (response) => {
-        startLoading();
-        if (response.status === 200) {
-          endLoading();
-        }
+        hideLoading();
         // 提交失败
         // if (response.data.code == -1) {
         //   Message.error("登录已过期！");
