@@ -140,5 +140,7 @@ export function gotoPath(path) {
 
 // 从数组匹配内容(匹配列表数据对应描述内容)
 export function computedValueArr(arr, value) {
-  return arr[value]["description"];
+  if (arr.length > 0) {
+    return arr[value]["description"];
+  }
 }

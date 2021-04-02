@@ -19,6 +19,7 @@
         :data="tableData"
         tooltip-effect="dark"
         style="width:100%"
+        border
       >
         <el-table-column label="折叠内容" type="expand" width="100">
           <template slot-scope="scope">
@@ -40,7 +41,7 @@
             >
           </template>
         </el-table-column>
-        <el-table-column label="ID" prop="id" width="auto"></el-table-column>
+        <el-table-column label="ID" prop="id" width="100"></el-table-column>
         <el-table-column
           label="套餐名称"
           prop="name"
@@ -50,7 +51,7 @@
           label="oss储存空间"
           prop="oss_storage_space"
         ></el-table-column>
-        <el-table-column label="价格" prop="price"></el-table-column>
+        <el-table-column label="价格/元" prop="price"></el-table-column>
         <el-table-column label="排序" prop="sort"></el-table-column>
         <el-table-column label="状态" prop="status">
           <template slot-scope="scope">

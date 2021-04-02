@@ -4,14 +4,19 @@
       <el-button type="primary" @click="createData">添加</el-button>
     </el-header>
     <el-main>
-      <el-table :data="tableData" tooltip-effect="dark" style="width:100%">
-        <el-table-column label="ID" prop="id"></el-table-column>
+      <el-table
+        :data="tableData"
+        tooltip-effect="dark"
+        border
+        style="width:100%"
+      >
+        <el-table-column label="ID" prop="id" width="50"></el-table-column>
         <el-table-column label="付款模式" prop="payment_category">
           <template slot-scope="scope">{{
             scope.row.payment_category == 0 ? "线下付款" : ""
           }}</template>
         </el-table-column>
-        <el-table-column label="付款金额" prop="amount"></el-table-column>
+        <el-table-column label="付款金额/元" prop="amount"></el-table-column>
         <el-table-column label="交易单号" prop="trade_no"></el-table-column>
         <el-table-column label="收款人" prop="payee_name"></el-table-column>
         <el-table-column label="支付日期" prop="payment_date"></el-table-column>

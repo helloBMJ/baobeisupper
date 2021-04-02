@@ -11,8 +11,8 @@
       style="width: 100%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column prop="id" label="帮助ID" width="auto"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="auto"></el-table-column>
+      <el-table-column prop="id" label="帮助ID" width="100"></el-table-column>
+      <el-table-column prop="sort" label="排序" width="100"></el-table-column>
       <el-table-column
         prop="title"
         label="标题内容"

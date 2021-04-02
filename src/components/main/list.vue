@@ -72,20 +72,27 @@
       </el-table-column>
       <el-table-column prop="logo" label="logo">
         <template slot-scope="scope">
-          <img
-            v-if="scope.row.logo"
-            :src="scope.row.logo"
-            width="60px"
-            height="30px"
-            :alt="scope.row.name"
-          />
+          <el-popover width="500px" trigger="hover" placement="right">
+            <el-image
+              v-if="scope.row.logo"
+              style="width:300px;height:300px"
+              fit="contain"
+              :src="scope.row.logo"
+              alt=""
+            />
+            <img
+              slot="reference"
+              :src="scope.row.logo"
+              style="max-height: 50px;max-width: 100px"
+            />
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column prop="name" label="站点" width="auto">
         <template slot-scope="scope">
           <el-tag @click="openSite(scope.row)"
-            >{{ scope.row.name }} （{{ scope.row.id }}）</el-tag
-          >
+            >（{{ scope.row.id }}）{{ scope.row.name }}
+          </el-tag>
         </template>
         <!-- </el-table-column>
         <el-table-column prop="url" label="站点链接" width="auto">-->

@@ -4,10 +4,15 @@
       <el-button type="primary" @click="createData">添加</el-button>
     </el-header>
     <el-main>
-      <el-table :data="tableData" style="width:100%" tooltip-effect="dark">
-        <el-table-column label="ID" prop="id"></el-table-column>
+      <el-table
+        border
+        :data="tableData"
+        style="width:100%"
+        tooltip-effect="dark"
+      >
+        <el-table-column label="ID" prop="id" width="50"></el-table-column>
         <el-table-column label="等级" prop="status"></el-table-column>
-        <el-table-column label="余额" prop="balance"></el-table-column>
+        <el-table-column label="余额/元" prop="balance"></el-table-column>
         <el-table-column label="租户" prop="name">
           <template slot-scope="scope">
             <el-link

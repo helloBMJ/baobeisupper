@@ -11,7 +11,12 @@
       </div>
     </el-header>
     <el-main>
-      <el-table :data="tableData" tooltip-effect="dark" style="width:100%">
+      <el-table
+        border
+        :data="tableData"
+        tooltip-effect="dark"
+        style="width:100%"
+      >
         <el-table-column type="expand">
           <template slot-scope="scope">
             <el-form
@@ -77,7 +82,7 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column label="ID" prop="id"></el-table-column>
+        <el-table-column label="ID" prop="id" width="100"></el-table-column>
         <el-table-column label="版本名称" prop="name"></el-table-column>
         <el-table-column label="站点类型" prop="website_mode_category">
           <template slot-scope="scope">
