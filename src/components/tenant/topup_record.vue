@@ -4,38 +4,18 @@
       <el-button type="primary" @click="createData">添加</el-button>
     </el-header>
     <el-main>
-      <el-table
-        :data="tableData"
-        tooltip-effect="dark"
-        border
-        style="width:100%"
-      >
-        <el-table-column label="ID" prop="id" width="50"></el-table-column>
-        <el-table-column label="付款模式" prop="payment_category">
-          <template slot-scope="scope">{{
-            scope.row.payment_category == 0 ? "线下付款" : ""
-          }}</template>
-        </el-table-column>
-        <el-table-column label="付款金额/元" prop="amount"></el-table-column>
-        <el-table-column label="交易单号" prop="trade_no"></el-table-column>
-        <el-table-column label="收款人" prop="payee_name"></el-table-column>
-        <el-table-column label="支付日期" prop="payment_date"></el-table-column>
-        <el-table-column label="备注" prop="remark"></el-table-column>
-        <el-table-column label="创建日期" prop="created_at"></el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
     </el-main>
     <el-footer>
       <!-- 分页 -->
       <div class="pagination-box">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="this.params.currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="this.params.pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="this.params.total"
-        ></el-pagination>
+        <myPagination
+          :total="params.total"
+          :currentPage="params.currentPage"
+          :pagesize="params.pagesize"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+        ></myPagination>
       </div>
     </el-footer>
     <el-dialog :title="titleMap[dialogTitle]" :visible.sync="dialogCreate">
@@ -104,7 +84,13 @@
 </template>
 
 <script>
+import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myPagination,
+    myTable,
+  },
   data() {
     return {
       tableData: [],
@@ -123,6 +109,21 @@ export default {
       },
       dialogTitle: "",
       pyament_category_list: [{ value: "0", description: "线下付款" }],
+      table_header: [
+        { prop: "id", label: "ID", width: "80" },
+        {
+          label: "付款模式",
+          render: (h, data) => {
+            return <p>{data.row.pyament_category == 0 ? "线下付款" : ""}</p>;
+          },
+        },
+        { prop: "amount", label: "付款金额/元" },
+        { prop: "trade_no", label: "交易单号" },
+        { prop: "payee_name", label: "收款人" },
+        { prop: "payment_date", label: "支付日期" },
+        { prop: "remark", label: "备注" },
+        { prop: "created_at", label: "创建日期" },
+      ],
     };
   },
   mounted() {

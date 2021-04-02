@@ -3,48 +3,7 @@
     <el-header>
       <el-button type="primary" @click="createdHelp">添加</el-button>
     </el-header>
-    <el-table
-      ref="multipleTable"
-      :data="tableData"
-      border
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column prop="id" label="帮助ID" width="100"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="100"></el-table-column>
-      <el-table-column
-        prop="title"
-        label="标题内容"
-        width="auto"
-      ></el-table-column>
-      <el-table-column
-        prop="created_at"
-        label="创建时间"
-        width="auto"
-      ></el-table-column>
-      <el-table-column
-        prop="updated_at"
-        label="更新时间"
-        width="auto"
-      ></el-table-column>
-      <el-table-column
-        prop="operating"
-        label="操作"
-        show-overflow-tooltip
-        width="auto"
-        fixed="right"
-      >
-        <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="changeData(scope.row)"
-            >修改</el-button
-          >
-          <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+    <myTable :table-list="tableData" :header="table_header"></myTable>
     <el-footer>
       <!-- 分页 -->
       <div class="pagination-box">
@@ -62,29 +21,62 @@
 
 <script>
 import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
   components: {
     myPagination,
+    myTable,
   },
   data() {
     return {
       tableData: [],
-      multipleSelection: [],
       params: {
         page: 1,
         per_page: 10,
         total: 0,
       },
+      table_header: [
+        { prop: "id", label: "帮助ID", width: "80" },
+        { prop: "sort", label: "排序", width: "80" },
+        { prop: "title", label: "标题内容" },
+        { prop: "created_at", label: "创建时间" },
+        { prop: "updated_at", label: "更新时间" },
+        {
+          label: "操作",
+          width: "200",
+          fixed: "right",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {
     this.getDataList();
   },
   methods: {
-    // 全选
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
     // 根据分页设置的数据控制每页显示的数据条数及页码跳转页面刷新
     getPageData() {
       let start = (this.params.page - 1) * this.params.per_page;

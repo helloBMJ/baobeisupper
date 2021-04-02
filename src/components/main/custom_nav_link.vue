@@ -4,53 +4,17 @@
       <el-button type="primary" @click="createData">添加</el-button>
     </el-header>
     <el-main>
-      <el-table :data="tableData" style="width:100%">
-        <el-table-column label="ID" prop="id"></el-table-column>
-        <el-table-column label="key" prop="key">
-          <template slot-scope="scope">
-            {{ scope.row.key === "build_status" ? "楼盘状态" : "楼盘特色" }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          :formatter="formatterValue"
-          label="value"
-          prop="value"
-        ></el-table-column>
-        <el-table-column label="名称" prop="name"></el-table-column>
-        <el-table-column label="图标" prop="icon">
-          <template slot-scope="scope">
-            <img :src="scope.row.icon" width="50px" alt="" />
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="operating"
-          label="操作"
-          show-overflow-tooltip
-          fixed="right"
-          width="250"
-        >
-          <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="changeData(scope.row)"
-              >修改</el-button
-            >
-            <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
       <el-footer>
         <!-- 分页 -->
         <div class="pagination-box">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="this.params.currentPage"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="this.params.pagesize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="this.params.total"
-          ></el-pagination>
+          <myPagination
+            :total="params.total"
+            :pagesize="params.pagesize"
+            :currentPage="params.currentPage"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+          ></myPagination>
         </div>
       </el-footer>
     </el-main>
@@ -134,7 +98,13 @@
 
 <script>
 import config from "@/utils/config";
+import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myPagination,
+    myTable,
+  },
   data() {
     return {
       tableData: [],
@@ -162,6 +132,79 @@ export default {
       build_status_list: [],
       build_feature_list: [],
       category_value_list: [],
+      table_header: [
+        { prop: "id", label: "ID", width: "80" },
+        {
+          label: "key",
+          render: (h, data) => {
+            return (
+              <div>
+                {data.row.key === "build_status" ? "楼盘特色" : "楼盘特色"}
+              </div>
+            );
+          },
+        },
+        {
+          label: "value",
+          formatter: (row) => {
+            if (row.key === "build_status") {
+              let arr = this.build_status_list.filter((item) => {
+                if (row.value == item.value) {
+                  return item.description;
+                }
+              });
+              if (arr[0].description) {
+                return arr[0].description;
+              }
+            } else {
+              let arr = this.build_feature_list.filter((item) => {
+                if (row.value == item.value) {
+                  return item.description;
+                }
+              });
+              if (arr[0].description) {
+                return arr[0].description;
+              }
+            }
+          },
+        },
+        { prop: "name", label: "名称" },
+        {
+          label: "图标",
+          render: (h, data) => {
+            return <img src={data.row.icon} width="50px" />;
+          },
+        },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "250",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   computed: {
@@ -300,27 +343,6 @@ export default {
             message: "已取消删除",
           });
         });
-    },
-    formatterValue(row) {
-      if (row.key === "build_status") {
-        let arr = this.build_status_list.filter((item) => {
-          if (row.value == item.value) {
-            return item.description;
-          }
-        });
-        if (arr[0].description) {
-          return arr[0].description;
-        }
-      } else {
-        let arr = this.build_feature_list.filter((item) => {
-          if (row.value == item.value) {
-            return item.description;
-          }
-        });
-        if (arr[0].description) {
-          return arr[0].description;
-        }
-      }
     },
   },
 };

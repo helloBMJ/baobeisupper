@@ -14,59 +14,7 @@
       </div>
     </el-header>
     <el-main>
-      <el-table
-        :default-sort="{ prop: 'id', order: 'descending' }"
-        :data="tableData"
-        tooltip-effect="dark"
-        style="width: 100%"
-      >
-        <el-table-column label="ID" prop="id" width="100px"></el-table-column>
-        <el-table-column
-          label="字典名称"
-          prop="name"
-          width="300px"
-        ></el-table-column>
-        <el-table-column label="字典描述" prop="description" width="200px">
-          <template slot-scope="scope">
-            <el-button class="point" @click="onPoint(scope.row)">{{
-              scope.row.description
-            }}</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="排序"
-          prop="sort"
-          width="100px"
-        ></el-table-column>
-        <el-table-column
-          label="值"
-          prop="value"
-          width="100px"
-        ></el-table-column>
-        <el-table-column label="创建时间" prop="created_at"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="200px">
-          <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="onPoint(scope.row)"
-              >修改</el-button
-            >
-            <el-button size="mini" type="danger" @click="onDelete(scope.row.id)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-        <!-- <el-table-column label="字典内容" prop="desc">
-          <template slot-scope="scope">
-            <el-button
-              class="point"
-              v-for="(item, index) in scope.row.item"
-              :key="index"
-              @click="onPoint(item)"
-            >
-              {{ item.description }}
-            </el-button>
-          </template>
-        </el-table-column> -->
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
       <!-- 分页 -->
       <div class="pagination-box">
         <myPagination
@@ -129,9 +77,11 @@
 
 <script>
 import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
   components: {
     myPagination,
+    myTable,
   },
   data() {
     return {
@@ -157,6 +107,61 @@ export default {
         updateData: "修改数据",
       },
       dialogTitle: "",
+      table_header: [
+        { prop: "id", label: "ID", width: "80" },
+        { prop: "name", label: "字典名称" },
+        {
+          label: "字典描述",
+          render: (h, data) => {
+            return (
+              <el-button
+                class="point"
+                onClick={() => {
+                  this.onPoint(data.row);
+                }}
+              >
+                {data.row.description}
+              </el-button>
+            );
+          },
+        },
+        {
+          prop: "sort",
+          label: "排序",
+        },
+        { prop: "value", label: "值" },
+        { prop: "created_at", label: "创建时间" },
+        {
+          label: "操作",
+          width: "200",
+          fixed: "right",
+
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  size="mini"
+                  type="success"
+                  onClick={() => {
+                    this.onPoint(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  onClick={() => {
+                    this.onDelete(data.row.id);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {

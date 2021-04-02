@@ -4,80 +4,17 @@
       <el-button type="primary" @click="createData">添加</el-button>
     </el-header>
     <el-main>
-      <el-table
-        border
-        :data="tableData"
-        style="width:100%"
-        tooltip-effect="dark"
-      >
-        <el-table-column label="ID" prop="id" width="50"></el-table-column>
-        <el-table-column label="等级" prop="status"></el-table-column>
-        <el-table-column label="余额/元" prop="balance"></el-table-column>
-        <el-table-column label="租户" prop="name">
-          <template slot-scope="scope">
-            <el-link
-              type="primary"
-              @click="openSite(scope.row)"
-              target="_blank"
-              >{{ scope.row.name }}</el-link
-            >
-          </template>
-        </el-table-column>
-        <el-table-column label="有效期" prop="lease_start">
-          <template slot-scope="scope">
-            {{ scope.row.lease_start }}
-            -
-            {{ scope.row.lease_end }}
-          </template>
-        </el-table-column>
-        <el-table-column label="站点模式" prop="allow_website_mode_categories">
-          <template slot-scope="scope">
-            <p>
-              {{
-                $computedValueArr(
-                  website_mode_category_list,
-                  scope.row.allow_website_mode_categories
-                )
-              }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" prop="created_at"></el-table-column>
-        <el-table-column
-          prop="operating"
-          label="操作"
-          show-overflow-tooltip
-          fixed="right"
-          width="300"
-        >
-          <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="changeData(scope.row)"
-              >修改</el-button
-            >
-            <el-button
-              type="primary"
-              size="mini"
-              @click="$gotoPath(`/topup_record?tenant_id=${scope.row.id}`)"
-              >充值记录</el-button
-            >
-            <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
       <el-footer>
         <!-- 分页 -->
         <div class="pagination-box">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="this.params.currentPage"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="this.params.pagesize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="this.params.total"
-          ></el-pagination>
+          <myPagination
+            :total="params.total"
+            :currentPage="params.currentPage"
+            :pagesize="params.pagesize"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+          ></myPagination>
         </div>
       </el-footer>
     </el-main>
@@ -132,7 +69,13 @@
 </template>
 
 <script>
+import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myPagination,
+    myTable,
+  },
   data() {
     return {
       tableData: [],
@@ -153,6 +96,92 @@ export default {
       time_value: [],
       website_mode_category_list: [],
       level_list: [],
+      table_header: [
+        { prop: "id", label: "ID", width: "80" },
+        { prop: "status", label: "等级" },
+        { prop: "balance", label: "余额/元" },
+        {
+          label: "租户",
+          render: (h, data) => {
+            return (
+              <el-link
+                type="primary"
+                target="_blank"
+                onClick={() => {
+                  this.openSite(data.row);
+                }}
+              >
+                {data.row.name}
+              </el-link>
+            );
+          },
+        },
+        {
+          label: "有效期",
+          render: (h, data) => {
+            return (
+              <div>
+                {data.row.lease_start} - {data.row.lease_end}
+              </div>
+            );
+          },
+        },
+        {
+          label: "站点模式",
+          render: (h, data) => {
+            return (
+              <p>
+                {this.$computedValueArr(
+                  this.website_mode_category_list,
+                  data.row.allow_website_mode_categories
+                )}
+              </p>
+            );
+          },
+        },
+        {
+          label: "创建时间",
+          prop: "created_at",
+        },
+        {
+          label: "操作",
+          width: "250",
+          fixed: "right",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  onClick={() => {
+                    this.$gotoPath(`/topup_record?tenant_id=${data.row.id}`);
+                  }}
+                >
+                  充值记录
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {

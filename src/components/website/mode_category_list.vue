@@ -11,108 +11,7 @@
       </div>
     </el-header>
     <el-main>
-      <el-table
-        border
-        :data="tableData"
-        tooltip-effect="dark"
-        style="width:100%"
-      >
-        <el-table-column type="expand">
-          <template slot-scope="scope">
-            <el-form
-              label-width="120px"
-              label-position="left"
-              class="demo-table-expand"
-            >
-              <el-form-item label="官方指导价：">
-                <span>{{ scope.row.official_price }}元</span>
-              </el-form-item>
-              <el-form-item label="一级代理价：">
-                <span>{{ scope.row.one_level_price }}元</span>
-              </el-form-item>
-              <el-form-item label="一级最低定价：">
-                <span>{{ scope.row.one_level_min_top_up_amount }}元</span>
-              </el-form-item>
-              <el-form-item label="二级代理价：">
-                <span>{{ scope.row.second_level_price }}元</span>
-              </el-form-item>
-              <el-form-item label="二级最低定价：">
-                <span>{{ scope.row.second_level_min_top_up_amount }}元</span>
-              </el-form-item>
-              <el-form-item label="收费模式：">
-                <span>{{ formmatCost(scope.row.cost_duration_category) }}</span>
-              </el-form-item>
-              <el-form-item label="收费时长：">
-                <span>{{ scope.row.cost_duration_day }}天</span>
-              </el-form-item>
-              <el-form-item label="置业顾问：">
-                <span
-                  >已{{
-                    formmatSwitch(scope.row.config_support_project_manager)
-                  }}</span
-                >
-              </el-form-item>
-              <el-form-item label="分销报备：">
-                <span
-                  >已{{
-                    formmatSwitch(scope.row.config_support_reported)
-                  }}</span
-                >
-              </el-form-item>
-              <el-form-item label="在线获客：">
-                <span
-                  >已{{
-                    formmatSwitch(scope.row.config_support_online_get_customer)
-                  }}</span
-                >
-              </el-form-item>
-              <el-form-item label="即时通讯：">
-                <span>已{{ formmatSwitch(scope.row.config_support_im) }}</span>
-              </el-form-item>
-              <el-form-item label="在线直播">
-                <span
-                  >已{{
-                    formmatSwitch(scope.row.config_support_online_live)
-                  }}</span
-                >
-              </el-form-item>
-              <el-form-item label="描述信息">
-                <span>{{ scope.row.description }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-        <el-table-column label="ID" prop="id" width="100"></el-table-column>
-        <el-table-column label="版本名称" prop="name"></el-table-column>
-        <el-table-column label="站点类型" prop="website_mode_category">
-          <template slot-scope="scope">
-            {{
-              scope.row.website_mode_category == 0
-                ? "分销报备"
-                : scope.row.website_mode_category == 1
-                ? "单楼盘"
-                : "微房产"
-            }}
-          </template>
-        </el-table-column>
-        <el-table-column label="创建时间" prop="created_at"></el-table-column>
-        <el-table-column
-          prop="operating"
-          label="操作"
-          show-overflow-tooltip
-          fixed="right"
-          width="200"
-        >
-          <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="changeData(scope.row)"
-              >修改</el-button
-            >
-            <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
       <el-footer>
         <!-- 分页 -->
         <div class="pagination-box">
@@ -406,9 +305,11 @@
 
 <script>
 import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
   components: {
     myPagination,
+    myTable,
   },
   data() {
     return {
@@ -449,6 +350,127 @@ export default {
         name: "",
       },
       time_value: [],
+      table_header: [
+        {
+          expand: "expand",
+          render: (h, data) => {
+            return (
+              <el-form
+                label-width="120px"
+                label-position="left"
+                class="demo-table-expand"
+              >
+                <el-form-item label="官方指导价：">
+                  <span>{data.row.official_price}元</span>
+                </el-form-item>
+                <el-form-item label="一级代理价：">
+                  <span>{data.row.one_level_price}元</span>
+                </el-form-item>
+                <el-form-item label="一级最低定价：">
+                  <span>{data.row.one_level_min_top_up_amount}元</span>
+                </el-form-item>
+                <el-form-item label="二级代理价：">
+                  <span>{data.row.second_level_price}元</span>
+                </el-form-item>
+                <el-form-item label="二级最低定价：">
+                  <span>{data.row.second_level_min_top_up_amount}元</span>
+                </el-form-item>
+                <el-form-item label="收费模式：">
+                  <span>
+                    {this.formmatCost(data.row.cost_duration_category)}
+                  </span>
+                </el-form-item>
+                <el-form-item label="收费时长：">
+                  <span>{data.row.cost_duration_day}天</span>
+                </el-form-item>
+                <el-form-item label="置业顾问：">
+                  <span>
+                    已
+                    {this.formmatSwitch(
+                      data.row.config_support_project_manager
+                    )}
+                  </span>
+                </el-form-item>
+                <el-form-item label="分销报备：">
+                  <span>
+                    已{this.formmatSwitch(data.row.config_support_reported)}
+                  </span>
+                </el-form-item>
+                <el-form-item label="在线获客：">
+                  <span>
+                    已
+                    {this.formmatSwitch(
+                      data.row.config_support_online_get_customer
+                    )}
+                  </span>
+                </el-form-item>
+                <el-form-item label="即时通讯：">
+                  <span>
+                    已{this.formmatSwitch(data.row.config_support_im)}
+                  </span>
+                </el-form-item>
+                <el-form-item label="在线直播">
+                  <span>
+                    已{this.formmatSwitch(data.row.config_support_online_live)}
+                  </span>
+                </el-form-item>
+                <el-form-item label="描述信息">
+                  <span>{data.row.description}</span>
+                </el-form-item>
+              </el-form>
+            );
+          },
+        },
+        { prop: "id", label: "ID", width: "80" },
+        { prop: "name", label: "版本名称" },
+        {
+          label: "站点类型",
+          render: (h, data) => {
+            return (
+              <div>
+                {data.row.website_mode_category == 0
+                  ? "分销报备"
+                  : data.row.website_mode_category == 1
+                  ? "单楼盘"
+                  : "微房产"}
+              </div>
+            );
+          },
+        },
+        {
+          prop: "created_at",
+          label: "创建时间",
+        },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "200",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {

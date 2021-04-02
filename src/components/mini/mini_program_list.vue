@@ -23,99 +23,12 @@
         </div>
       </div>
     </el-header>
-    <el-table
-      ref="multipleTable"
+    <myTable
+      :table-list="tableData"
+      :header="table_header"
+      :select="true"
       @selection-change="handleSelectionChange"
-      :data="tableData"
-      border
-      tooltip-effect="dark"
-      style="width:100%"
-    >
-      <el-table-column type="selection"> </el-table-column>
-      <el-table-column label="最新上传/提交/上线信息" type="expand" width="200">
-        <template slot-scope="scope">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="最新提交审核版本ID：">
-              <span>{{ scope.row.submit_audit_id }}</span>
-            </el-form-item>
-            <el-form-item label="最新提交审核的审核状态：">
-              <span>
-                {{
-                  scope.row.submit_audit_status === 0
-                    ? "审核成功"
-                    : scope.row.submit_audit_status === 1
-                    ? "审核被拒绝"
-                    : scope.row.submit_audit_status === 2
-                    ? "审核中"
-                    : scope.row.submit_audit_status === 3
-                    ? "已撤回"
-                    : scope.row.submit_audit_status === 4
-                    ? "审核延后"
-                    : scope.row.submit_audit_status === 5
-                    ? "未提交审核"
-                    : ""
-                }}
-              </span>
-              <el-button
-                v-if="scope.row.submit_audit_status === 1"
-                size="mini"
-                type="danger"
-                @click="findReason(scope.row)"
-                >查看原因</el-button
-              >
-            </el-form-item>
-            <el-form-item label="最新提交审核版本的更新时间：">
-              <span>{{ scope.row.submit_audit_updated_at }}</span>
-            </el-form-item>
-            <el-form-item label="最新上传版本ID：">
-              <span>{{ scope.row.last_version_id }}</span>
-            </el-form-item>
-            <el-form-item label="最新上传版本更新时间：">
-              <span>{{ scope.row.last_updated_at }}</span>
-            </el-form-item>
-            <el-form-item label="最新上线版本ID：">
-              <span>{{ scope.row.release_id }}</span>
-            </el-form-item>
-            <el-form-item label="最新版本上线时间：">
-              <span>{{ scope.row.release_updated_at }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-      <el-table-column prop="id" label="站点ID"></el-table-column>
-      <el-table-column
-        prop="name"
-        label="站点名称"
-        width="200"
-      ></el-table-column>
-      <el-table-column
-        prop="last_user_version"
-        label="最新上传版本号"
-      ></el-table-column>
-      <el-table-column
-        prop="submit_audit_user_version"
-        label="最新提交审核版本号"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="release_user_version"
-        label="最新上线版本号"
-      ></el-table-column>
-      <el-table-column label="操作" fixed="right" width="200">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            :disabled="scope.row.submit_audit_status !== 0"
-            type="success"
-            @click="onlineCode(scope.row)"
-            >上线</el-button
-          >
-          <el-button size="mini" type="primary" @click="templateList(scope.row)"
-            >审核记录</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+    ></myTable>
     <!-- 分页 -->
     <el-footer>
       <div class="pagination-box">
@@ -184,9 +97,11 @@
 
 <script>
 import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
   components: {
     myPagination,
+    myTable,
   },
   data() {
     return {
@@ -226,6 +141,102 @@ export default {
       // 模板列表数据
       template_list: [],
       submit_audit_status: "",
+      table_header: [
+        {
+          expand: "expand",
+          label: "最新上传/提交/上线信息",
+          width: "200",
+          render: (h, data) => {
+            return (
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="最新提交审核版本ID：">
+                  <span>{data.row.submit_audit_id}</span>
+                </el-form-item>
+                <el-form-item label="最新提交审核的审核状态：">
+                  <span>
+                    {data.row.submit_audit_status === 0
+                      ? "审核成功"
+                      : data.row.submit_audit_status === 1
+                      ? "审核被拒绝"
+                      : data.row.submit_audit_status === 2
+                      ? "审核中"
+                      : data.row.submit_audit_status === 3
+                      ? "已撤回"
+                      : data.row.submit_audit_status === 4
+                      ? "审核延后"
+                      : data.row.submit_audit_status === 5
+                      ? "未提交审核"
+                      : ""}
+                    {data.row.submit_audit_status === 1 ? (
+                      <el-button
+                        size="mini"
+                        type="danger"
+                        onClick={() => {
+                          this.findReason(data.row);
+                        }}
+                      >
+                        查看原因
+                      </el-button>
+                    ) : (
+                      ""
+                    )}
+                  </span>
+                </el-form-item>
+                <el-form-item label="最新提交审核版本的更新时间：">
+                  <span>{data.row.submit_audit_updated_at}</span>
+                </el-form-item>
+                <el-form-item label="最新上传版本ID:">
+                  <span>{data.row.last_version_id}</span>
+                </el-form-item>
+                <el-form-item label="最新上传版本更新时间：">
+                  <span>{data.row.last_updated_at}</span>
+                </el-form-item>
+                <el-form-item label="最新上线版本ID：">
+                  <span>{data.row.release_id}</span>
+                </el-form-item>
+                <el-form-item label="最新版本上线时间：">
+                  <span>{data.row.release_updated_at}</span>
+                </el-form-item>
+              </el-form>
+            );
+          },
+        },
+        { prop: "id", label: "站点ID" },
+        { prop: "name", label: "站点名称" },
+        { prop: "last_user_version", label: "最新上传版本号" },
+        { prop: "submit_audit_user_version", label: "最新提交审核版本号" },
+        { prop: "release_user_version", label: "最新上传版本号" },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "200",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  size="mini"
+                  disabled={data.row.submit_audit_status !== 0}
+                  type="success"
+                  onClick={() => {
+                    this.onlineCode(data.row);
+                  }}
+                >
+                  上线
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="primary"
+                  onClick={() => {
+                    this.templateList(data.row);
+                  }}
+                >
+                  审核记录
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {

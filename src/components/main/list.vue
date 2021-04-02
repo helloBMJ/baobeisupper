@@ -27,160 +27,7 @@
         >
       </div>
     </el-header>
-    <el-table
-      ref="multipleTable"
-      :row-key="getRowKey"
-      :data="tableData"
-      border
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column
-        type="selection"
-        :reserve-selection="true"
-        width="50"
-      ></el-table-column>
-
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <el-form
-            label-position="left"
-            label-width="200px"
-            inline
-            class="demo-table-expand"
-          >
-            <el-form-item label="公司名称：">
-              <span>{{ scope.row.website_company_name }}</span>
-            </el-form-item>
-            <el-form-item label="联系人：">
-              <span>{{ scope.row.website_contact_name }}</span>
-            </el-form-item>
-            <el-form-item label="联系方式：">
-              <span>{{ scope.row.website_contact_phone }}</span>
-            </el-form-item>
-            <el-form-item label="城市名称：">
-              <span>{{ scope.row.website_city_name }}</span>
-            </el-form-item>
-            <el-form-item label="版本类型名称：">
-              <span v-if="scope.row.website_version_category">{{
-                scope.row.website_version_category === 0 ? "试用版" : "正式版"
-              }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-      <el-table-column prop="logo" label="logo">
-        <template slot-scope="scope">
-          <el-popover width="500px" trigger="hover" placement="right">
-            <el-image
-              v-if="scope.row.logo"
-              style="width:300px;height:300px"
-              fit="contain"
-              :src="scope.row.logo"
-              alt=""
-            />
-            <img
-              slot="reference"
-              :src="scope.row.logo"
-              style="max-height: 50px;max-width: 100px"
-            />
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column prop="name" label="站点" width="auto">
-        <template slot-scope="scope">
-          <el-tag @click="openSite(scope.row)"
-            >（{{ scope.row.id }}）{{ scope.row.name }}
-          </el-tag>
-        </template>
-        <!-- </el-table-column>
-        <el-table-column prop="url" label="站点链接" width="auto">-->
-      </el-table-column>
-      <el-table-column prop="id" label="站点模式" width="auto">
-        <template slot-scope="scope">
-          <el-tag style="margin:4px" type="success">{{
-            scope.row.website_mode_category === 0
-              ? "分销报备"
-              : scope.row.website_mode_category === 1
-              ? "单楼盘"
-              : "微房产"
-          }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="wx_pub_app_id" label="公众号" width="auto">
-        <template slot-scope="scope">
-          <el-tag
-            @click="authWxPubAppId(scope.row)"
-            type="success"
-            class="bang"
-            v-if="scope.row.wx_pub_app_id"
-            >已授权</el-tag
-          >
-          <el-tag type="danger" class="weibang" v-else>未授权</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="wx_mini_program_app_id"
-        label="小程序"
-        width="auto"
-      >
-        <template slot-scope="scope">
-          <el-tag
-            @click="authWxMiniAppId(scope.row)"
-            type="success"
-            class="bang"
-            v-if="scope.row.wx_mini_program_app_id"
-            >已授权</el-tag
-          >
-          <el-tag type="danger" class="weibang" v-else>未授权</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="created_at"
-        label="创建时间"
-        width="auto"
-      ></el-table-column>
-      <el-table-column
-        prop="operating"
-        label="操作"
-        show-overflow-tooltip
-        width="350"
-        fixed="right"
-      >
-        <template slot-scope="scope">
-          <el-dropdown style="margin-right:10px">
-            <el-button type="primary" size="mini">
-              操作<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="changeData(scope.row)"
-                >修改</el-dropdown-item
-              >
-              <el-dropdown-item @click.native="deleteData(scope.row)"
-                >删除</el-dropdown-item
-              >
-              <el-dropdown-item @click.native="editData(scope.row)"
-                >管理员列表</el-dropdown-item
-              >
-              <el-dropdown-item @click.native="roleData(scope.row)"
-                >角色</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </el-dropdown>
-          <el-button
-            v-if="scope.row.wx_mini_program_app_id"
-            type="success"
-            size="mini"
-            @click="authorization(scope.row)"
-            >小程序管理</el-button
-          >
-          <el-button type="primary" size="mini" @click="bindSite(scope.row)">{{
-            scope.row.tfy_app_id === "" ? "绑定腾房云站点" : "修改腾房云站点"
-          }}</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <myTable :table-list="tableData" :header="table_header"></myTable>
     <el-footer>
       <!-- 分页 -->
       <div class="pagination-box">
@@ -258,14 +105,15 @@
 
 <script>
 import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
   components: {
     myPagination,
+    myTable,
   },
   data() {
     return {
       tableData: [],
-      multipleSelection: [],
       params: {
         page: 1,
         per_page: 10,
@@ -293,15 +141,218 @@ export default {
       ],
       time_value: [],
       draw_slider: false,
+      table_header: [
+        {
+          expand: "expand",
+          render: (h, data) => {
+            return (
+              <el-form
+                label-position="left"
+                label-width="120px"
+                inline
+                class="demo-table-expand"
+              >
+                <el-form-item label="公司名称：">
+                  <span>{data.row.website_company_name}</span>
+                </el-form-item>
+                <el-form-item label="联系人：">
+                  <span>{data.row.website_contact_name}</span>
+                </el-form-item>
+                <el-form-item label="联系方式：">
+                  <span>{data.row.website_contact_phone}</span>
+                </el-form-item>
+                <el-form-item label="城市名称：">
+                  <span>{data.row.website_city_name}</span>
+                </el-form-item>
+                <el-form-item label="版本类型名称：">
+                  <span>
+                    {data.row.website_version_category === 0
+                      ? "试用版"
+                      : "正式版"}
+                  </span>
+                </el-form-item>
+              </el-form>
+            );
+          },
+        },
+        {
+          label: "logo",
+          render: (h, data) => {
+            return (
+              <el-popover width="500px" trigger="hover" placement="right">
+                <el-image
+                  style="width:300px;height:300px"
+                  fit="contain"
+                  src={data.row.logo}
+                />
+                <img
+                  slot="reference"
+                  src={data.row.logo}
+                  style="max-height:50px;max-width:100px"
+                />
+              </el-popover>
+            );
+          },
+        },
+        {
+          label: "站点",
+          render: (h, data) => {
+            return (
+              <el-tag
+                onClick={() => {
+                  this.openSite(data.row);
+                }}
+              >
+                （{data.row.id}）{data.row.name}
+              </el-tag>
+            );
+          },
+        },
+        {
+          label: "站点模式",
+          render: (h, data) => {
+            return (
+              <el-tag
+                type={
+                  data.row.website_mode_category === 0
+                    ? "primary"
+                    : data.row.website_mode_category === 1
+                    ? "success"
+                    : "danger"
+                }
+              >
+                {data.row.website_mode_category === 0
+                  ? "分销报备"
+                  : data.row.website_mode_category === 1
+                  ? "单楼盘"
+                  : "微房产"}
+              </el-tag>
+            );
+          },
+        },
+        {
+          label: "公众号",
+          render: (h, data) => {
+            return (
+              <div>
+                {data.row.wx_pub_app_id ? (
+                  <el-tag
+                    type="success"
+                    onClick={() => {
+                      this.authWxPubAppId(data.row);
+                    }}
+                  >
+                    已授权
+                  </el-tag>
+                ) : (
+                  <el-tag type="danger">未授权</el-tag>
+                )}
+              </div>
+            );
+          },
+        },
+        {
+          label: "小程序",
+          render: (h, data) => {
+            return (
+              <div>
+                {data.row.wx_mini_program_app_id ? (
+                  <el-tag
+                    type="success"
+                    onClick={() => {
+                      this.authWxMiniAppId(data.row);
+                    }}
+                  >
+                    已授权
+                  </el-tag>
+                ) : (
+                  <el-tag type="danger">未授权</el-tag>
+                )}
+              </div>
+            );
+          },
+        },
+        {
+          prop: "created_at",
+          label: "创建时间",
+        },
+        {
+          label: "操作",
+          width: "350",
+          fixed: "right",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-dropdown style="margin-right:10px">
+                  <el-button type="primary" size="mini">
+                    操作<i class="el-icon-arrow-down el-icon--right"></i>
+                  </el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item
+                      nativeOnClick={() => {
+                        this.changeData(data.row);
+                      }}
+                    >
+                      修改
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      nativeOnClick={() => {
+                        this.deleteData(data.row);
+                      }}
+                    >
+                      删除
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      nativeOnClick={() => {
+                        this.editData(data.row);
+                      }}
+                    >
+                      管理员列表
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      nativeOnClick={() => {
+                        this.roleData(data.row);
+                      }}
+                    >
+                      角色
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+                {data.row.wx_mini_program_app_id ? (
+                  <el-button
+                    type="success"
+                    size="mini"
+                    onClick={() => {
+                      this.authorization(data.row);
+                    }}
+                  >
+                    小程序管理
+                  </el-button>
+                ) : (
+                  " "
+                )}
+                <el-button
+                  type="primary"
+                  size="mini"
+                  onClick={() => {
+                    this.bindSite(data.row);
+                  }}
+                >
+                  {data.row.tfy_app_id === ""
+                    ? "绑定腾房云站点"
+                    : "修改腾房云站点"}
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {
     this.getDataList();
   },
   methods: {
-    getRowKey(row) {
-      return row.id;
-    },
     changeData(row) {
       this.$gotoPath(`/updata_web?id=${row.id}`);
     },
@@ -333,9 +384,6 @@ export default {
         });
     },
     // 全选
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
     // 取消全选
     // toggleSelection(rows) {
     //   if (rows) {

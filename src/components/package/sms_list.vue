@@ -14,70 +14,7 @@
       </div>
     </el-header>
     <el-main>
-      <el-table
-        :default-sort="{ prop: 'sort', order: 'descending' }"
-        :data="tableData"
-        tooltip-effect="dark"
-        style="width:100%"
-        border
-      >
-        <el-table-column label="折叠内容" type="expand" width="100">
-          <template slot-scope="scope">
-            <el-form
-              label-width="100px"
-              label-position="left"
-              inline
-              class="demo-table-expand"
-            >
-              <el-form-item label="套餐描述：">
-                <span>{{ scope.row.description }}</span>
-              </el-form-item>
-              <el-form-item label="创建时间：">
-                <span>{{ scope.row.created_at }}</span>
-              </el-form-item>
-              <el-form-item label="修改时间：">
-                <span>{{ scope.row.updated_at }}</span>
-              </el-form-item></el-form
-            >
-          </template>
-        </el-table-column>
-        <el-table-column label="ID" prop="id" width="100"></el-table-column>
-        <el-table-column
-          label="套餐名称"
-          prop="name"
-          width="auto"
-        ></el-table-column>
-        <el-table-column label="短信总数" prop="sms_total"></el-table-column>
-        <el-table-column label="价格/元" prop="price"></el-table-column>
-        <el-table-column label="排序" prop="sort"></el-table-column>
-        <el-table-column label="状态" prop="status">
-          <template slot-scope="scope">
-            <p>{{ scope.row.status === 1 ? "上架" : "下架" }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="operating"
-          label="操作"
-          show-overflow-tooltip
-          fixed="right"
-          width="400"
-        >
-          <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="changeData(scope.row)"
-              >修改</el-button
-            >
-            <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-              >删除</el-button
-            >
-            <el-button
-              :type="scope.row.status === 1 ? 'success' : 'primary'"
-              size="mini"
-              @click="updateStatus(scope.row)"
-              >{{ scope.row.status === 1 ? "下架" : "上架" }}</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
       <el-footer>
         <!-- 分页 -->
         <div class="pagination-box">
@@ -146,9 +83,11 @@
 
 <script>
 import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
   components: {
     myPagination,
+    myTable,
   },
   data() {
     return {
@@ -172,6 +111,82 @@ export default {
       },
       dialogTitle: "",
       updateContent: false,
+      table_header: [
+        {
+          label: "折叠内容",
+          expand: "expand",
+          width: "100",
+          render: (h, data) => {
+            return (
+              <el-form
+                label-width="100px"
+                label-position="left"
+                inline
+                class="demo-table-expand"
+              >
+                <el-form-item label="套餐描述：">
+                  <span>{data.row.description}</span>
+                </el-form-item>
+                <el-form-item label="创建时间：">
+                  <span>{data.row.created_at}</span>
+                </el-form-item>
+                <el-form-item label="修改时间：">
+                  <span>{data.row.updated_at}</span>
+                </el-form-item>
+              </el-form>
+            );
+          },
+        },
+        { prop: "id", label: "ID", width: "80" },
+        { prop: "name", label: "套餐名称" },
+        { prop: "sms_total", label: "短信总数" },
+        { prop: "price", label: "价格/元" },
+        { prop: "sort", label: "排序" },
+        {
+          label: "状态",
+          render: (h, data) => {
+            return <p>{data.row.status === 1 ? "上架" : "下架"}</p>;
+          },
+        },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "250",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+                <el-button
+                  type={data.row.status === 1 ? "success" : "primary"}
+                  size="mini"
+                  onClick={() => {
+                    this.updateStatus(data.row);
+                  }}
+                >
+                  {data.row.status === 1 ? "下架" : "上架"}
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {
