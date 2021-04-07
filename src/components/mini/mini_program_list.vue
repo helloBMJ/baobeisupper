@@ -202,7 +202,21 @@ export default {
           },
         },
         { prop: "id", label: "站点ID" },
-        { prop: "name", label: "站点名称" },
+        {
+          label: "站点名称",
+          render: (h, data) => {
+            return (
+              <el-link
+                onClick={() => {
+                  this.openSite(data.row);
+                }}
+                type="primary"
+              >
+                {data.row.name}
+              </el-link>
+            );
+          },
+        },
         { prop: "last_user_version", label: "最新上传版本号" },
         { prop: "submit_audit_user_version", label: "最新提交审核版本号" },
         { prop: "release_user_version", label: "最新上传版本号" },
@@ -414,6 +428,19 @@ export default {
     },
     findReason(row) {
       this.$gotoPath(`/review_audit_list?id=${row.submit_audit_id}`);
+    },
+    // 点击跳转到站点
+    openSite(row) {
+      this.$http.getWebsiteToken(row.id).then((res) => {
+        if (res.status === 200) {
+          localStorage.setItem("TOKEN", res.data.token);
+          localStorage.setItem("website_id", row.id);
+          var tempwindow = window.open("_blank");
+          if (localStorage.getItem("TOKEN")) {
+            tempwindow.location = `https://yun.tfcs.cn/admin/?website_id=${row.id}`;
+          }
+        }
+      });
     },
   },
 };
