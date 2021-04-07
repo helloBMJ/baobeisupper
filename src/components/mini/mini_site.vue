@@ -414,7 +414,6 @@ export default {
     if (this.$route.query.isReview) {
       this.isReview = parseInt(this.$route.query.isReview);
     }
-    this.queryLastCode();
   },
   methods: {
     // 获取当月的提审和加急次数
@@ -442,6 +441,7 @@ export default {
       this.$http.getCodeTemplateList({ params: this.params }).then((res) => {
         if (res.status === 200) {
           this.tabelData = res.data.template_list;
+          this.queryLastCode();
         }
       });
     },
@@ -451,6 +451,7 @@ export default {
       this.form_template.user_version = row.user_version;
       this.form_template.user_desc = row.user_desc;
       this.form_template.ext_json.ext.website_id = this.$route.query.website_id;
+      this.queryLastCode();
     },
     deleteData(row) {
       this.$confirm("此操作将删除该模板，是否继续？", "提示", {
