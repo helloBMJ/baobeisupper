@@ -110,100 +110,24 @@
         ></el-step>
       </el-steps>
     </div>
-    <el-table
+    <myTable
       v-if="isReview === 1"
-      ref="multipleTable"
-      :data="tabelData"
-      border
-      tooltip-effect="dark"
-      style="width:100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column
-        prop="template_id"
-        label="模板ID"
-        width="100"
-      ></el-table-column>
-      <el-table-column prop="create_time" label="创建时间" width="200">
-        <template slot-scope="scope">
-          <p>{{ scope.row.create_time | time }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="user_version"
-        label="版本号"
-        width="100"
-      ></el-table-column>
-      <el-table-column prop="user_desc" label="项目备注"></el-table-column>
-      <el-table-column
-        prop="source_miniprogram_appid"
-        label="小程序ID"
-      ></el-table-column>
-      <el-table-column
-        prop="source_miniprogram"
-        label="小程序名称"
-      ></el-table-column>
-      <el-table-column prop="developer" label="上传者名称"></el-table-column>
-      <el-table-column label="操作" fixed="right" v-if="isReview">
-        <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="uploadCode(scope.row)"
-            >上传代码</el-button
-          >
-
-          <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-            >删除</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-table
+      :table-list="tabelData"
+      :header="table_header_1"
+    ></myTable>
+    <myTable
       v-if="isReview === 0"
-      :data="reviewList"
-      border
-      style="width:100%"
-    >
-      <el-table-column prop="id" label="ID"> </el-table-column>
-      <el-table-column prop="template_id" label="模板ID">
-        <template slot-scope="scope">
-          <p>{{ scope.row.template_id }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column prop="website_id" label="提交站点ID"> </el-table-column>
-      <el-table-column prop="user_version" label="提交版本号">
-      </el-table-column>
-      <el-table-column prop="user_desc" label="版本描述"> </el-table-column>
-      <el-table-column prop="status" label="代码状态" :formatter="status">
-      </el-table-column>
-      <el-table-column
-        prop="audit_status"
-        label="审核状态"
-        :formatter="audit_status"
-      >
-      </el-table-column>
-      <el-table-column prop="created_at" label="提交时间">
-        <template slot-scope="scope">
-          <p>{{ scope.row.created_at }}</p>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button @click="reviewRecording(scope.row.id)" type="primary"
-            >审核记录</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+      :table-list="reviewList"
+      :header="table_header_2"
+    ></myTable>
     <div class="pagination-box" v-if="isReview === 0">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="this.params.page"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="this.params.per_page"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="this.params.total"
-      >
-      </el-pagination>
+      <myPagination
+        :total="params.total"
+        :pagesize="params.per_page"
+        :currentPage="params.page"
+        @handleSizeChange="handleSizeChange"
+        @handleCurrentChange="handleCurrentChange"
+      ></myPagination>
     </div>
     <el-dialog title="上传代码" :visible.sync="dialogVisible" width="60%">
       <el-form
@@ -320,7 +244,13 @@
 </template>
 
 <script>
+import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myPagination,
+    myTable,
+  },
   data() {
     return {
       website_id: "",
@@ -331,7 +261,6 @@ export default {
         row: 0,
       },
       tabelData: [],
-      multipleSelection: [],
       dialogVisible: false,
       dialogVisibleList: false,
       form_template: {
@@ -400,7 +329,112 @@ export default {
         total: 0,
         row: 0,
       },
-      // 默认显示分销报备
+      table_header_1: [
+        { prop: "template_id", label: "模板ID", width: "100" },
+        {
+          label: "创建时间",
+          formatter: (row) => {
+            return new Date(parseInt(row.create_time) * 1000)
+              .toLocaleString()
+              .replace(/:\d{1,2}$/, " ");
+          },
+        },
+        { prop: "user_version", label: "版本号" },
+        { prop: "user_desc", label: "描述信息" },
+        { prop: "source_miniprogram_appid", label: "小程序ID" },
+        { prop: "source_miniprogram", label: "小程序名称" },
+        { prop: "developer", label: "上传者微信名称" },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "200",
+          render: (h, data) => {
+            return (
+              <div>
+                {this.isReview ? (
+                  <div class="div row">
+                    <el-button
+                      type="success"
+                      size="mini"
+                      onClick={() => {
+                        this.uploadCode(data.row);
+                      }}
+                    >
+                      上传代码
+                    </el-button>
+                    <el-button
+                      type="danger"
+                      size="mini"
+                      onClick={() => {
+                        this.deleteData(data.row);
+                      }}
+                    >
+                      删除
+                    </el-button>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            );
+          },
+        },
+      ],
+      table_header_2: [
+        { prop: "id", label: "ID", width: "100" },
+        { prop: "template_id", label: "模板ID" },
+        { prop: "website_id", label: "提交站点ID", width: "100" },
+        { prop: "user_version", label: "提交版本号" },
+        { prop: "user_desc", label: "版本描述" },
+        {
+          label: "代码状态",
+          formatter: (row) => {
+            let status =
+              row.status === 0
+                ? "提交代码"
+                : row.status === 1
+                ? "提交审核"
+                : "上线";
+            return status;
+          },
+        },
+        {
+          label: "审核状态",
+          formatter: (row) => {
+            let audit_status =
+              row.audit_status === 0
+                ? "审核通过"
+                : row.audit_status === 1
+                ? "审核不通过"
+                : row.audit_status === 2
+                ? "审核中"
+                : row.audit_status === 3
+                ? "已撤回"
+                : row.audit_status === 4
+                ? "审核延后"
+                : row.audit_status === 5
+                ? "未提交审核"
+                : "";
+            return audit_status;
+          },
+        },
+        { prop: "created_at", label: "提交时间" },
+        {
+          label: "操作",
+          render: (h, data) => {
+            return (
+              <el-button
+                type="primary"
+                onClick={() => {
+                  this.reviewRecording(data.row.id);
+                }}
+              >
+                审核记录
+              </el-button>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {
@@ -423,10 +457,6 @@ export default {
           this.query_quota = res.data;
         }
       });
-    },
-    // 全选
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
     },
     getWebsiteToken() {
       this.$http.getWebsiteToken(this.website_id).then((res) => {
@@ -594,29 +624,6 @@ export default {
       this.review_params.page = val;
       this.getPageData();
       this.getReviewCodeList();
-    },
-    // 过滤状态
-    audit_status(row) {
-      let audit_status =
-        row.audit_status === 0
-          ? "审核通过"
-          : row.audit_status === 1
-          ? "审核不通过"
-          : row.audit_status === 2
-          ? "审核中"
-          : row.audit_status === 3
-          ? "已撤回"
-          : row.audit_status === 4
-          ? "审核延后"
-          : row.audit_status === 5
-          ? "未提交审核"
-          : "";
-      return audit_status;
-    },
-    status(row) {
-      let status =
-        row.status === 0 ? "提交代码" : row.status === 1 ? "提交审核" : "上线";
-      return status;
     },
     // 查询审核状态
     queryReview() {

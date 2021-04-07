@@ -70,6 +70,7 @@ class UserCenter {
         return response;
       },
       (error) => {
+        hideLoading();
         // console.log(error.response.data);
         if (error.response.status === undefined) {
           Message.error("请检查网络连接");
