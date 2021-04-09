@@ -4,31 +4,7 @@
       <el-button type="primary" @click="createData">添加</el-button>
     </el-header>
     <el-main>
-      <el-table :data="tableData" style="width:100%">
-        <el-table-column label="ID" prop="id"></el-table-column>
-        <el-table-column label="类型" prop="category">
-          <template slot-scope="scope">
-            {{ scope.row.category == 1 ? "总价" : "单价" }}
-          </template>
-        </el-table-column>
-        <el-table-column label="名称" prop="name"></el-table-column>
-        <el-table-column
-          prop="operating"
-          label="操作"
-          show-overflow-tooltip
-          fixed="right"
-          width="250"
-        >
-          <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="changeData(scope.row)"
-              >修改</el-button
-            >
-            <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
     </el-main>
     <el-dialog :title="titleMap[dialogTitle]" :visible.sync="dialogCreate">
       <el-form :model="form_create" label-width="100px">
@@ -88,7 +64,11 @@
 </template>
 
 <script>
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myTable,
+  },
   data() {
     return {
       tableData: [],
@@ -108,6 +88,45 @@ export default {
       min_price: 0,
       max_price: 8000,
       category_list: [],
+      table_header: [
+        { prop: "id", label: "ID", width: "100" },
+        {
+          label: "类型",
+          render: (h, data) => {
+            return <p>{data.row.category == 1 ? "总价" : "单价"}</p>;
+          },
+        },
+        { prop: "name", label: "名称" },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "250",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {
