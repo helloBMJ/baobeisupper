@@ -116,6 +116,8 @@ export default {
             return (
               <el-button
                 class="point"
+                type="primary"
+                plain
                 onClick={() => {
                   this.onPoint(data.row);
                 }}
