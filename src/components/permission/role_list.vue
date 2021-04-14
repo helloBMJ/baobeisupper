@@ -14,43 +14,17 @@
       </div>
     </el-header>
     <el-main>
-      <el-table :data="tableData" tooltip-effect="dark" style="width:100%">
-        <el-table-column label="ID" prop="id"></el-table-column>
-        <el-table-column label="站点id" prop="website_id"></el-table-column>
-        <el-table-column label="角色名称" prop="name"></el-table-column>
-        <el-table-column label="创建时间" prop="created_at"></el-table-column>
-        <el-table-column
-          label="操作"
-          prop="operating"
-          show-overflow-tooltip
-          fixed="right"
-          width="400"
-        >
-          <template slot-scope="scope">
-            <el-button type="success" size="mini" @click="changeData(scope.row)"
-              >修改</el-button
-            >
-            <el-button type="primary" size="mini" @click="onShow(scope.row)"
-              >分配</el-button
-            >
-            <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
       <el-footer>
         <!-- 分页 -->
         <div class="pagination-box">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="this.params.page"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="this.params.per_page"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="this.params.total"
-          ></el-pagination>
+          <myPagination
+            :total="params.total"
+            :pagesize="params.per_page"
+            :currentPage="params.page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+          ></myPagination>
         </div>
       </el-footer>
     </el-main>
@@ -112,7 +86,13 @@
 </template>
 
 <script>
+import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myPagination,
+    myTable,
+  },
   data() {
     return {
       tableData: [],
@@ -160,6 +140,50 @@ export default {
       check_permission_list: [],
       // 全选非全选择
       checkAll: false,
+      table_header: [
+        { prop: "id", label: "ID", width: "100" },
+        { prop: "website_id", label: "站点id" },
+        { prop: "name", label: "角色名称" },
+        { prop: "created_at", label: "创建时间" },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "400",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  onClick={() => {
+                    this.onShow(data.row);
+                  }}
+                >
+                  分配
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {

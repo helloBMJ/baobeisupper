@@ -198,13 +198,14 @@ export default {
           label: "站点",
           render: (h, data) => {
             return (
-              <el-tag
+              <el-link
                 onClick={() => {
                   this.openSite(data.row);
                 }}
+                type="primary"
               >
                 （{data.row.id}）{data.row.name}
-              </el-tag>
+              </el-link>
             );
           },
         },

@@ -3,65 +3,17 @@
     <el-header>
       <el-button type="primary" @click="addUser">添加管理员</el-button>
     </el-header>
-    <el-table
-      ref="multipleTable"
-      :data="tableData"
-      border
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column prop="id" label="用户ID" width="auto"></el-table-column>
-      <el-table-column
-        prop="user_name"
-        label="用户名"
-        width="auto"
-      ></el-table-column>
-      <el-table-column
-        prop="phone"
-        label="联系方式"
-        width="auto"
-      ></el-table-column>
-      <el-table-column
-        prop="created_at"
-        label="创建时间"
-        width="auto"
-      ></el-table-column>
-      <el-table-column
-        prop="operating"
-        label="操作"
-        show-overflow-tooltip
-        width="400"
-        fixed="right"
-      >
-        <template slot-scope="scope">
-          <el-button type="success" size="mini" @click="changeData(scope.row)"
-            >管理员信息</el-button
-          >
-          <el-button type="primary" size="mini" @click="bindRole(scope.row)"
-            >绑定角色</el-button
-          >
-          <el-button type="danger" size="mini" @click="deleteData(scope.row)"
-            >删除</el-button
-          >
-          <!-- <el-button type="success" size="mini" @click="editData(scope.row)"
-            >编辑</el-button
-          >-->
-        </template>
-      </el-table-column>
-    </el-table>
+    <myTable :table-list="tableData" :header="table_header"></myTable>
     <el-footer>
       <!-- 分页 -->
       <div class="pagination-box">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="this.params.currentPage"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="this.params.pagesize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="this.params.total"
-        ></el-pagination>
+        <myPagination
+          :total="params.total"
+          :pagesize="params.pagesize"
+          :currentPage="params.currentPage"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+        ></myPagination>
       </div>
     </el-footer>
     <el-dialog :title="titleMap[dialogTitle]" :visible.sync="dialogCreate">
@@ -91,11 +43,16 @@
 </template>
 
 <script>
+import myPagination from "@/components/my_pagination";
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myPagination,
+    myTable,
+  },
   data() {
     return {
       tableData: [],
-      multipleSelection: [],
       params: {
         currentPage: 1,
         pagesize: 10,
@@ -114,6 +71,50 @@ export default {
         role_names: [],
       },
       roles_list: [],
+      table_header: [
+        { prop: "id", label: "用户ID", width: "100" },
+        { prop: "user_name", label: "用户名" },
+        { prop: "phone", label: "联系方式" },
+        { prop: "created_at", label: "创建时间" },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "400",
+          render: (h, data) => {
+            return (
+              <div>
+                <el-button
+                  type="success"
+                  size="mini"
+                  onClick={() => {
+                    this.changeData(data.row);
+                  }}
+                >
+                  管理员信息
+                </el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  onClick={() => {
+                    this.bindRole(data.row);
+                  }}
+                >
+                  绑定角色
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  onClick={() => {
+                    this.deleteData(data.row);
+                  }}
+                >
+                  删除
+                </el-button>
+              </div>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {
@@ -169,10 +170,7 @@ export default {
           });
         });
     },
-    // 全选
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
+
     // 取消全选
     toggleSelection(rows) {
       if (rows) {

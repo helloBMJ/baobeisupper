@@ -13,29 +13,7 @@
       </div>
     </el-header>
     <el-main>
-      <el-table :data="tableData" tooltip-effect="dark" style="width:100%">
-        <el-table-column label="ID" prop="id"></el-table-column>
-        <el-table-column label="网站名称" prop="ter_name"></el-table-column
-        ><el-table-column label="网站地址" prop="ter_domain"></el-table-column>
-        <el-table-column label="网站logo" prop="logo">
-          <template slot-scope="scope">
-            <img :src="scope.row.logo" alt="" />
-          </template>
-        </el-table-column>
-        <el-table-column label="网站IP" prop="ter_server_ip"></el-table-column>
-        <el-table-column label="APPID" prop="ter_appid"></el-table-column>
-        <el-table-column
-          label="ter_appsecret"
-          prop="ter_appsecret"
-        ></el-table-column>
-        <el-table-column label="操作" fixed="right" width="100">
-          <template slot-scope="scope">
-            <el-button @click="bindTfy(scope.row)" type="success" size="mini"
-              >绑定</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+      <myTable :table-list="tableData" :header="table_header"></myTable>
     </el-main>
     <el-footer>
       <!-- 分页 -->
@@ -52,7 +30,11 @@
 </template>
 
 <script>
+import myTable from "@/components/my_table";
 export default {
+  components: {
+    myTable,
+  },
   data() {
     return {
       tableData: [],
@@ -61,6 +43,47 @@ export default {
         row: 10,
         keywords: "",
       },
+      table_header: [
+        { prop: "id", label: "ID", width: "100" },
+        { prop: "ter_name", label: "网站名称" },
+        {
+          label: "网站地址",
+          render: (h, data) => {
+            return (
+              <el-link href={data.row.ter_domain} target="_blank">
+                {data.row.ter_domain}
+              </el-link>
+            );
+          },
+        },
+        {
+          label: "网站logo",
+          render: (h, data) => {
+            return <img width="200px" src={data.row.logo} />;
+          },
+        },
+        { prop: "ter_server_ip", label: "网站IP" },
+        { prop: "ter_appid", label: "APPID" },
+        { prop: "ter_appsecret", label: "ter_appsecret" },
+        {
+          label: "操作",
+          fixed: "right",
+          width: "100",
+          render: (h, data) => {
+            return (
+              <el-button
+                onClick={() => {
+                  this.bindTfy(data.row);
+                }}
+                type="success"
+                size="mini"
+              >
+                绑定
+              </el-button>
+            );
+          },
+        },
+      ],
     };
   },
   mounted() {
